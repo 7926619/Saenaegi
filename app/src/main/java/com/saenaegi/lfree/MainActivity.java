@@ -23,9 +23,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.hide();
-
         mainLogo = (ImageView)findViewById(R.id.main_logo);
         Animation logoMoveAnimation = AnimationUtils.loadAnimation(this, R.anim.logo_move);
         mainLogo.startAnimation(logoMoveAnimation);

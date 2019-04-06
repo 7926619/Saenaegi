@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/it_home"
+            android:title="홈"
+            />
+        <item
+            android:id="@+id/it_commentation"
+            android:title="화면 해설하기"
+            />
+        <item
+            android:id="@+id/it_request_video"
+            android:title="영상 요청하기"
+            />
+        <item
+            android:id="@+id/it_my_video"
+            android:title="내 동영상"
+            />
+        <item
+            android:id="@+id/it_like_video"
+            android:title="좋아요 표시한 동영상"
+            />
+        <item
+            android:id="@+id/it_notice"
+            android:title="공지사항"
+            />
+        <item
+            android:id="@+id/it_setting"
+            android:title="설정"
+            />
+    </group>
+</menu>

@@ -14,9 +14,6 @@ public class ChoiceActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choice);
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.hide();
-
         ImageButton noButton = (ImageButton)findViewById(R.id.no);
         ImageButton yesButton = (ImageButton)findViewById(R.id.yes);
 
