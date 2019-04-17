@@ -22,11 +22,12 @@ public class LfreeMainActivity extends AppCompatActivity implements NavigationVi
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private ActionBarDrawerToggle drawerToggle;
-    private DataManage dbtest=new DataManage();
+    private DataManage dbtest = new DataManage();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_lfree_main);
 
         /* Action Bar */
@@ -47,7 +48,7 @@ public class LfreeMainActivity extends AppCompatActivity implements NavigationVi
 
         navigationView = (NavigationView) findViewById(R.id.navigationView);
         navigationView.setNavigationItemSelectedListener(this);
-        boolean check= dbtest.setUserQuery( "example1","example1", true);
+        boolean check = dbtest.setUserQuery( "example1","example1", true);
 
     }
 

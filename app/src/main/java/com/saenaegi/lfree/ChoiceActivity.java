@@ -13,13 +13,18 @@ public class ChoiceActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_choice);
+
         ImageButton noButton = (ImageButton)findViewById(R.id.no);
         ImageButton yesButton = (ImageButton)findViewById(R.id.yes);
 
         noButton.setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View v) {
+                Intent intent=new Intent(ChoiceActivity.this, aLfreeMainActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
 

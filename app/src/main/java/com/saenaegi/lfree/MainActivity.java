@@ -1,7 +1,6 @@
 package com.saenaegi.lfree;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -21,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_main);
 
         mainLogo = (ImageView)findViewById(R.id.main_logo);
@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         signInButton = (SignInButton)findViewById(R.id.sign_in_button);
         TextView textView = (TextView) signInButton.getChildAt(0);
         textView.setText("Sign in with Google");
-        Animation fadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.fade_in);
+        Animation fadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.res_fade_in);
         signInButton.startAnimation(fadeInAnimation);
 
         signInButton.setOnClickListener(new View.OnClickListener()
