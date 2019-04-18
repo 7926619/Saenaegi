@@ -29,14 +29,6 @@
                 android:textStyle="bold"
                 android:text="검색" />
 
-            <View
-                android:id="@+id/view"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_alignParentBottom="true"
-                android:layout_marginTop="20dp"
-                android:background="#d5d5d5" />
-
         </RelativeLayout>
 
         <LinearLayout
@@ -50,6 +42,13 @@
                 android:layout_height="wrap_content"
                 android:padding="70dp"
                 app:srcCompat="@drawable/mic" />
+
+            <View
+                android:id="@+id/view"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="20dp"
+                android:background="#d5d5d5" />
 
         </LinearLayout>
     </LinearLayout>
