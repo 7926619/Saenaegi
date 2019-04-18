@@ -1,21 +1,28 @@
 package Data;
 
-public class User implements Data{
-    public String idgoogle;
-    public String username;
-    public boolean see;
+public class User{
+    private String idgoogle;
+    private String username;
+    private boolean type;
 
     public User(){
         this("example","example",true);
     }
-    public User(String idgoogle, String username, boolean see){
+
+    public User(String idgoogle, String username, boolean type){
         this.idgoogle=idgoogle;
         this.username=username;
-        this.see=see;
+        this.type=type;
     }
 
-    @Override
-    public String getKey() {
+    public String getIdgoogle() {
         return idgoogle;
+    }
+    public String getUsername(){
+        return username;
+    }
+
+    public boolean isType(){
+        return type;
     }
 }
