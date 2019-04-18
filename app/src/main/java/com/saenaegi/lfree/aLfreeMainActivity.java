@@ -48,9 +48,9 @@ public class aLfreeMainActivity extends AppCompatActivity {
     // 접근성 설정화면으로 넘겨주는 부분
     public void setAccessibilityPermissions() {
         AlertDialog.Builder gsDialog = new AlertDialog.Builder(this);
-        gsDialog.setTitle("접근성 권한 설정");
-        gsDialog.setMessage("접근성 권한을 필요로 합니다");
-        gsDialog.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+        gsDialog.setTitle("제스처 권한 설정");
+        gsDialog.setMessage("제스처 기능을 사용하기 위해서는 접근성 권한을 필요로 합니다");
+        gsDialog.setPositiveButton("동의", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 // 설정화면으로 보내는 부분
                 startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));
