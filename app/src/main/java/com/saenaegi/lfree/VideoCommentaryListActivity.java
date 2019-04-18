@@ -1,35 +1,32 @@
 package com.saenaegi.lfree;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
-import Data.DataManage;
 
-public class LfreeMainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class VideoCommentaryListActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
-    private DataManage dbtest = new DataManage();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-        setContentView(R.layout.activity_lfree_main);
+        setContentView(R.layout.activity_video_commentary_list);
 
         /* Action Bar */
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -49,18 +46,45 @@ public class LfreeMainActivity extends AppCompatActivity implements NavigationVi
 
         navigationView = (NavigationView) findViewById(R.id.navigationView);
         navigationView.setNavigationItemSelectedListener(this);
-        boolean check = dbtest.setUserQuery( "example1","example1", true);
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.search_menu, menu);
+
+        MenuItem mSearch = menu.findItem(R.id.search_icon);
+
+        SearchView mSearchView = (SearchView) mSearch.getActionView();
+        mSearchView.setMaxWidth(Integer.MAX_VALUE);
+        mSearchView.setQueryHint("Search");
+
+        int searchImgId = android.support.v7.appcompat.R.id.search_button;
+        ImageView v = (ImageView) mSearchView.findViewById(searchImgId);
+        v.setImageResource(R.drawable.search);
+        v.setPadding(0,0,0,0);
+
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case R.id.it_home:
+                Intent intent=new Intent(VideoCommentaryListActivity.this, LfreeMainActivity.class);
+                startActivity(intent);
                 break;
             case R.id.it_commentation:
-                Intent intent=new Intent(LfreeMainActivity.this, VideoCommentaryListActivity.class);
-                startActivity(intent);
                 break;
             case R.id.it_request_video:
                 Toast.makeText(this, "it_request_video", Toast.LENGTH_SHORT).show();

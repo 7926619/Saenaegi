@@ -33,7 +33,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:paddingHorizontal="30dp"
-            android:paddingTop="30dp">
+            android:paddingTop="20dp">
 
             <TextView
                 android:id="@+id/textView18"

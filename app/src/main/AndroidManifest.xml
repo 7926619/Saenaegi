@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".aOpenSourceActivity"></activity>
+        <activity android:name=".aOpenSourceActivity" />
         <activity android:name=".aIntroductionActivity" />
         <activity android:name=".aSelectPartActivity" />
         <activity android:name=".aWatchVideoActivity" />
@@ -27,12 +27,14 @@
         <activity android:name=".aWatchVideoMenuActivitiy" />
         <activity android:name=".aHowToUseActivity" />
         <activity android:name=".aLfreeMainActivity" />
-        <activity android:name=".ChoiceActivity">
+        <activity android:name=".VideoCommentaryListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".ChoiceActivity">
         </activity>
         <activity android:name=".LfreeMainActivity" />
         <activity android:name=".MainActivity" />
