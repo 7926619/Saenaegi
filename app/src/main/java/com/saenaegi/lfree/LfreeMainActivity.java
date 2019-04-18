@@ -36,6 +36,10 @@ public class LfreeMainActivity extends AppCompatActivity implements NavigationVi
         toolbar.setNavigationIcon(null);
         setSupportActionBar(toolbar);
 
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        toolbar.setTitle("");
+        toolbar.setSubtitle("");
+
         /* navigation */
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
 
