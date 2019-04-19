@@ -4,7 +4,7 @@
     package="com.saenaegi.lfree">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
         android:allowBackup="true"
@@ -14,6 +14,21 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+        <meta-data
+            android:name="com.google.android.actions"
+            android:resource="@xml/accessibility_service_config" />
+        <service
+            android:name=".aAccessibilityService"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE" >
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/accessibility_service_config" />
+        </service>
+
         <activity android:name=".aOpenSourceActivity" />
         <activity android:name=".aIntroductionActivity" />
         <activity android:name=".aSelectPartActivity" />
@@ -35,8 +50,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ChoiceActivity">
-        </activity>
+        <activity android:name=".ChoiceActivity"></activity>
         <activity android:name=".LfreeMainActivity" />
         <activity android:name=".MainActivity" />
     </application>
