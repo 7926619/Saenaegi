@@ -29,5 +29,9 @@
             android:id="@+id/it_setting"
             android:title="설정"
             />
+        <item
+            android:id="@+id/it_logout"
+            android:title="로그아웃"
+            />
     </group>
 </menu>

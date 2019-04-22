@@ -1,6 +1,8 @@
 package com.saenaegi.lfree;
 
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -39,6 +41,26 @@ public class MainActivity extends AppCompatActivity {
 
     // Google API Client object.
     public GoogleApiClient googleApiClient;
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // 활동을 초기화 할 때 사용자가 현재 로그인되어 있는지 확인
+        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+
+        if(currentUser != null){
+            signInButton.setVisibility(View.GONE);
+            Handler handler = new Handler() {
+                public void handleMessage(Message msg) {
+                    super.handleMessage(msg);
+                    Toast.makeText(MainActivity.this,"자동로그인!",Toast.LENGTH_LONG).show();
+                    startActivity(new Intent(MainActivity.this, ChoiceActivity.class));
+                    finish();
+                }
+            };
+            handler.sendEmptyMessageDelayed(0, 3000); //3초후 화면전환
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,32 +116,22 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == RequestSignInCode){
-
             GoogleSignInResult googleSignInResult = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-
             if (googleSignInResult.isSuccess()){
-
                 GoogleSignInAccount googleSignInAccount = googleSignInResult.getSignInAccount();
-
                 FirebaseUserAuth(googleSignInAccount);
             }
-
         }
     }
 
     public void FirebaseUserAuth(GoogleSignInAccount googleSignInAccount) {
-
         AuthCredential authCredential = GoogleAuthProvider.getCredential(googleSignInAccount.getIdToken(), null);
-
         firebaseAuth.signInWithCredential(authCredential)
                 .addOnCompleteListener(MainActivity.this, new OnCompleteListener() {
                     @Override
                     public void onComplete(@NonNull Task AuthResultTask) {
-
                         if (AuthResultTask.isSuccessful()){
                             // Getting Current Login user details.
                             FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
@@ -127,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(MainActivity.this,"로그인 성공!",Toast.LENGTH_LONG).show();
                             Intent intent = new Intent(MainActivity.this, ChoiceActivity.class);
                             startActivity(intent);
-
+                            finish();
                         }else {
                             Toast.makeText(MainActivity.this,"Something Went Wrong",Toast.LENGTH_LONG).show();
                         }

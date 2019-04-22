@@ -1,5 +1,6 @@
 package com.saenaegi.lfree;
 
+import android.content.ClipData;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -15,8 +16,18 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.auth.api.Auth;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import java.time.Instant;
+
 import Data.DataManage;
 
 public class LfreeMainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -24,6 +35,9 @@ public class LfreeMainActivity extends AppCompatActivity implements NavigationVi
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private DataManage dbtest = new DataManage();
+
+    public FirebaseAuth firebaseAuth;
+    TextView LoginUserProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +69,11 @@ public class LfreeMainActivity extends AppCompatActivity implements NavigationVi
         navigationView.setNavigationItemSelectedListener(this);
         boolean check = dbtest.setUserQuery( "example1","example1", true);
 
+        View headerView = navigationView.getHeaderView(0);
+        LoginUserProfile = (TextView)headerView.findViewById(R.id.textView10);
+        firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        LoginUserProfile.setText(user.getDisplayName() + "님\n" + user.getEmail());
     }
 
     @Override
@@ -81,10 +100,24 @@ public class LfreeMainActivity extends AppCompatActivity implements NavigationVi
             case R.id.it_setting:
                 Toast.makeText(this, "it_setting", Toast.LENGTH_SHORT).show();
                 break;
+            case R.id.it_logout:
+                UserSignOutMethod();
+                Toast.makeText(this, "it_logout", Toast.LENGTH_SHORT).show();
+                break;
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);
         return false;
+    }
+
+    // Sign In function Starts From Here.
+    public void UserSignOutMethod(){
+        FirebaseAuth.getInstance().signOut();
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            Toast.makeText(LfreeMainActivity.this, "로그아웃!", Toast.LENGTH_LONG).show();
+            startActivity(new Intent(LfreeMainActivity.this, MainActivity.class));
+            finish();
+        }
     }
 
     @Override
