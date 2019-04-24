@@ -80,10 +80,10 @@ public class LfreeMainActivity extends AppCompatActivity implements NavigationVi
     public boolean onNavigationItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case R.id.it_home:
-                Toast.makeText(this, "it_home", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.it_commentation:
-                Toast.makeText(this, "it_commentation", Toast.LENGTH_SHORT).show();
+                Intent intent=new Intent(LfreeMainActivity.this, VideoCommentaryListActivity.class);
+                startActivity(intent);
                 break;
             case R.id.it_request_video:
                 Toast.makeText(this, "it_request_video", Toast.LENGTH_SHORT).show();

@@ -30,6 +30,7 @@ public class aSearchActivity extends AppCompatActivity implements View.OnClickLi
         }
 
         super.onCreate(savedInstanceState);
+        this.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_a_search);
         findViewById(R.id.imageView4).setOnClickListener(this);
 
