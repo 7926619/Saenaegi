@@ -39,7 +39,7 @@ public class DataManage implements DataManager{
     @Override
     public boolean setRequestQuery(String id, String idgoogle, boolean type, String link) {
         Request request=new Request(id,idgoogle,type,link);
-        databaseReference.child("LFREE").child("REQUEST").setValue(request);
+        databaseReference.child("LFREE").child("REQUEST").child( id ).setValue(request);
         return true;
     }
 
@@ -51,8 +51,20 @@ public class DataManage implements DataManager{
     @Override
     public boolean setVideoQuery(String id, String link, boolean lookstate, boolean listenstate, int sectionCount, int view) {
         Video video=new Video(id,link,lookstate,listenstate,sectionCount,view);
-        databaseReference.child("LFREE").child("VIDEO").setValue(video);
+        databaseReference.child("LFREE").child("VIDEO").child( id ).setValue(video);
         return true;
+    }
+
+    @Override
+    public boolean setSubtitle(String id, String directory, String idgoogle, String idvideo, String name, int recommend, String sectionF, int sectionNum, String sectionS, boolean type) {
+        Subtitle subtitle=new Subtitle(id, directory,idgoogle,idvideo,name,recommend,sectionF,sectionS,sectionNum,type);
+        databaseReference.child("LFREE").child("SUBTITLE").child( id ).setValue(subtitle);
+        return true;
+    }
+
+    @Override
+    public boolean getSubtitle(Subtitle subtitle) {
+        return false;
     }
 
 }

@@ -15,12 +15,24 @@
       },
       "oauth_client": [
         {
+          "client_id": "876690212212-825nrs81r02rmmrunjemg935vh50gp8g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.saenaegi.lfree",
+            "certificate_hash": "57ae316ed723039153dd854c8e41f5f7e44afeab"
+          }
+        },
+        {
           "client_id": "876690212212-ati5hv3u2p00mjabdilo15h71a5ul4b9.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.saenaegi.lfree",
             "certificate_hash": "eb5053868287aab10261df9dd45da431b6cd0fbe"
           }
+        },
+        {
+          "client_id": "876690212212-ohenov5k5e4mvm8ic4nda0f3ji7e7s7t.apps.googleusercontent.com",
+          "client_type": 3
         }
       ],
       "api_key": [

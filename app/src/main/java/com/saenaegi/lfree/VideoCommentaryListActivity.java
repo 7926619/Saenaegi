@@ -1,58 +1,37 @@
 package com.saenaegi.lfree;
 
-import android.content.ClipData;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.auth.api.Auth;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-
-import java.time.Instant;
-
-import Data.DataManage;
-
-public class LfreeMainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class VideoCommentaryListActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
-    private DataManage dbtest = new DataManage();
-
-    public FirebaseAuth firebaseAuth;
-    TextView LoginUserProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-        setContentView(R.layout.activity_lfree_main);
+        setContentView(R.layout.activity_video_commentary_list);
 
         /* Action Bar */
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(null);
         setSupportActionBar(toolbar);
-
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        toolbar.setTitle("");
-        toolbar.setSubtitle("");
 
         /* navigation */
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
@@ -67,23 +46,45 @@ public class LfreeMainActivity extends AppCompatActivity implements NavigationVi
 
         navigationView = (NavigationView) findViewById(R.id.navigationView);
         navigationView.setNavigationItemSelectedListener(this);
-        boolean check = dbtest.setUserQuery( "example1","example1", true);
+    }
 
-        View headerView = navigationView.getHeaderView(0);
-        LoginUserProfile = (TextView)headerView.findViewById(R.id.textView10);
-        firebaseAuth = FirebaseAuth.getInstance();
-        FirebaseUser user = firebaseAuth.getCurrentUser();
-        LoginUserProfile.setText(user.getDisplayName() + "님\n" + user.getEmail());
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.search_menu, menu);
+
+        MenuItem mSearch = menu.findItem(R.id.search_icon);
+
+        SearchView mSearchView = (SearchView) mSearch.getActionView();
+        mSearchView.setMaxWidth(Integer.MAX_VALUE);
+        mSearchView.setQueryHint("Search");
+
+        int searchImgId = android.support.v7.appcompat.R.id.search_button;
+        ImageView v = (ImageView) mSearchView.findViewById(searchImgId);
+        v.setImageResource(R.drawable.search);
+        v.setPadding(0,0,0,0);
+
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case R.id.it_home:
-                Toast.makeText(this, "it_home", Toast.LENGTH_SHORT).show();
+                Intent intent=new Intent(VideoCommentaryListActivity.this, LfreeMainActivity.class);
+                startActivity(intent);
                 break;
             case R.id.it_commentation:
-                Toast.makeText(this, "it_commentation", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.it_request_video:
                 Toast.makeText(this, "it_request_video", Toast.LENGTH_SHORT).show();
@@ -100,24 +101,10 @@ public class LfreeMainActivity extends AppCompatActivity implements NavigationVi
             case R.id.it_setting:
                 Toast.makeText(this, "it_setting", Toast.LENGTH_SHORT).show();
                 break;
-            case R.id.it_logout:
-                UserSignOutMethod();
-                Toast.makeText(this, "it_logout", Toast.LENGTH_SHORT).show();
-                break;
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);
         return false;
-    }
-
-    // Sign In function Starts From Here.
-    public void UserSignOutMethod(){
-        FirebaseAuth.getInstance().signOut();
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
-            Toast.makeText(LfreeMainActivity.this, "로그아웃!", Toast.LENGTH_LONG).show();
-            startActivity(new Intent(LfreeMainActivity.this, MainActivity.class));
-            finish();
-        }
     }
 
     @Override

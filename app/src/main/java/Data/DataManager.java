@@ -9,5 +9,6 @@ public interface DataManager {
     public boolean setRequestQuery(String id, String idgoogle, boolean type, String link);
     public boolean getVideoQuery(Video video);
     public boolean setVideoQuery(String id, String link, boolean lookstate,boolean listenstate, int sectionCount, int view);
-
+    public boolean setSubtitle(String id, String directory, String idgoogle, String idvideo, String name, int recommend, String sectionF,int sectionNum, String sectionS, boolean type);
+    public boolean getSubtitle(Subtitle subtitle);
 }

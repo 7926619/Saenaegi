@@ -1,0 +1,15 @@
+<?xml version ="1.0" encoding ="utf-8"?>
+<accessibility-service
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:packageNames="com.saenaegi.lfree"
+    android:accessibilityEventTypes="typeViewClicked|typeViewFocused|typeGestureDetectionStart|typeGestureDetectionEnd|typeViewTextChanged|typeViewTextSelectionChanged"
+    android:accessibilityFeedbackType="feedbackSpoken"
+    android:accessibilityFlags="flagReportViewIds"
+    android:notificationTimeout="100"
+    android:description="@string/accessibility_description"
+    android:canRetrieveWindowContent="true"
+    android:canRequestTouchExplorationMode="true"
+    android:canPerformGestures="true" />
+    <!-- android:accessibilityFlags="flagRequestFingerprintGestures" -->
+    <!-- android:canRequestFingerprintGestures="true" -->
+
