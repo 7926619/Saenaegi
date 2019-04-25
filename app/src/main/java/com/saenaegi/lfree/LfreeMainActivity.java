@@ -67,6 +67,8 @@ public class LfreeMainActivity extends AppCompatActivity implements NavigationVi
 
         navigationView = (NavigationView) findViewById(R.id.navigationView);
         navigationView.setNavigationItemSelectedListener(this);
+
+        /*
         boolean check = dbtest.setUserQuery( "example1","example1", true);
 
         View headerView = navigationView.getHeaderView(0);
@@ -74,6 +76,7 @@ public class LfreeMainActivity extends AppCompatActivity implements NavigationVi
         firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser user = firebaseAuth.getCurrentUser();
         LoginUserProfile.setText(user.getDisplayName() + "님\n" + user.getEmail());
+        */
     }
 
     @Override
