@@ -14,12 +14,23 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".LikeVideoListActivity"></activity>
+        <activity android:name=".MyVideoListActivity" />
+        <activity android:name=".VideoRequestListActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <meta-data
             android:name="com.google.android.actions"
             android:resource="@xml/accessibility_service_config" />
+
         <service
             android:name=".aAccessibilityService"
-            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE" >
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
             <intent-filter>
                 <action android:name="android.accessibilityservice.AccessibilityService" />
             </intent-filter>
@@ -43,17 +54,10 @@
         <activity android:name=".aWatchVideoMenuActivitiy" />
         <activity android:name=".aHowToUseActivity" />
         <activity android:name=".aLfreeMainActivity" />
-        <activity android:name=".VideoCommentaryListActivity"/>
-        <activity android:name=".ChoiceActivity"/>
-        <activity android:name=".LfreeMainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".MainActivity">
-        </activity>
+        <activity android:name=".VideoCommentaryListActivity" />
+        <activity android:name=".ChoiceActivity" />
+        <activity android:name=".LfreeMainActivity" />
+        <activity android:name=".MainActivity" />
     </application>
 
 </manifest>

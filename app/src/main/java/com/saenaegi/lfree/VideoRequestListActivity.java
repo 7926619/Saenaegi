@@ -1,19 +1,22 @@
 package com.saenaegi.lfree;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
@@ -25,7 +28,7 @@ import com.saenaegi.lfree.ListviewController.ListviewItem;
 
 import java.util.ArrayList;
 
-public class VideoCommentaryListActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class VideoRequestListActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
@@ -34,7 +37,7 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-        setContentView(R.layout.activity_video_commentary_list);
+        setContentView(R.layout.activity_video_request_list);
 
         /* Action Bar */
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -55,48 +58,48 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
         navigationView = (NavigationView) findViewById(R.id.navigationView);
         navigationView.setNavigationItemSelectedListener(this);
 
-        changeView(0);
-
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tablayout1);
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        /* link button */
+        ImageButton link_button = (ImageButton) findViewById(R.id.link_button) ;
+        link_button.setOnClickListener(new Button.OnClickListener() {
             @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                // TODO : tab의 상태가 선택 상태로 변경.
-                int pos = tab.getPosition() ;
-                changeView(pos);
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-                // TODO : tab의 상태가 선택되지 않음으로 변경.
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-                // TODO : 이미 선택된 tab이 다시
+            public void onClick(View view) {
+                input_link();
             }
         });
-    }
 
-    private void changeView(int index) {
+        /* list view */
         ListView listView = (ListView) findViewById(R.id.listview);
         ArrayList<ListviewItem> data = new ArrayList<>();
-
-        switch (index) {
-            case 0 :
-                ListviewItem test = new ListviewItem(R.drawable.icon,"test");
-                data.add(test);
-                ListviewItem test1 = new ListviewItem(R.drawable.icon,"test1");
-                data.add(test1);
-                break;
-            case 1 :
-                break;
-        }
-
+        ListviewItem test = new ListviewItem(R.drawable.icon,"test");
+        data.add(test);
         ListviewAdapter adapter = new ListviewAdapter(this, R.layout.listview_item, data);
         listView.setAdapter(adapter);
         setListViewHeightBasedOnChildren(listView);
     }
+
+    void input_link()
+    {
+        final EditText edittext = new EditText(this);
+        edittext.setHint("link address");
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("링크 가져오기");
+        builder.setView(edittext, 60, 0, 60, 0);
+        builder.setPositiveButton("확인",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getApplicationContext(),edittext.getText().toString() ,Toast.LENGTH_LONG).show();
+                    }
+                });
+        builder.setNegativeButton("취소",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+        builder.show();
+    }
+
 
     public static void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
@@ -154,21 +157,21 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
         Intent intent;
         switch(item.getItemId()) {
             case R.id.it_home:
-                intent = new Intent(VideoCommentaryListActivity.this, LfreeMainActivity.class);
+                intent = new Intent(VideoRequestListActivity.this, LfreeMainActivity.class);
                 startActivity(intent);
                 break;
             case R.id.it_commentation:
-                break;
-            case R.id.it_request_video:
-                intent = new Intent(VideoCommentaryListActivity.this, VideoRequestListActivity.class);
+                intent = new Intent(VideoRequestListActivity.this, VideoCommentaryListActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.it_request_video:
+                break;
             case R.id.it_my_video:
-                intent = new Intent(VideoCommentaryListActivity.this, MyVideoListActivity.class);
+                intent = new Intent(VideoRequestListActivity.this, MyVideoListActivity.class);
                 startActivity(intent);
                 break;
             case R.id.it_like_video:
-                intent = new Intent(VideoCommentaryListActivity.this, LikeVideoListActivity.class);
+                intent = new Intent(VideoRequestListActivity.this, LikeVideoListActivity.class);
                 startActivity(intent);
                 break;
             case R.id.it_notice:

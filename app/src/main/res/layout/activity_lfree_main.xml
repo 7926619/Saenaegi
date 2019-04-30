@@ -68,7 +68,7 @@
                         android:orientation="horizontal">
 
                         <ImageButton
-                            android:id="@+id/imageButton"
+                            android:id="@+id/commentButton"
                             android:layout_width="20dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -82,7 +82,7 @@
                             android:layout_height="wrap_content" />
 
                         <ImageButton
-                            android:id="@+id/imageButton2"
+                            android:id="@+id/requestButton"
                             android:layout_width="20dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"

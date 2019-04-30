@@ -68,6 +68,25 @@ public class LfreeMainActivity extends AppCompatActivity implements NavigationVi
         navigationView = (NavigationView) findViewById(R.id.navigationView);
         navigationView.setNavigationItemSelectedListener(this);
 
+        /* buttons */
+        ImageButton comButton = (ImageButton) findViewById(R.id.commentButton);
+        comButton.setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick(View v) {
+                Intent intent = new Intent(LfreeMainActivity.this, VideoCommentaryListActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        ImageButton reqButton = (ImageButton) findViewById(R.id.requestButton);
+        reqButton.setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick(View v) {
+                Intent intent = new Intent(LfreeMainActivity.this, VideoRequestListActivity.class);
+                startActivity(intent);
+            }
+        });
+
         /*
         boolean check = dbtest.setUserQuery( "example1","example1", true);
 
@@ -81,31 +100,31 @@ public class LfreeMainActivity extends AppCompatActivity implements NavigationVi
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
+        Intent intent;
         switch(item.getItemId()) {
             case R.id.it_home:
                 break;
             case R.id.it_commentation:
-                Intent intent=new Intent(LfreeMainActivity.this, VideoCommentaryListActivity.class);
+                intent = new Intent(LfreeMainActivity.this, VideoCommentaryListActivity.class);
                 startActivity(intent);
                 break;
             case R.id.it_request_video:
-                Toast.makeText(this, "it_request_video", Toast.LENGTH_SHORT).show();
+                intent = new Intent(LfreeMainActivity.this, VideoRequestListActivity.class);
+                startActivity(intent);
                 break;
             case R.id.it_my_video:
-                Toast.makeText(this, "it_my_video", Toast.LENGTH_SHORT).show();
+                intent = new Intent(LfreeMainActivity.this, MyVideoListActivity.class);
+                startActivity(intent);
                 break;
             case R.id.it_like_video:
-                Toast.makeText(this, "it_like_video", Toast.LENGTH_SHORT).show();
+                intent = new Intent(LfreeMainActivity.this, LikeVideoListActivity.class);
+                startActivity(intent);
                 break;
             case R.id.it_notice:
                 Toast.makeText(this, "it_notice", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.it_setting:
                 Toast.makeText(this, "it_setting", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.it_logout:
-                UserSignOutMethod();
-                Toast.makeText(this, "it_logout", Toast.LENGTH_SHORT).show();
                 break;
         }
 

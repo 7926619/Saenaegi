@@ -32,27 +32,27 @@
                     app:contentInsetStart="0dp"
                     android:background="#fff">
 
-                        <ImageButton
-                            android:id="@+id/drawer_icon"
-                            android:layout_width="30dp"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginStart="15dp"
-                            android:adjustViewBounds="true"
-                            android:background="@android:color/transparent"
-                            android:scaleType="centerInside"
-                            android:src="@drawable/nav_1" />
+                    <ImageButton
+                        android:id="@+id/drawer_icon"
+                        android:layout_width="30dp"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="15dp"
+                        android:adjustViewBounds="true"
+                        android:background="@android:color/transparent"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/nav_1" />
 
-                        <TextView
-                            android:id="@+id/textView9"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:adjustViewBounds="true"
-                            android:gravity="center"
-                            android:text="화면 해설하기"
-                            android:textColor="#363636"
-                            android:textSize="25sp"
-                            android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/textView9"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:adjustViewBounds="true"
+                        android:gravity="center"
+                        android:text="영상 요청하기"
+                        android:textColor="#363636"
+                        android:textSize="25sp"
+                        android:textStyle="bold" />
 
                 </android.support.v7.widget.Toolbar>
 
@@ -61,38 +61,30 @@
                     android:layout_height="1dp"
                     android:background="#d5d5d5" />
 
-                <android.support.design.widget.TabLayout
-                    android:id="@+id/tablayout1"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:tabIndicatorColor="#57b000">
-
-                    <android.support.design.widget.TabItem
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="완성" />
-
-                    <android.support.design.widget.TabItem
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="제작중" />
-
-                </android.support.design.widget.TabLayout>
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="30dp"
                     android:orientation="vertical"
                     android:paddingHorizontal="30dp"
-                    android:paddingTop="25dp">
+                    android:paddingTop="20dp">
+
+                    <ImageButton
+                        android:id="@+id/link_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="35dp"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="30dp"
+                        android:adjustViewBounds="true"
+                        android:background="@android:color/transparent"
+                        android:scaleType="centerInside"
+                        app:srcCompat="@drawable/link_button" />
 
                     <ListView
                         android:id="@+id/listview"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:divider="#fff"
-                        android:dividerHeight="20dp" />
+                        android:layout_height="match_parent" />
+
                 </LinearLayout>
 
                 <include layout="@layout/layout_footer" />
