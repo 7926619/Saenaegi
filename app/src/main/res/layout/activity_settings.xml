@@ -15,6 +15,7 @@
         android:background="#ffffff">
 
         <ScrollView
+            android:id="@+id/scroll_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -49,7 +50,7 @@
                         android:layout_height="match_parent"
                         android:adjustViewBounds="true"
                         android:layout_gravity="center"
-                        android:text="좋아요 표시한 동영상"
+                        android:text="설정"
                         android:textColor="#363636"
                         android:textSize="25sp"
                         android:textStyle="bold" />
@@ -64,17 +65,15 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="30dp"
-                    android:orientation="vertical"
-                    android:paddingHorizontal="30dp"
-                    android:paddingTop="30dp">
+                    android:layout_marginBottom="70dp"
+                    android:orientation="vertical">
 
                     <ListView
                         android:id="@+id/listview"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:divider="#fff"
-                        android:dividerHeight="20dp" />
+                        android:divider="#d5d5d5"
+                        android:dividerHeight="0.5dp" />
 
                 </LinearLayout>
 

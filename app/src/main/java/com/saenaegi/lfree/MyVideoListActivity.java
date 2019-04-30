@@ -42,6 +42,7 @@ public class MyVideoListActivity extends AppCompatActivity implements Navigation
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(null);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         /* navigation */
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
@@ -60,14 +61,14 @@ public class MyVideoListActivity extends AppCompatActivity implements Navigation
         /* list view */
         ListView listView = (ListView) findViewById(R.id.listview);
         ArrayList<ListviewItem> data = new ArrayList<>();
-        ListviewItem test = new ListviewItem(R.drawable.icon,"test");
+        ListviewItem test = new ListviewItem(R.drawable.icon,"test", "test입니다.");
         data.add(test);
         ListviewAdapter adapter = new ListviewAdapter(this, R.layout.listview_item, data);
         listView.setAdapter(adapter);
         setListViewHeightBasedOnChildren(listView);
     }
 
-    public static void setListViewHeightBasedOnChildren(ListView listView) {
+    public void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
         if (listAdapter == null) {
             // pre-condition
@@ -144,7 +145,8 @@ public class MyVideoListActivity extends AppCompatActivity implements Navigation
                 Toast.makeText(this, "it_notice", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.it_setting:
-                Toast.makeText(this, "it_setting", Toast.LENGTH_SHORT).show();
+                intent = new Intent(MyVideoListActivity.this, SettingsActivity.class);
+                startActivity(intent);
                 break;
         }
 

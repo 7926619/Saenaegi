@@ -38,10 +38,14 @@ public class ListviewAdapter extends BaseAdapter {
         }
 
         ListviewItem listviewitem = data.get(position);
-        ImageView icon = (ImageView) convertView.findViewById(R.id.list_image);
-        icon.setImageResource(listviewitem.getIcon());
+        if(listviewitem.getIcon() != 0) {
+            ImageView icon = (ImageView) convertView.findViewById(R.id.list_image);
+            icon.setImageResource(listviewitem.getIcon());
+        }
         TextView name = (TextView)convertView.findViewById(R.id.list_text);
         name.setText(listviewitem.getName());
+        TextView sub = (TextView)convertView.findViewById(R.id.list_sub);
+        sub.setText(listviewitem.getSub());
         return convertView;
     }
 }

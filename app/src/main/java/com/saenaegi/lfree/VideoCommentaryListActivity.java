@@ -40,6 +40,7 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(null);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         /* navigation */
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
@@ -84,9 +85,9 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
 
         switch (index) {
             case 0 :
-                ListviewItem test = new ListviewItem(R.drawable.icon,"test");
+                ListviewItem test = new ListviewItem(R.drawable.icon,"test", "test입니다.");
                 data.add(test);
-                ListviewItem test1 = new ListviewItem(R.drawable.icon,"test1");
+                ListviewItem test1 = new ListviewItem(R.drawable.icon,"test1", "test입니다.");
                 data.add(test1);
                 break;
             case 1 :
@@ -98,7 +99,7 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
         setListViewHeightBasedOnChildren(listView);
     }
 
-    public static void setListViewHeightBasedOnChildren(ListView listView) {
+    public void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
         if (listAdapter == null) {
             // pre-condition
@@ -175,7 +176,8 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
                 Toast.makeText(this, "it_notice", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.it_setting:
-                Toast.makeText(this, "it_setting", Toast.LENGTH_SHORT).show();
+                intent = new Intent(VideoCommentaryListActivity.this, SettingsActivity.class);
+                startActivity(intent);
                 break;
         }
 

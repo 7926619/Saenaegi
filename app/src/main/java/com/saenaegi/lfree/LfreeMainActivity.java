@@ -124,7 +124,8 @@ public class LfreeMainActivity extends AppCompatActivity implements NavigationVi
                 Toast.makeText(this, "it_notice", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.it_setting:
-                Toast.makeText(this, "it_setting", Toast.LENGTH_SHORT).show();
+                intent = new Intent(LfreeMainActivity.this, SettingsActivity.class);
+                startActivity(intent);
                 break;
         }
 
