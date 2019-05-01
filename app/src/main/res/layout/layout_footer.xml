@@ -38,7 +38,7 @@
             app:layout_constraintStart_toStartOf="parent">
 
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/submenu1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -58,7 +58,7 @@
                 android:textColor="#919191" />
 
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/submenu2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -78,7 +78,7 @@
                 android:textColor="#919191" />
 
             <TextView
-                android:id="@+id/textView5"
+                android:id="@+id/submenu3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
