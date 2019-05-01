@@ -6,10 +6,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +15,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.ScrollView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.saenaegi.lfree.ListviewController.ListviewAdapter;
@@ -70,7 +65,7 @@ public class SettingsActivity extends AppCompatActivity implements NavigationVie
         data.add(set3);
         ListviewItem set4 = new ListviewItem("오픈소스 라이선스", "test입니다.");
         data.add(set4);
-        ListviewAdapter adapter = new ListviewAdapter(this, R.layout.listview_notice_item, data);
+        ListviewAdapter adapter = new ListviewAdapter(this, R.layout.listview_settings_item, data);
         listView.setAdapter(adapter);
         setListViewHeightBasedOnChildren(listView);
         listView.setOnItemClickListener(ItemClickListener);

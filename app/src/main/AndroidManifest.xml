@@ -14,17 +14,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".SettingsActivity">
+        <activity android:name=".NoticeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".SettingsActivity">
+        </activity>
         <activity android:name=".LikeVideoListActivity" />
         <activity android:name=".MyVideoListActivity" />
-        <activity android:name=".VideoRequestListActivity">
-        </activity>
+        <activity android:name=".VideoRequestListActivity"></activity>
 
         <meta-data
             android:name="com.google.android.actions"
