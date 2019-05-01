@@ -142,7 +142,8 @@ public class LikeVideoListActivity extends AppCompatActivity implements Navigati
             case R.id.it_like_video:
                 break;
             case R.id.it_notice:
-                Toast.makeText(this, "it_notice", Toast.LENGTH_SHORT).show();
+                intent = new Intent(LikeVideoListActivity.this, NoticeActivity.class);
+                startActivity(intent);
                 break;
             case R.id.it_setting:
                 intent = new Intent(LikeVideoListActivity.this, SettingsActivity.class);

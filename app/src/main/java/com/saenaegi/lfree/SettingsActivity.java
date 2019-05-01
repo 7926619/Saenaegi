@@ -136,7 +136,8 @@ public class SettingsActivity extends AppCompatActivity implements NavigationVie
                 startActivity(intent);
                 break;
             case R.id.it_notice:
-                Toast.makeText(this, "it_notice", Toast.LENGTH_SHORT).show();
+                intent = new Intent(SettingsActivity.this, NoticeActivity.class);
+                startActivity(intent);
                 break;
             case R.id.it_setting:
                 break;

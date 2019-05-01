@@ -173,7 +173,8 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
                 startActivity(intent);
                 break;
             case R.id.it_notice:
-                Toast.makeText(this, "it_notice", Toast.LENGTH_SHORT).show();
+                intent = new Intent(VideoCommentaryListActivity.this, NoticeActivity.class);
+                startActivity(intent);
                 break;
             case R.id.it_setting:
                 intent = new Intent(VideoCommentaryListActivity.this, SettingsActivity.class);
