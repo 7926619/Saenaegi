@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,6 +45,14 @@ public class LfreeMainActivity extends AppCompatActivity implements NavigationVi
         super.onCreate(savedInstanceState);
         this.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_lfree_main);
+
+        /* scroll on top */
+        final ScrollView scroll_view = (ScrollView) findViewById(R.id.scroll_view);
+        scroll_view.post(new Runnable() {
+            public void run() {
+                scroll_view.scrollTo(0, 0);
+            }
+        });
 
         /* Action Bar */
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ScrollView;
 
 import com.saenaegi.lfree.RecyclevieController.Data;
 import com.saenaegi.lfree.RecyclevieController.RecyclerAdapter;
@@ -30,6 +31,14 @@ public class NoticeActivity extends AppCompatActivity implements NavigationView.
         super.onCreate(savedInstanceState);
         this.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_notice);
+
+        /* scroll on top */
+        final ScrollView scroll_view = (ScrollView) findViewById(R.id.scroll_view);
+        scroll_view.post(new Runnable() {
+            public void run() {
+                scroll_view.scrollTo(0, 0);
+            }
+        });
 
         /* Action Bar */
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

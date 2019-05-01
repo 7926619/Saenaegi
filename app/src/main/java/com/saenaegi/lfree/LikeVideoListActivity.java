@@ -20,6 +20,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.saenaegi.lfree.ListviewController.ListviewAdapter;
@@ -37,6 +38,14 @@ public class LikeVideoListActivity extends AppCompatActivity implements Navigati
         super.onCreate(savedInstanceState);
         this.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_like_video_list);
+
+        /* scroll on top */
+        final ScrollView scroll_view = (ScrollView) findViewById(R.id.scroll_view);
+        scroll_view.post(new Runnable() {
+            public void run() {
+                scroll_view.scrollTo(0, 0);
+            }
+        });
 
         /* Action Bar */
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
