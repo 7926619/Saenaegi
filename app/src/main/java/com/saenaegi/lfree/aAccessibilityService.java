@@ -4,18 +4,52 @@ import android.accessibilityservice.AccessibilityServiceInfo;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
+import android.speech.tts.TextToSpeech;
+//import android.speech.tts.Voice;
+import java.util.Locale;
 
 public class aAccessibilityService extends android.accessibilityservice.AccessibilityService {
     private static final String TAG = "AccessibilityService";
+    private TextToSpeech tts;              // TTS 변수 선언
 
     @Override
     public void onCreate() {
         getServiceInfo().flags = AccessibilityServiceInfo.FLAG_REQUEST_TOUCH_EXPLORATION_MODE;
+        tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                tts.setLanguage(Locale.KOREAN);
+            }
+        });
     }
 
     // 이벤트가 발생할때마다 실행되는 부분
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
+        // 발생한 이벤트로부터 Source를 get
+        AccessibilityNodeInfo nodeInfo = event.getSource();
+        // 실현 시간 상수로서 접근성 서비스에 대한 이벤트 타입 변수 선언 및 생성
+        final int eventType =  event.getEventType();
+        // 특정 이벤트에 대한 서술 변수
+        String eventText = null;
+
+        switch(eventType) {
+            // 특정 컴포넌트에 대해 포커싱이 발생하면
+            case AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUSED:
+                eventText = "Focused: ";
+                break;
+            // 특정 컴포넌트에 대해 사용자의 직접적인 클릭이 발생하면
+            case AccessibilityEvent.TYPE_VIEW_CLICKED:
+                eventText = "Focused : ";
+                break;
+        }
+        // 이벤트의 대상이 된 컴포넌트의 ContentDescription 내용을 String에 저장
+        eventText = eventText + event.getContentDescription();
+
+        // TTS 기능으로 말하기
+        tts.speak(eventText, TextToSpeech.QUEUE_FLUSH, null, null);
+
+        /*
         // 발생한 이벤트로부터 소스 get
         AccessibilityNodeInfo nodeInfo = event.getSource();
 
@@ -31,6 +65,7 @@ public class aAccessibilityService extends android.accessibilityservice.Accessib
         // Log.e(TAG, "Catch Event ContentDescription : " + event.getContentDescription());
         // Log.e(TAG, "Catch Event getSource : " + event.getSource());
         // Log.e(TAG, "=========================================================================");
+        */
     }
 
     // 접근성 권한을 가지고, 연결이 되면 호출되는 함수
