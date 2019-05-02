@@ -4,18 +4,46 @@ import android.accessibilityservice.AccessibilityServiceInfo;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
+import android.speech.tts.TextToSpeech;
+//import android.speech.tts.Voice;
+import java.util.Locale;
 
 public class aAccessibilityService extends android.accessibilityservice.AccessibilityService {
     private static final String TAG = "AccessibilityService";
+    private TextToSpeech tts;              // TTS 변수 선언
 
     @Override
     public void onCreate() {
         getServiceInfo().flags = AccessibilityServiceInfo.FLAG_REQUEST_TOUCH_EXPLORATION_MODE;
+        tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                tts.setLanguage(Locale.KOREAN);
+            }
+        });
     }
 
     // 이벤트가 발생할때마다 실행되는 부분
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
+        AccessibilityNodeInfo nodeInfo = event.getSource();
+        final int eventType =  event.getEventType();
+        String eventText = null;
+
+        switch(eventType) {
+            case AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUSED:
+                eventText = "Focused: ";
+                break;
+            case AccessibilityEvent.TYPE_VIEW_CLICKED:
+                eventText = "Focused : ";
+                break;
+        }
+
+        eventText = eventText + event.getContentDescription();
+
+        tts.speak(eventText, TextToSpeech.QUEUE_FLUSH, null, null);
+
+        /*
         // 발생한 이벤트로부터 소스 get
         AccessibilityNodeInfo nodeInfo = event.getSource();
 
@@ -31,6 +59,7 @@ public class aAccessibilityService extends android.accessibilityservice.Accessib
         // Log.e(TAG, "Catch Event ContentDescription : " + event.getContentDescription());
         // Log.e(TAG, "Catch Event getSource : " + event.getSource());
         // Log.e(TAG, "=========================================================================");
+        */
     }
 
     // 접근성 권한을 가지고, 연결이 되면 호출되는 함수
