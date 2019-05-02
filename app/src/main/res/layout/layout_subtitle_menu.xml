@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/subtitle_menu"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="end">
+
+    <ImageButton
+        android:id="@+id/sub_ok"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:scaleType="centerInside"
+        android:background="@android:color/transparent"
+        app:srcCompat="@drawable/sub_ok" />
+
+    <ImageButton
+        android:id="@+id/sub_cancel"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:scaleType="centerInside"
+        android:layout_marginStart="10dp"
+        android:background="@android:color/transparent"
+        app:srcCompat="@drawable/sub_cancel" />
+
+</LinearLayout>

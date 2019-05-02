@@ -4,4 +4,5 @@
     <string name="drawer_close">drawer_close</string>
     <!-- Accessibility -->
     <string name="accessibility_description">제스처 기능을 사용하기 위해서는 접근성 권한을 필요로 합니다.</string>
+    <string name="title_activity_main2">Main2Activity</string>
 </resources>

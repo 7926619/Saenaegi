@@ -14,6 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
@@ -65,8 +66,8 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
         navigationView = (NavigationView) findViewById(R.id.navigationView);
         navigationView.setNavigationItemSelectedListener(this);
 
+        /* Tab */
         changeView(0);
-
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tablayout1);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -106,6 +107,14 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
         ListviewAdapter adapter = new ListviewAdapter(this, R.layout.listview_item, data);
         listView.setAdapter(adapter);
         setListViewHeightBasedOnChildren(listView);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(VideoCommentaryListActivity.this, WatchVideoActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     public void setListViewHeightBasedOnChildren(ListView listView) {
