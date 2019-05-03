@@ -4,12 +4,12 @@
     android:packageNames="com.saenaegi.lfree"
     android:accessibilityEventTypes="typeViewClicked|typeViewFocused|typeGestureDetectionStart|typeGestureDetectionEnd|typeViewTextChanged|typeViewTextSelectionChanged"
     android:accessibilityFeedbackType="feedbackSpoken"
-    android:accessibilityFlags="flagReportViewIds"
     android:notificationTimeout="100"
     android:description="@string/accessibility_description"
     android:canRetrieveWindowContent="true"
     android:canRequestTouchExplorationMode="true"
     android:canPerformGestures="true" />
+    <!--android:accessibilityFlags="flagReportViewIds" -->
     <!-- android:accessibilityFlags="flagRequestFingerprintGestures" -->
     <!-- android:canRequestFingerprintGestures="true" -->
 

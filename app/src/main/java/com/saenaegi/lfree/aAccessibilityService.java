@@ -1,10 +1,12 @@
 package com.saenaegi.lfree;
 
 import android.accessibilityservice.AccessibilityServiceInfo;
+import android.os.Build;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.speech.tts.TextToSpeech;
+import android.widget.Toast;
 //import android.speech.tts.Voice;
 import java.util.Locale;
 
@@ -12,9 +14,10 @@ public class aAccessibilityService extends android.accessibilityservice.Accessib
     private static final String TAG = "AccessibilityService";
     private TextToSpeech tts;              // TTS 변수 선언
 
+    /*
     @Override
     public void onCreate() {
-        getServiceInfo().flags = AccessibilityServiceInfo.FLAG_REQUEST_TOUCH_EXPLORATION_MODE;
+        // getServiceInfo().flags = AccessibilityServiceInfo.FLAG_REQUEST_TOUCH_EXPLORATION_MODE;
         tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
@@ -22,16 +25,20 @@ public class aAccessibilityService extends android.accessibilityservice.Accessib
             }
         });
     }
+    */
 
     // 이벤트가 발생할때마다 실행되는 부분
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
         // 발생한 이벤트로부터 Source를 get
-        AccessibilityNodeInfo nodeInfo = event.getSource();
+        AccessibilityNodeInfo source = event.getSource();
         // 실현 시간 상수로서 접근성 서비스에 대한 이벤트 타입 변수 선언 및 생성
         final int eventType =  event.getEventType();
         // 특정 이벤트에 대한 서술 변수
         String eventText = null;
+
+        if(source == null)
+            return;
 
         switch(eventType) {
             // 특정 컴포넌트에 대해 포커싱이 발생하면
@@ -40,14 +47,35 @@ public class aAccessibilityService extends android.accessibilityservice.Accessib
                 break;
             // 특정 컴포넌트에 대해 사용자의 직접적인 클릭이 발생하면
             case AccessibilityEvent.TYPE_VIEW_CLICKED:
-                eventText = "Focused : ";
+                eventText = "Clicked : ";
+                break;
+            case AccessibilityEvent.TYPE_VIEW_SELECTED:
+                eventText = "Selected : ";
                 break;
         }
-        // 이벤트의 대상이 된 컴포넌트의 ContentDescription 내용을 String에 저장
+        // 이벤트의 대상이 된 컴포넌트의 ContentDescription 내용을 String에 저장 및 출력
         eventText = eventText + event.getContentDescription();
+        Toast.makeText(getApplication(), eventText, Toast.LENGTH_SHORT).show();
 
         // TTS 기능으로 말하기
-        tts.speak(eventText, TextToSpeech.QUEUE_FLUSH, null, null);
+
+        // TextToSpeech은 버전에 따라 다르게 구성
+        if(eventType != AccessibilityEvent.TYPE_VIEW_SCROLLED) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                tts.speak(eventText, TextToSpeech.QUEUE_FLUSH, null, "TextToSpeech_ID");
+            } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                tts.speak(eventText, TextToSpeech.QUEUE_FLUSH, null);
+            }
+        }
+        else if(eventType == AccessibilityEvent.TYPE_VIEW_SCROLLED) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                tts.speak("스크롤 중", TextToSpeech.QUEUE_FLUSH, null, "TextToSpeech_ID");
+            } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                tts.speak("스크롤 중", TextToSpeech.QUEUE_FLUSH, null);
+            }
+        }
+
+        //tts.speak(eventText, TextToSpeech.QUEUE_FLUSH, null, null);
 
         /*
         // 발생한 이벤트로부터 소스 get
@@ -59,18 +87,32 @@ public class aAccessibilityService extends android.accessibilityservice.Accessib
         // 다시 사용할 수 있도록 해당 인스턴스를 반환
         nodeInfo.recycle();
 
-        // Log.e(TAG, "Catch Event : " + event.toString());
-        // Log.e(TAG, "Catch Event Package Name : " + event.getPackageName());
-        // Log.e(TAG, "Catch Event TEXT : " + event.getText());
-        // Log.e(TAG, "Catch Event ContentDescription : " + event.getContentDescription());
-        // Log.e(TAG, "Catch Event getSource : " + event.getSource());
-        // Log.e(TAG, "=========================================================================");
+        Log.e(TAG, "Catch Event : " + event.toString());
+        Log.e(TAG, "Catch Event Package Name : " + event.getPackageName());
+        Log.e(TAG, "Catch Event TEXT : " + event.getText());
+        Log.e(TAG, "Catch Event ContentDescription : " + event.getContentDescription());
+        Log.e(TAG, "Catch Event getSource : " + event.getSource());
+        Log.e(TAG, "=========================================================================");
         */
     }
 
     // 접근성 권한을 가지고, 연결이 되면 호출되는 함수
     @Override
     public void onServiceConnected() {
+        //Toast.makeText(getApplication(), "Accessibility Service : Connected", Toast.LENGTH_SHORT).show();
+        tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS) {
+                    int result = tts.setLanguage(Locale.KOREAN);
+                    if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                        Toast.makeText(getApplication(), "TTS : Korean Language Not Supported!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else
+                    Toast.makeText(getApplication(), "TTS : TTS's Initialization is Failed!", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         AccessibilityServiceInfo info = new AccessibilityServiceInfo();
 
@@ -89,15 +131,19 @@ public class aAccessibilityService extends android.accessibilityservice.Accessib
 
         info.flags = AccessibilityServiceInfo.FLAG_REQUEST_TOUCH_EXPLORATION_MODE;
         //info.flags = AccessibilityServiceInfo.FLAG_REQUEST_FINGERPRINT_GESTURES;
-        info.notificationTimeout = 100; // millisecond
+        info.notificationTimeout = 10; // millisecond
 
         this.setServiceInfo(info);
     }
 
     @Override
     public void onInterrupt() {
-        // TODO Auto-generated method stub
-        Log.e("TEST", "OnInterrupt");
+        //Log.e("TEST", "OnInterrupt");
+        // 특정 컴포넌트에 대한 tts 기능 사용 후에는 반드시 shutdown을 시켜 리소스 낭비를 피하도록 한다.
+        if (tts != null) {
+            tts.stop();
+            tts.shutdown();
+        }
     }
 
     public void onUnbind() {

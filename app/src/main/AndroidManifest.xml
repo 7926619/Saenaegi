@@ -14,6 +14,19 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+
+        <service
+            android:name=".aAccessibilityService"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/accessibility_service_config" />
+        </service>
+
         <activity android:name=".MakeVideoActivity">
         </activity>
         <activity android:name=".WatchVideoActivity">
@@ -27,18 +40,6 @@
         <meta-data
             android:name="com.google.android.actions"
             android:resource="@xml/accessibility_service_config" />
-
-        <service
-            android:name=".aAccessibilityService"
-            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
-            <intent-filter>
-                <action android:name="android.accessibilityservice.AccessibilityService" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.accessibilityservice"
-                android:resource="@xml/accessibility_service_config" />
-        </service>
 
         <activity android:name=".aOpenSourceActivity" />
         <activity android:name=".aIntroductionActivity" />

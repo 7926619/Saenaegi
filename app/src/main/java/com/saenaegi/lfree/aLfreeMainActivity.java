@@ -10,11 +10,12 @@ import android.content.Intent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.provider.Settings;
+import android.widget.Toast;
 
 import java.util.List;
 
 public class aLfreeMainActivity extends AppCompatActivity {
-
+    List<AccessibilityServiceInfo> list;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,13 +32,19 @@ public class aLfreeMainActivity extends AppCompatActivity {
     // 있으면 true, 없으면 false
     public boolean checkAccessibilityPermissions() {
         AccessibilityManager accessibilityManager = (AccessibilityManager) getSystemService(Context.ACCESSIBILITY_SERVICE);
+        if(accessibilityManager == null) {
+            Toast.makeText(getApplicationContext(), "Accessibility Service Manager is NULL!", Toast.LENGTH_LONG).show();
+            return false;
+        }
 
         // getEnabledAccessibilityServiceList는 현재 접근성 권한을 가진 리스트를 가져오게 된다
-        List<AccessibilityServiceInfo> list = accessibilityManager.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.DEFAULT);
+        list = accessibilityManager.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_ALL_MASK);
 
-        for (int i = 0; i < list.size(); i++) {
+        if(list.size() == 0)
+            Toast.makeText(getApplicationContext(), "Accessibility Service List is NULL!", Toast.LENGTH_LONG).show();
+
+        for (int i = 0, count = list.size() ; i < count ; ++i) {
             AccessibilityServiceInfo info = list.get(i);
-
             // 접근성 권한을 가진 앱의 패키지 네임과 패키지 네임이 같으면 현재앱이 접근성 권한을 가지고 있다고 판단함
             if (info.getResolveInfo().serviceInfo.packageName.equals(getApplication().getPackageName())) {
                 return true;
@@ -54,9 +61,27 @@ public class aLfreeMainActivity extends AppCompatActivity {
         gsDialog.setPositiveButton("동의", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 // 설정화면으로 보내는 부분
-                startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));
-                return;
+                Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+                startActivityForResult(intent, 0);
+                //return;
             }
         }).create().show();
+    }
+
+    // 접근성 서비스 on으로 설정 후, 다시 앱으로 돌아왔을 때 동작처리
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch(requestCode) {
+            case 0:
+                if(list.contains(getApplication().getPackageName()))
+                    Toast.makeText(getApplicationContext(), "Accessibility Service : Connected", Toast.LENGTH_SHORT).show();
+                else {
+                    Toast.makeText(getApplicationContext(), "Accessibility Service : Not Connected", Toast.LENGTH_SHORT).show();
+                    // 임시 주석
+                    //setAccessibilityPermissions();
+                }
+                break;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }
