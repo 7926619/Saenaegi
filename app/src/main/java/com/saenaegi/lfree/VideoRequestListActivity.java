@@ -3,7 +3,10 @@ package com.saenaegi.lfree;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import java.util.List;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -25,18 +28,36 @@ import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.saenaegi.lfree.ListviewController.ListviewAdapter;
 import com.saenaegi.lfree.ListviewController.ListviewItem;
-
 import java.util.ArrayList;
+import Data.Request;
 
+//Video 요청 화면
 public class VideoRequestListActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    private FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();;
+    private DatabaseReference databaseReference=firebaseDatabase.getReference().child( "LFREE" ).child( "REQUEST" );;
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
 
+    private ArrayList<ListviewItem> data = new ArrayList<>();
+    private ArrayList<Request> requests=new ArrayList<>();
+    private ListView listView;
+    private ListviewAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         this.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_video_request_list);
@@ -79,13 +100,30 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
         });
 
         /* list view */
-        ListView listView = (ListView) findViewById(R.id.listview);
-        ArrayList<ListviewItem> data = new ArrayList<>();
-        ListviewItem test = new ListviewItem(R.drawable.icon,"test", "test입니다.");
-        data.add(test);
-        ListviewAdapter adapter = new ListviewAdapter(this, R.layout.listview_item, data);
+        listView = (ListView) findViewById(R.id.listview);
+        ListviewItem listviewItem=new ListviewItem( R.drawable.icon,"test", "test 입니다");
+        //data.add( listviewItem );
+        adapter = new ListviewAdapter(this, R.layout.listview_item, data);
         listView.setAdapter(adapter);
         setListViewHeightBasedOnChildren(listView);
+        databaseReference.addValueEventListener( new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot snapshot:dataSnapshot.getChildren()){
+                    Request request=snapshot.getValue(Request.class);
+                    requests.add( request );
+                    ListviewItem temp=new ListviewItem( R.drawable.icon,request.getLink(), request.seeType());
+                    data.add(temp);
+                }
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        } );
+
     }
 
     @SuppressLint("RestrictedApi")
@@ -100,18 +138,24 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
         builder.setPositiveButton("확인",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(getApplicationContext(),edittext.getText().toString() ,Toast.LENGTH_LONG).show();
+                        setRequestQuery("user_id","true",edittext.getText().toString());
+                        //Toast.makeText(getApplicationContext(),edittext.getText().toString() ,Toast.LENGTH_LONG).show();
                     }
                 });
+
         builder.setNegativeButton("취소",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-
                     }
                 });
         builder.show();
     }
 
+    public boolean setRequestQuery(String idgoogle, String type, String link) {
+        Request request=new Request(idgoogle,type,link);
+        databaseReference.push().setValue(request);
+        return true;
+    }
 
     public void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();

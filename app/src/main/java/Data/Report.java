@@ -8,7 +8,7 @@ public class Report {
     private int subtitle;
 
     public Report(){
-        this("no","exapmple","exapmple","exapmple",-1);
+
     }
     public Report(String id, String idgoogle, String idreported, String matter, int subtitle){
         this.id=id;

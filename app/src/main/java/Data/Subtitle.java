@@ -4,7 +4,6 @@ import java.util.TimerTask;
 
 public class Subtitle {
 
-    private String idsubtitle;
     private String directory;
     private String idgoogle;
     private String idvideo;
@@ -16,11 +15,10 @@ public class Subtitle {
     private boolean type;
 
     public Subtitle(){
-        this("-1", "direcctory", "example","example","example",0,"00:00","00:00", 0, true);
+
     }
 
-    public Subtitle(String idsubtitle, String directory, String idgoogle, String idvideo, String name, int recommend, String sectionF, String sectionS, int sectionNum, boolean type){
-        this.idsubtitle=idsubtitle;
+    public Subtitle(String directory, String idgoogle, String idvideo, String name, int recommend, String sectionF, String sectionS, int sectionNum, boolean type){
         this.idgoogle=idgoogle;
         this.directory=directory;
         this.idvideo=idvideo;
@@ -31,9 +29,6 @@ public class Subtitle {
         this.sectionNum=sectionNum;
         this.type=type;
 
-    }
-    public String getIdsubtitle() {
-        return idsubtitle;
     }
 
     public String getDirectory() {

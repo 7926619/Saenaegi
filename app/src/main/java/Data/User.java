@@ -6,7 +6,7 @@ public class User{
     private boolean type;
 
     public User(){
-        this("example","example",true);
+
     }
 
     public User(String idgoogle, String username, boolean type){

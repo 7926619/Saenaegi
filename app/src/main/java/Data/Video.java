@@ -1,7 +1,6 @@
 package Data;
 
 public class Video {
-    private String id;
     private String link;
     private boolean lookstate;
     private boolean listenstate;
@@ -11,17 +10,12 @@ public class Video {
     public Video(){
 
     }
-    public  Video(String id, String link, boolean lookstate, boolean listenstate, int sectionCount,int view){
-        this.id=id;
+    public  Video(String link, boolean lookstate, boolean listenstate, int sectionCount,int view){
         this.link=link;
         this.lookstate=lookstate;
         this.listenstate=listenstate;
         this.sectionCount=sectionCount;
         this.view=view;
-    }
-
-    public String getId() {
-        return id;
     }
 
     public String getLink() {
