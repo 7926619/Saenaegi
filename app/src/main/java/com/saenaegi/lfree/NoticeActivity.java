@@ -14,8 +14,8 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ScrollView;
 
-import com.saenaegi.lfree.RecyclevieController.Data;
-import com.saenaegi.lfree.RecyclevieController.RecyclerAdapter;
+import com.saenaegi.lfree.RecycleviewController.Data;
+import com.saenaegi.lfree.RecycleviewController.RecyclerAdapter;
 
 import java.util.Arrays;
 import java.util.List;
