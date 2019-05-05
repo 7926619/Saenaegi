@@ -42,6 +42,9 @@
                 android:textSize="20sp"
                 android:layout_marginBottom="10dp"
                 android:textColor="#363636"
+                android:contentDescription="이용 방법"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:text="이용 방법" />
 
             <TextView
@@ -51,6 +54,9 @@
                 android:textSize="20sp"
                 android:layout_marginBottom="10dp"
                 android:textColor="#363636"
+                android:contentDescription="영상 시청하기"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:text="영상 시청하기" />
 
             <TextView
@@ -60,6 +66,9 @@
                 android:textSize="20sp"
                 android:layout_marginBottom="10dp"
                 android:textColor="#363636"
+                android:contentDescription="영상 요청하기"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:text="영상 요청하기" />
 
             <TextView
@@ -69,6 +78,9 @@
                 android:textSize="20sp"
                 android:layout_marginBottom="10dp"
                 android:textColor="#363636"
+                android:contentDescription="좋아요 표시한 동영상"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:text="좋아요 표시한 동영상" />
 
             <TextView
@@ -78,6 +90,9 @@
                 android:textSize="20sp"
                 android:layout_marginBottom="10dp"
                 android:textColor="#363636"
+                android:contentDescription="공지사항"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:text="공지사항" />
 
             <TextView
@@ -87,6 +102,9 @@
                 android:textSize="20sp"
                 android:layout_marginBottom="10dp"
                 android:textColor="#363636"
+                android:contentDescription="설정"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:text="설정" />
 
             <TextView
@@ -96,6 +114,9 @@
                 android:textSize="20sp"
                 android:layout_marginBottom="10dp"
                 android:textColor="#363636"
+                android:contentDescription="종료"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:text="종료" />
 
         </LinearLayout>

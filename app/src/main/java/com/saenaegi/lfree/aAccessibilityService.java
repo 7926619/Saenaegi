@@ -37,8 +37,10 @@ public class aAccessibilityService extends android.accessibilityservice.Accessib
         // 특정 이벤트에 대한 서술 변수
         String eventText = null;
 
-        if(source == null)
+        if(source == null) {
+            Toast.makeText(getApplicationContext(), "Accessibility Service Source is NULL!", Toast.LENGTH_LONG).show();
             return;
+        }
 
         switch(eventType) {
             // 특정 컴포넌트에 대해 포커싱이 발생하면

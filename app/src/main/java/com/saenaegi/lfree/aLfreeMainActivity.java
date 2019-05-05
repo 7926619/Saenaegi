@@ -69,6 +69,7 @@ public class aLfreeMainActivity extends AppCompatActivity {
     }
 
     // 접근성 서비스 on으로 설정 후, 다시 앱으로 돌아왔을 때 동작처리
+    // 물론 접근성 서비스를 on하지 않고 그대로 다시 앱으로 돌아왔을 때는 다시 접근성 서비스 설정 화면으로 이동
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch(requestCode) {
@@ -77,8 +78,7 @@ public class aLfreeMainActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Accessibility Service : Connected", Toast.LENGTH_SHORT).show();
                 else {
                     Toast.makeText(getApplicationContext(), "Accessibility Service : Not Connected", Toast.LENGTH_SHORT).show();
-                    // 임시 주석
-                    //setAccessibilityPermissions();
+                    setAccessibilityPermissions();
                 }
                 break;
         }

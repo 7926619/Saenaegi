@@ -26,6 +26,9 @@
                 android:textSize="25sp"
                 android:textColor="#363636"
                 android:textStyle="bold"
+                android:contentDescription="앱 소개"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:text="앱 소개" />
 
             <View
@@ -52,6 +55,9 @@
                 android:textSize="20sp"
                 android:layout_marginBottom="10dp"
                 android:textColor="#363636"
+                android:contentDescription="흠"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:text="흠" />
 
         </LinearLayout>

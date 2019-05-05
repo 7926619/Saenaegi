@@ -5,4 +5,8 @@
     <!-- Accessibility -->
     <string name="accessibility_description">제스처 기능을 사용하기 위해서는 접근성 권한을 필요로 합니다.</string>
     <string name="title_activity_main2">Main2Activity</string>
+    <string name="how_to_use">저시력자 및 중증 시각장애인을 위해 구성된 기능입니다. 하단에 절반정도 위치해있는 제스처 영역에서
+    오른쪽에서 왼쪽으로 스와이프를 하는 경우 현재 버튼에서 다음 버튼을 가리키며, 왼쪽에서 오른쪽으로 스와이프를 하는 경우 현재 버튼에서
+    이전 버튼을 가리키게 됩니다. 특정 버튼의 액션을 실행하고자 하는 경우, 탭을 연속으로 두번 수행하면 됩니다. 그 밖에 자세한 이용방법은
+    공지사항을 참고하시길 바랍니다.</string>
 </resources>

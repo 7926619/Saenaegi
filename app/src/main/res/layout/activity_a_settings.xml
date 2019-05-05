@@ -26,6 +26,9 @@
                 android:textSize="25sp"
                 android:textColor="#363636"
                 android:textStyle="bold"
+                android:contentDescription="설정"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:text="설정" />
 
             <View
@@ -52,6 +55,9 @@
                 android:textSize="20sp"
                 android:layout_marginBottom="10dp"
                 android:textColor="#363636"
+                android:contentDescription="Push 알림 설정"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:text="Push 알림 설정" />
 
             <TextView
@@ -61,6 +67,9 @@
                 android:textSize="20sp"
                 android:layout_marginBottom="10dp"
                 android:textColor="#363636"
+                android:contentDescription="앱 소개"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:text="앱 소개" />
 
             <TextView
@@ -70,6 +79,9 @@
                 android:textSize="20sp"
                 android:layout_marginBottom="10dp"
                 android:textColor="#363636"
+                android:contentDescription="버전 정보"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:text="버전 정보" />
 
             <TextView
@@ -79,6 +91,9 @@
                 android:textSize="20sp"
                 android:layout_marginBottom="10dp"
                 android:textColor="#363636"
+                android:contentDescription="오픈소스 라이선스"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:text="오픈소스 라이선스" />
 
             <TextView
@@ -88,6 +103,9 @@
                 android:textSize="20sp"
                 android:layout_marginBottom="10dp"
                 android:textColor="#363636"
+                android:contentDescription="뒤로가기"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:text="뒤로가기" />
 
         </LinearLayout>
