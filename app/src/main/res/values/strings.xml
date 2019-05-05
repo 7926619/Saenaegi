@@ -3,7 +3,7 @@
     <string name="drawer_open">drawer_open</string>
     <string name="drawer_close">drawer_close</string>
     <!-- Accessibility -->
-    <string name="accessibility_description">제스처 기능을 사용하기 위해서는 접근성 권한을 필요로 합니다.</string>
+    <string name="accessibility_description">제스처 기능을 사용하기 위해서는 안드로이드 접근성 권한을 필요로 합니다.</string>
     <string name="title_activity_main2">Main2Activity</string>
     <string name="how_to_use">저시력자 및 중증 시각장애인을 위해 구성된 기능입니다. 하단에 절반정도 위치해있는 제스처 영역에서
     오른쪽에서 왼쪽으로 스와이프를 하는 경우 현재 버튼에서 다음 버튼을 가리키며, 왼쪽에서 오른쪽으로 스와이프를 하는 경우 현재 버튼에서

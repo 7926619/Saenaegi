@@ -78,7 +78,8 @@ public class aLfreeMainActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Accessibility Service : Connected", Toast.LENGTH_SHORT).show();
                 else {
                     Toast.makeText(getApplicationContext(), "Accessibility Service : Not Connected", Toast.LENGTH_SHORT).show();
-                    setAccessibilityPermissions();
+                    // 임시 주석
+                    //setAccessibilityPermissions();
                 }
                 break;
         }
