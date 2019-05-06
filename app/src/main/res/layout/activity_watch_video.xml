@@ -70,6 +70,7 @@
 
                     <View
                         android:id="@+id/youtube_screen"
+                        class="com.google.android.youtube.player.YouTubePlayerView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="#000"/>
@@ -131,7 +132,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:paddingTop="10dp"
-                            android:visibility="invisible"/>
+                            android:visibility="invisible" />
 
                     </LinearLayout>
 
@@ -154,14 +155,13 @@
 
     </FrameLayout>
 
-    <android.support.design.widget.NavigationView
+<!--    <android.support.design.widget.NavigationView
         android:id="@+id/navigationView"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="#fff"
         app:headerLayout="@layout/layout_nav_header"
-        app:menu="@menu/main_navigation_menu"
-        />
+        app:menu="@menu/main_navigation_menu" /> -->
 
 </android.support.v4.widget.DrawerLayout>
