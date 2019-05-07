@@ -30,6 +30,11 @@
         <activity android:name=".MakeVideoActivity">
         </activity>
         <activity android:name=".WatchVideoActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity android:name=".NoticeActivity" />
         <activity android:name=".SettingsActivity" />
@@ -44,13 +49,7 @@
         <activity android:name=".aOpenSourceActivity" />
         <activity android:name=".aIntroductionActivity" />
         <activity android:name=".aSelectPartActivity" />
-        <activity android:name=".aWatchVideoActivity" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".aWatchVideoActivity" />
         <activity android:name=".aSetPushActivity" />
         <activity android:name=".aSettingsActivity" />
         <activity android:name=".aNoticeActivity" />
