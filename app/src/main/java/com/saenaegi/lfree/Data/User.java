@@ -1,4 +1,4 @@
-package Data;
+package com.saenaegi.lfree.Data;
 
 public class User{
     private String idgoogle;

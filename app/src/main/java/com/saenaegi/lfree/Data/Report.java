@@ -1,4 +1,4 @@
-package Data;
+package com.saenaegi.lfree.Data;
 
 public class Report {
     private String id;

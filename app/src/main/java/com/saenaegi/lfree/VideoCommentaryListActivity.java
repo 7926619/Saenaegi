@@ -1,6 +1,7 @@
 package com.saenaegi.lfree;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
@@ -10,7 +11,6 @@ import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,17 +20,30 @@ import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ScrollView;
-import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.saenaegi.lfree.ListviewController.ListviewAdapter;
 import com.saenaegi.lfree.ListviewController.ListviewItem;
 
 import java.util.ArrayList;
 
+import com.saenaegi.lfree.Data.Video;
+
 public class VideoCommentaryListActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
+    private FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
+    private DatabaseReference databaseReference=firebaseDatabase.getReference().child( "LFREE" ).child( "VIDEO" );
+
+    private ListviewAdapter adapter;
+    private ListView listView;
+    private ArrayList<Video> videos=new ArrayList<>();
+    private ArrayList<ListviewItem> data = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,24 +103,69 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
     }
 
     private void changeView(int index) {
-        ListView listView = (ListView) findViewById(R.id.listview);
-        ArrayList<ListviewItem> data = new ArrayList<>();
+        listView = (ListView) findViewById(R.id.listview);
+        adapter = new ListviewAdapter(this, R.layout.listview_item, data);
+        listView.setAdapter(adapter);
 
         switch (index) {
             case 0 :
-                ListviewItem test = new ListviewItem(R.drawable.icon,"test", "test입니다.");
-                data.add(test);
-                ListviewItem test1 = new ListviewItem(R.drawable.icon,"test1", "test입니다.");
-                data.add(test1);
+                databaseReference.addValueEventListener( new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        data.clear();
+                        videos.clear();
+                        for(DataSnapshot snapshot:dataSnapshot.getChildren()){
+                            Video video=snapshot.getValue(Video.class);
+                            videos.add( video );
+                            if (video.isLookstate() && video.isListenstate()) {
+                                ListviewItem temp = new ListviewItem( R.drawable.icon, video.getLink(), String.valueOf( video.getView() ) );
+                                data.add( temp );
+                            }
+                        }
+                        adapter.notifyDataSetChanged();
+                        setListViewHeightBasedOnChildren(listView);
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                    }
+                } );
                 break;
+
             case 1 :
+                data.clear();
+                StringBuilder stringBuilder;
+                for(Video video:videos){
+                    if(!video.isListenstate()&&!video.isLookstate()){
+                        stringBuilder=new StringBuilder();
+                        stringBuilder.append( "조회수 : " );
+                        stringBuilder.append( video.getView() );
+                        stringBuilder.append(" / ");
+                        stringBuilder.append( video.noTrueAllState() );
+                        ListviewItem temp = new ListviewItem(R.drawable.icon,video.getLink(),stringBuilder.toString());
+                        data.add( temp );
+                    }
+                    else if(video.isListenstate()==false){
+                        stringBuilder=new StringBuilder();
+                        stringBuilder.append( "조회수 : " );
+                        stringBuilder.append( video.getView() );
+                        stringBuilder.append(" / ");
+                        stringBuilder.append( video.noTrueListenstate() );
+                        ListviewItem temp = new ListviewItem(R.drawable.icon,video.getLink(),stringBuilder.toString());
+                        data.add( temp );
+                    }
+                    else if(video.isLookstate()==false){
+                        stringBuilder=new StringBuilder();
+                        stringBuilder.append( "조회수 : " );
+                        stringBuilder.append( video.getView() );
+                        stringBuilder.append(" / ");
+                        stringBuilder.append( video.noTrueLookstate() );
+                        ListviewItem temp = new ListviewItem(R.drawable.icon,video.getLink(),stringBuilder.toString());
+                        data.add( temp );
+                    }
+                }
+                setListViewHeightBasedOnChildren(listView);
                 break;
         }
-
-        ListviewAdapter adapter = new ListviewAdapter(this, R.layout.listview_item, data);
-        listView.setAdapter(adapter);
-        setListViewHeightBasedOnChildren(listView);
-
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

@@ -1,14 +1,14 @@
-package Data;
+package com.saenaegi.lfree.Data;
 
 public class Request {
     private String idgoogle;
-    private String type;
+    private boolean type;
     private String link;
 
     public Request(){
 
     }
-    public Request(String idgoogle, String type, String link){
+    public Request(String idgoogle, boolean type, String link){
         this.idgoogle=idgoogle;
         this.type=type;
         this.link=link;
@@ -22,7 +22,7 @@ public class Request {
         this.link = link;
     }
 
-    public void setType(String type) {
+    public void setType(boolean type) {
         this.type = type;
     }
 
@@ -31,14 +31,14 @@ public class Request {
     }
 
     public String seeType(){
-        if(type=="true"){
+        if(type){
             return "청각 자료 요청";
         }
         else{
             return "시각 자료 요청";
         }
     }
-    public String getType() {
+    public boolean getType() {
         return type;
     }
 
