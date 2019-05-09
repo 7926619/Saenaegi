@@ -4,10 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
-import java.util.List;
-import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
@@ -26,11 +23,7 @@ import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ScrollView;
-import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -39,13 +32,19 @@ import com.google.firebase.database.ValueEventListener;
 import com.saenaegi.lfree.ListviewController.ListviewAdapter;
 import com.saenaegi.lfree.ListviewController.ListviewItem;
 import java.util.ArrayList;
-import Data.Request;
+import com.saenaegi.lfree.Data.Request;
 
-//Video 요청 화면
+//Video 요청 화면 - DB 연결 완료
+//1. 링크에 따른 썸네일 보여주기
+//2. Data를 생성순으로 내림 차순으로 정렬<후에>
+//3. 사용자 세션을 이용하여 idgoogle과 see정보 알아오기 -> 마지막
+//4. FIREBASE 사용자 인증으로 데이터 접근하게 하기 -> 가장 마지막
+//5. 링크를 잘못 입력하거나 없는 링크일 경우 사용자에게 에러 메시지 보내기. -> 가장 마지막
+
 public class VideoRequestListActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();;
-    private DatabaseReference databaseReference=firebaseDatabase.getReference().child( "LFREE" ).child( "REQUEST" );;
+    private DatabaseReference databaseReference=firebaseDatabase.getReference().child( "LFREE" ).child( "REQUEST" );
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
@@ -101,14 +100,14 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
 
         /* list view */
         listView = (ListView) findViewById(R.id.listview);
-        ListviewItem listviewItem=new ListviewItem( R.drawable.icon,"test", "test 입니다");
-        //data.add( listviewItem );
         adapter = new ListviewAdapter(this, R.layout.listview_item, data);
         listView.setAdapter(adapter);
         setListViewHeightBasedOnChildren(listView);
         databaseReference.addValueEventListener( new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                data.clear();
+                requests.clear();
                 for(DataSnapshot snapshot:dataSnapshot.getChildren()){
                     Request request=snapshot.getValue(Request.class);
                     requests.add( request );
@@ -116,8 +115,8 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
                     data.add(temp);
                 }
                 adapter.notifyDataSetChanged();
+                setListViewHeightBasedOnChildren(listView);
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
@@ -138,7 +137,7 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
         builder.setPositiveButton("확인",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        setRequestQuery("user_id","true",edittext.getText().toString());
+                        setRequestQuery("user_id",true ,edittext.getText().toString());
                         //Toast.makeText(getApplicationContext(),edittext.getText().toString() ,Toast.LENGTH_LONG).show();
                     }
                 });
@@ -151,7 +150,7 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
         builder.show();
     }
 
-    public boolean setRequestQuery(String idgoogle, String type, String link) {
+    public boolean setRequestQuery(String idgoogle, boolean type, String link) {
         Request request=new Request(idgoogle,type,link);
         databaseReference.push().setValue(request);
         return true;
