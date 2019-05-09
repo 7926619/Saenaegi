@@ -3,8 +3,7 @@ package com.saenaegi.lfree.RecycleviewController;
 public class Data {
 
     private String title;
-    private String sub;
-    private String content;
+    private int resId;
 
     public String getTitle() {
         return title;
@@ -14,19 +13,11 @@ public class Data {
         this.title = title;
     }
 
-    public String getSub() {
-        return sub;
+    public int getResId() {
+        return resId;
     }
 
-    public void setSub(String sub) {
-        this.sub = sub;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
+    public void setResId(int resId) {
+        this.resId = resId;
     }
 }
