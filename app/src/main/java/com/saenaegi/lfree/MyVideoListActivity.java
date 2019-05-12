@@ -27,7 +27,12 @@ import com.google.firebase.database.ValueEventListener;
 import com.saenaegi.lfree.ListviewController.ListviewAdapter;
 import com.saenaegi.lfree.ListviewController.ListviewItem;
 
+import java.security.Key;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 import com.saenaegi.lfree.Data.Subtitle;
 import com.saenaegi.lfree.Data.Video;
@@ -43,9 +48,9 @@ public class MyVideoListActivity extends AppCompatActivity implements Navigation
 
     private ListView listView;
     private ListviewAdapter adapter;
-    private ArrayList<Video> videos=new ArrayList<>(  );
     private ArrayList<ListviewItem> data = new ArrayList<>();
-    private ArrayList<Subtitle> subtitles =new ArrayList<>( );
+    private ArrayList<Video> videos =new ArrayList<>( );
+    private HashMap<String, Video> videosKey=new HashMap<>( );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,15 +93,21 @@ public class MyVideoListActivity extends AppCompatActivity implements Navigation
         listView.setAdapter(adapter);
 
 
-        SdatabaseReference.addValueEventListener( new ValueEventListener() {
+        SdatabaseReference.addListenerForSingleValueEvent( new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                subtitles.clear();
+                data.clear();
                 for(DataSnapshot snapshot:dataSnapshot.getChildren()){
                     Subtitle subtitle=snapshot.getValue(Subtitle.class);
-                    if(subtitle.getIdgoogle().equals( "userid" ))
-                        subtitles.add( subtitle );
+                    if(subtitle.getIdgoogle().equals( "userid" )){
+                        Video video=videosKey.get( subtitle.getIdvideo());
+                        ListviewItem temp=new ListviewItem( R.drawable.icon,video.getLink(), String.valueOf( video.getView()));
+                        data.add( temp );
+                    }
                 }
+                adapter.notifyDataSetChanged();
+                setListViewHeightBasedOnChildren( listView );
+
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -104,23 +115,14 @@ public class MyVideoListActivity extends AppCompatActivity implements Navigation
             }
         } );
 
-        VdatabaseReference.addValueEventListener( new ValueEventListener() {
+        VdatabaseReference.addListenerForSingleValueEvent(  new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                data.clear();
-                videos.clear();
+                videosKey.clear();
                 for(DataSnapshot snapshot:dataSnapshot.getChildren()){
-                    for(Subtitle temp:subtitles){
-                        if(temp.getIdvideo().equals( snapshot.getKey())){
-                            Video video=snapshot.getValue(Video.class);
-                            videos.add(video);
-                            ListviewItem tmp = new ListviewItem(R.drawable.icon,video.getLink(), String.valueOf( video.getView()));
-                            data.add(tmp);
-                        }
-                    }
+                    Video video= snapshot.getValue(Video.class);
+                    videosKey.put( snapshot.getKey(),video );
                 }
-                adapter.notifyDataSetChanged();
-                setListViewHeightBasedOnChildren(listView);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {

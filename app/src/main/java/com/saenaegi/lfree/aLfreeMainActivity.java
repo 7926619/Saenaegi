@@ -1,5 +1,6 @@
 package com.saenaegi.lfree;
 
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -12,10 +13,23 @@ import android.content.DialogInterface;
 import android.provider.Settings;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.saenaegi.lfree.Data.Video;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class aLfreeMainActivity extends AppCompatActivity {
     List<AccessibilityServiceInfo> list;
+    private FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
+    private DatabaseReference databaseReference=firebaseDatabase.getReference().child( "LFREE" ).child( "VIDEO" );
+    private ArrayList<Video> pvideos=new ArrayList<>(  );
+    private ArrayList<Video> mvideos=new ArrayList<>(  );
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,5 +98,26 @@ public class aLfreeMainActivity extends AppCompatActivity {
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+    public void getDataQuery(){
+        databaseReference.addValueEventListener( new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot snapshot:dataSnapshot.getChildren()){
+                        Video video=snapshot.getValue(Video.class);
+                        if(video.isListenstate()&&video.isLookstate()) {
+                            pvideos.add(video);
+                        }
+                        else{
+                            mvideos.add(video);
+                        }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        } );
     }
 }

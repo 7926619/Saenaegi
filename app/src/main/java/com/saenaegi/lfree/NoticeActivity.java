@@ -21,8 +21,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.saenaegi.lfree.Data.Notice;
-import com.saenaegi.lfree.RecycleviewController.Data;
-import com.saenaegi.lfree.RecycleviewController.RecyclerAdapter;
+import com.saenaegi.lfree.RecycleviewController_n.Data;
+import com.saenaegi.lfree.RecycleviewController_n.RecyclerAdapter;
 
 import java.util.ArrayList;
 import java.util.Arrays;

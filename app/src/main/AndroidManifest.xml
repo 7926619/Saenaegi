@@ -34,13 +34,12 @@
         <activity android:name=".NoticeActivity" />
         <activity android:name=".SettingsActivity" />
         <activity android:name=".LikeVideoListActivity" />
-        <activity android:name=".MyVideoListActivity" />
+        <activity android:name=".MyVideoListActivity" >
+        </activity>
         <activity android:name=".VideoRequestListActivity" />
-
         <meta-data
             android:name="com.google.android.actions"
             android:resource="@xml/accessibility_service_config" />
-
         <activity android:name=".aOpenSourceActivity" />
         <activity android:name=".aIntroductionActivity" />
         <activity android:name=".aSelectPartActivity" />
