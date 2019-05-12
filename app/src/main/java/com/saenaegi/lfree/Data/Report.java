@@ -37,4 +37,24 @@ public class Report {
     public int getSubtitle(){
         return subtitle;
     }
+
+    public void setSubtitle(int subtitle) {
+        this.subtitle = subtitle;
+    }
+
+    public void setIdgoogle(String idgoogle) {
+        this.idgoogle = idgoogle;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setIdreported(String idreported) {
+        this.idreported = idreported;
+    }
+
+    public void setMatter(String matter) {
+        this.matter = matter;
+    }
 }

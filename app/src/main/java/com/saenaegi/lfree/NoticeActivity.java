@@ -1,6 +1,7 @@
 package com.saenaegi.lfree;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -14,9 +15,16 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ScrollView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.saenaegi.lfree.Data.Notice;
 import com.saenaegi.lfree.RecycleviewController.Data;
 import com.saenaegi.lfree.RecycleviewController.RecyclerAdapter;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -25,6 +33,13 @@ public class NoticeActivity extends AppCompatActivity implements NavigationView.
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private RecyclerAdapter adapter;
+    private RecyclerView recyclerView;
+
+    private List<String> listTitle;
+    private List<String> listContent;
+    private ArrayList<Notice> notices=new ArrayList<>(  );
+    private FirebaseDatabase firebase=FirebaseDatabase.getInstance();
+    private DatabaseReference databaseReference=firebase.getReference().child( "LFREE" ).child( "NOTICE" );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,42 +76,40 @@ public class NoticeActivity extends AppCompatActivity implements NavigationView.
         navigationView.setNavigationItemSelectedListener(this);
 
         /* recycle view */
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        recyclerView = findViewById(R.id.recyclerView);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        adapter = new RecyclerAdapter();
-        recyclerView.setAdapter(adapter);
         getData();
     }
 
     private void getData() {
+
         // 임의의 데이터입니다.
-        List<String> listTitle = Arrays.asList("국화", "사막", "수국", "해파리", "코알라", "등대", "펭귄", "튤립");
-        List<String> listContent = Arrays.asList(
-                "이 꽃은 국화입니다.",
-                "여기는 사막입니다.",
-                "이 꽃은 수국입니다.",
-                "이 동물은 해파리입니다.",
-                "이 동물은 코알라입니다.",
-                "이것은 등대입니다.",
-                "이 동물은 펭귄입니다.",
-                "이 꽃은 튤립입니다."
-        );
-        for (int i = 0; i < listTitle.size(); i++) {
-            // 각 List의 값들을 data 객체에 set 해줍니다.
-            Data data = new Data();
-            data.setTitle(listTitle.get(i));
-            data.setSub(listContent.get(i));
-            data.setContent("누구냐 개잘만들었다");
+        databaseReference.addValueEventListener( new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                notices.clear();
+                adapter = new RecyclerAdapter();
+                recyclerView.setAdapter(adapter);
+                for(DataSnapshot snapshot:dataSnapshot.getChildren()){
+                    Notice notice=snapshot.getValue(Notice.class);
+                    notices.add(notice);
+                    Data data = new Data();
+                    data.setTitle(notice.getSubtitle());
+                    data.setSub(notice.getTime());
+                    data.setContent(notice.getText());
+                    adapter.addItem( data );
+                }
+                adapter.notifyDataSetChanged();
 
-            // 각 값이 들어간 data를 adapter에 추가합니다.
-            adapter.addItem(data);
-        }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        } );
 
-        // adapter의 값이 변경되었다는 것을 알려줍니다.
-        adapter.notifyDataSetChanged();
     }
 
     @Override

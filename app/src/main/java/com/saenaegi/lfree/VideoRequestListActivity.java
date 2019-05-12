@@ -137,7 +137,7 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
         builder.setPositiveButton("확인",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        setRequestQuery("user_id",true ,edittext.getText().toString());
+                        setRequestQuery("user_id",true ,edittext.getText().toString()); // 유저의 id와 type을 제시 -> session 유지 필요
                         //Toast.makeText(getApplicationContext(),edittext.getText().toString() ,Toast.LENGTH_LONG).show();
                     }
                 });

@@ -64,4 +64,41 @@ public class Subtitle {
     public boolean isType() {
         return type;
     }
+
+    public void setType(boolean type) {
+        this.type = type;
+    }
+
+    public void setIdgoogle(String idgoogle) {
+        this.idgoogle = idgoogle;
+    }
+
+    public void setDirectory(String directory) {
+        this.directory = directory;
+    }
+
+    public void setIdvideo(String idvideo) {
+        this.idvideo = idvideo;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setRecommend(int recommend) {
+        this.recommend = recommend;
+    }
+
+    public void setSectionF(String sectionF) {
+        this.sectionF = sectionF;
+    }
+
+    public void setSectionNum(int sectionNum) {
+        this.sectionNum = sectionNum;
+    }
+
+    public void setSectionS(String sectionS) {
+        this.sectionS = sectionS;
+    }
+
 }

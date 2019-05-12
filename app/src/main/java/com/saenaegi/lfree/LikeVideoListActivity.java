@@ -32,7 +32,6 @@ public class LikeVideoListActivity extends AppCompatActivity implements Navigati
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

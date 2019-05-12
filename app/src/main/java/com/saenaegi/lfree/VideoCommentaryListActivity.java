@@ -163,6 +163,7 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
                         data.add( temp );
                     }
                 }
+                adapter.notifyDataSetChanged();
                 setListViewHeightBasedOnChildren(listView);
                 break;
         }

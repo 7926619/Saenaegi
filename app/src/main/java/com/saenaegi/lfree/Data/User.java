@@ -4,7 +4,6 @@ public class User{
     private String idgoogle;
     private String username;
     private boolean type;
-
     public User(){
 
     }
@@ -21,8 +20,19 @@ public class User{
     public String getUsername(){
         return username;
     }
-
     public boolean isType(){
         return type;
+    }
+
+    public void setIdgoogle(String idgoogle) {
+        this.idgoogle = idgoogle;
+    }
+
+    public void setType(boolean type) {
+        this.type = type;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }
