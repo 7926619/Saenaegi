@@ -81,6 +81,8 @@ public class NoticeActivity extends AppCompatActivity implements NavigationView.
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
 
+        adapter = new RecyclerAdapter();
+        recyclerView.setAdapter(adapter);
         getData();
     }
 

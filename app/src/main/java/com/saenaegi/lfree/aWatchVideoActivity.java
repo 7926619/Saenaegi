@@ -13,10 +13,10 @@ import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerView;
 
 public class aWatchVideoActivity extends YouTubeBaseActivity {
-    YouTubePlayerView youtubeScreen;
-    TextView play, pause, next, pre;
-    YouTubePlayer.OnInitializedListener listener;
-    YouTubePlayer player;
+    private YouTubePlayerView youtubeScreen;
+    private TextView play, pause, next, pre;
+    private YouTubePlayer.OnInitializedListener listener;
+    private YouTubePlayer player;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,9 +105,6 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
                 player.seekRelativeMillis(10000);
             }
         });
-
-
-
 
         /* youtube_screen */
         Display display = getWindowManager().getDefaultDisplay();

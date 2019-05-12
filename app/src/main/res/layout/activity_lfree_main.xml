@@ -40,28 +40,48 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="완성 영상"
+                        android:textStyle="bold"
                         android:textColor="#363636"
                         android:textSize="20sp" />
 
-                    <android.support.v7.widget.RecyclerView
+                    <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="20dp" />
+                        android:layout_height="wrap_content">
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/complete_list"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="#fff"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="20dp"
+                            android:scrollbars="horizontal" />
+
+                    </RelativeLayout>
 
                     <TextView
                         android:id="@+id/textView8"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="제작중인 영상"
+                        android:textStyle="bold"
                         android:textColor="#363636"
                         android:textSize="20sp" />
 
-                    <android.support.v7.widget.RecyclerView
+                    <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="20dp" />
+                        android:layout_height="wrap_content">
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/making_list"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="#fff"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="30dp"
+                            android:scrollbars="horizontal"/>
+
+                    </RelativeLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"

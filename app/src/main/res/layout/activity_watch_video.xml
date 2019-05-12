@@ -68,12 +68,12 @@
                     android:layout_marginBottom="30dp"
                     android:orientation="vertical">
 
-                    <View
+                    <view
                         android:id="@+id/youtube_screen"
                         class="com.google.android.youtube.player.YouTubePlayerView"
+                        id="@+id/view4"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="#000"/>
+                        android:layout_height="wrap_content" />
 
                     <TextView
                         android:id="@+id/subtitle"
@@ -155,13 +155,13 @@
 
     </FrameLayout>
 
-<!--    <android.support.design.widget.NavigationView
+        <android.support.design.widget.NavigationView
         android:id="@+id/navigationView"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="#fff"
         app:headerLayout="@layout/layout_nav_header"
-        app:menu="@menu/main_navigation_menu" /> -->
+        app:menu="@menu/main_navigation_menu" />
 
 </android.support.v4.widget.DrawerLayout>
