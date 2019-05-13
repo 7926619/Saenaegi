@@ -42,8 +42,8 @@ public class aRequestVideoActivity extends AppCompatActivity {
             } );
     }
 
-    public boolean setRequestQuery(String idgoogle, boolean type, String link) {
-        Request request=new Request(idgoogle,type,link);
+    public boolean setRequestQuery(String idgoogle, boolean type, String link, String title) {
+        Request request=new Request(idgoogle,type,link,title);
         databaseReference.push().setValue(request);
         return true;
     }

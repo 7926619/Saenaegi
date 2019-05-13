@@ -2,6 +2,7 @@ package com.saenaegi.lfree.Data;
 
 public class Video {
     private String link;
+    private String title;
     private boolean lookstate;
     private boolean listenstate;
     private int sectionCount;
@@ -10,8 +11,9 @@ public class Video {
     public Video(){
 
     }
-    public  Video(String link, boolean lookstate, boolean listenstate, int sectionCount,int view){
+    public  Video(String link, String title, boolean lookstate, boolean listenstate, int sectionCount,int view){
         this.link=link;
+        this.title=title;
         this.lookstate=lookstate;
         this.listenstate=listenstate;
         this.sectionCount=sectionCount;
@@ -21,18 +23,27 @@ public class Video {
     public void setLink(String link){
         this.link=link;
     }
+
     public void setLookstate(boolean lookstate){
         this.lookstate=lookstate;
     }
+
     public void setListenstate(boolean listenstate){
         this.listenstate=listenstate;
     }
+
     public void setSectionCount(int sectionCount){
         this.sectionCount=sectionCount;
     }
+
+    public void setTitle(String title) {
+        this.title=title;
+    }
+
     public void setView(int view){
         this.view=view;
     }
+
     public String noTrueListenstate(){
         if(this.listenstate==false)
             return "청각 자료 제직중";
@@ -49,6 +60,7 @@ public class Video {
     public String noTrueAllState(){
         return "시각 청각 둘 다 제작중";
     }
+
     public String getLink() {
         return link;
     }
@@ -63,6 +75,10 @@ public class Video {
 
     public int getView() {
         return view;
+    }
+
+    public String getTitle() {
+        return title;
     }
 
     public int getSectionCount() {

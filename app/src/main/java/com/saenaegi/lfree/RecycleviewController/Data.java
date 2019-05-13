@@ -1,9 +1,11 @@
 package com.saenaegi.lfree.RecycleviewController;
 
+import android.graphics.Bitmap;
+
 public class Data {
 
     private String title;
-    private int resId;
+    private Bitmap bit;
 
     public String getTitle() {
         return title;
@@ -13,11 +15,11 @@ public class Data {
         this.title = title;
     }
 
-    public int getResId() {
-        return resId;
+    public Bitmap getBit() {
+        return bit;
     }
 
-    public void setResId(int resId) {
-        this.resId = resId;
+    public void setBit(Bitmap bit) {
+        this.bit = bit;
     }
 }

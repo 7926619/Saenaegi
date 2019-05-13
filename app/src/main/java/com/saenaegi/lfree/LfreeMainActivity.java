@@ -1,6 +1,7 @@
 package com.saenaegi.lfree;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -26,7 +27,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.saenaegi.lfree.Data.Video;
 import com.saenaegi.lfree.RecycleviewController.RecyclerAdapter;
 import com.saenaegi.lfree.RecycleviewController.Data;
+import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -46,6 +49,8 @@ public class LfreeMainActivity extends AppCompatActivity implements NavigationVi
     private ArrayList<Video> mvideos=new ArrayList<>(  );
     public FirebaseAuth firebaseAuth;
     TextView LoginUserProfile;
+    private Bitmap thumb;
+    private String url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,18 +148,31 @@ public class LfreeMainActivity extends AppCompatActivity implements NavigationVi
                 recyclerView2.setAdapter( adapter2 );
                 for(DataSnapshot snapshot:dataSnapshot.getChildren()){
                     Video video=snapshot.getValue(Video.class);
+                    /* 썸네일 주소 설정 */
+                    url = "https://img.youtube.com/vi/"+video.getLink()+"/maxresdefault.jpg";
+
+                    /* 썸네일 쓰레드 실행 */
+                    Runnable r = new BackgroundTask();
+                    Thread thread = new Thread(r);
+                    thread.start();
+                    try {
+                        thread.join();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
                     if(video.isListenstate()&&video.isLookstate()) {
                         pvideos.add(video);
                         Data data=new Data();
-                        data.setTitle( video.getLink() );
-                        data.setResId( R.drawable.icon );
+                        data.setTitle( video.getTitle() );
+                        data.setBit( thumb );
                         adapter1.addItem( data );
                     }
                     else{
                         mvideos.add(video);
                         Data data=new Data();
-                        data.setTitle( video.getLink() );
-                        data.setResId( R.drawable.icon );
+                        data.setTitle( video.getTitle() );
+                        data.setBit( thumb );
                         adapter2.addItem( data );
                     }
                 }
@@ -222,6 +240,18 @@ public class LfreeMainActivity extends AppCompatActivity implements NavigationVi
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+        }
+    }
+
+    /* 썸네일 추출 쓰레드 */
+    class BackgroundTask implements Runnable {
+        @Override
+        public void run() {
+            try {
+                thumb = Picasso.with(LfreeMainActivity.this).load(url).get();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

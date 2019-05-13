@@ -1,6 +1,7 @@
 package com.saenaegi.lfree.ListviewController;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,9 +39,9 @@ public class ListviewAdapter extends BaseAdapter {
         }
 
         ListviewItem listviewitem = data.get(position);
-        if(listviewitem.getIcon() != 0) {
+        if(listviewitem.getBit() != null) {
             ImageView icon = (ImageView) convertView.findViewById(R.id.list_image);
-            icon.setImageResource(listviewitem.getIcon());
+            icon.setImageBitmap(listviewitem.getBit());
         }
         TextView name = (TextView)convertView.findViewById(R.id.list_text);
         name.setText(listviewitem.getName());

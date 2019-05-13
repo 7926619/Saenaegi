@@ -57,7 +57,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemVi
         }
 
         void onBind(Data data) {
-            imageView.setImageResource(data.getResId());
+            imageView.setImageBitmap(data.getBit());
             textView1.setText(data.getTitle());
         }
     }

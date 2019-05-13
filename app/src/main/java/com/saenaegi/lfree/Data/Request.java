@@ -4,14 +4,15 @@ public class Request {
     private String idgoogle;
     private boolean type;
     private String link;
+    private String title;
 
-    public Request(){
+    public Request() { }
 
-    }
-    public Request(String idgoogle, boolean type, String link){
+    public Request(String idgoogle, boolean type, String link, String title){
         this.idgoogle=idgoogle;
         this.type=type;
         this.link=link;
+        this.title=title;
     }
 
     public void setIdgoogle(String idgoogle) {
@@ -44,5 +45,13 @@ public class Request {
 
     public String getLink() {
         return link;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

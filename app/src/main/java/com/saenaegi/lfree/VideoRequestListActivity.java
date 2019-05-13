@@ -3,6 +3,8 @@ package com.saenaegi.lfree;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,16 +26,35 @@ import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.saenaegi.lfree.Data.Video;
 import com.saenaegi.lfree.ListviewController.ListviewAdapter;
 import com.saenaegi.lfree.ListviewController.ListviewItem;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Pattern;
+
 import com.saenaegi.lfree.Data.Request;
+import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 //Video 요청 화면 - DB 연결 완료
 //1. 링크에 따른 썸네일 보여주기
@@ -43,16 +65,22 @@ import com.saenaegi.lfree.Data.Request;
 
 public class VideoRequestListActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    private FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();;
-    private DatabaseReference databaseReference=firebaseDatabase.getReference().child( "LFREE" ).child( "REQUEST" );
+    private FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
+    private DatabaseReference databaseReference=firebaseDatabase.getReference().child("LFREE").child( "REQUEST" );
+    private DatabaseReference databaseReference2=firebaseDatabase.getReference().child("LFREE").child("VIDEO");
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
 
     private ArrayList<ListviewItem> data = new ArrayList<>();
     private ArrayList<Request> requests=new ArrayList<>();
+    private ArrayList<Video> videos = new ArrayList<>();
     private ListView listView;
     private ListviewAdapter adapter;
+    private Bitmap thumb;
+    private String url;
+    private String videoID;
+    private int effective;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,12 +135,26 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 data.clear();
-                requests.clear();
+                videos.clear();
                 for(DataSnapshot snapshot:dataSnapshot.getChildren()){
-                    Request request=snapshot.getValue(Request.class);
+                    Request request = snapshot.getValue(Request.class);
                     requests.add( request );
-                    ListviewItem temp=new ListviewItem( R.drawable.icon,request.getLink(), request.seeType());
-                    data.add(temp);
+                    /* 썸네일 주소 설정 */
+                    url = "https://img.youtube.com/vi/"+request.getLink()+"/maxresdefault.jpg";
+
+                    /* 썸네일 쓰레드 실행 */
+                    Runnable r = new BackgroundTask();
+                    Thread thread = new Thread(r);
+                    thread.start();
+                    try {
+                        thread.join();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    /* 데이터 담기 */
+                    ListviewItem temp = new ListviewItem(thumb, request.getTitle(), request.seeType());
+                    data.add(0,temp);
                 }
                 adapter.notifyDataSetChanged();
                 setListViewHeightBasedOnChildren(listView);
@@ -137,8 +179,34 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
         builder.setPositiveButton("확인",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        setRequestQuery("user_id",true ,edittext.getText().toString()); // 유저의 id와 type을 제시 -> session 유지 필요
-                        //Toast.makeText(getApplicationContext(),edittext.getText().toString() ,Toast.LENGTH_LONG).show();
+                        String link = edittext.getText().toString();
+                        /* 링크 형식 필터링 */
+                        if (Pattern.matches("^(https://www.youtube.com/watch\\?v=)\\S+$", link)) {
+                            /* 유튜브 영상 ID 추출 */
+                            videoID = link.substring(link.indexOf("=")+1);
+                            if(videoID.indexOf("&")!=-1)
+                                videoID = videoID.substring(0,videoID.indexOf("&"));
+
+                            new Thread() {
+                                public void run() {
+                                    String title = Title();
+                                    if(effective==0) {
+                                        Looper.prepare();
+                                        Toast.makeText(getApplicationContext(), "유효한 영상주소가 아닙니다.", Toast.LENGTH_LONG).show();
+                                        Looper.loop();
+                                    }
+                                    else {
+                                        /* 영상 ID 저장 */
+                                        setRequestQuery("user_id", true, videoID, title);
+                                        setVideoQuery(videoID, title, false, false, 0, 0);
+                                    }
+                                }
+                            }.start();
+                        }
+                        else {
+                            Toast.makeText(getApplicationContext(), "올바른 주소형식이 아닙니다.", Toast.LENGTH_LONG).show();
+                            edittext.setText(null);
+                        }
                     }
                 });
 
@@ -150,9 +218,15 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
         builder.show();
     }
 
-    public boolean setRequestQuery(String idgoogle, boolean type, String link) {
-        Request request=new Request(idgoogle,type,link);
+    public boolean setRequestQuery(String idgoogle, boolean type, String link, String title) {
+        Request request=new Request(idgoogle,type,link,title);
         databaseReference.push().setValue(request);
+        return true;
+    }
+
+    public boolean setVideoQuery(String link, String title, boolean lookstate, boolean listenstate, int sectionCount,int view) {
+        Video video=new Video(link,title,lookstate,listenstate,sectionCount,view);
+        databaseReference2.push().setValue(video);
         return true;
     }
 
@@ -250,5 +324,53 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
         } else {
             super.onBackPressed();
         }
+    }
+
+    /* 썸네일 추출 쓰레드 */
+    class BackgroundTask implements Runnable {
+        @Override
+        public void run() {
+            try {
+                thumb = Picasso.with(VideoRequestListActivity.this).load(url).get();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /* 제목 파싱 쓰레드 */
+    private String Title() {
+        String result ="";
+        String title ="";
+        try {
+            URL aURL = new URL("https://www.googleapis.com/youtube/v3/videos?id="+videoID+"&key=AIzaSyCxaTSJkqWjCLbh4UzPXb1jOHrVX5-gmxs&part=snippet");
+            URLConnection con = aURL.openConnection();
+            InputStream is = con.getInputStream();
+            InputStreamReader isr = new InputStreamReader(is);
+            BufferedReader reader = new BufferedReader(isr);
+
+            while (true) {
+                String parsing = reader.readLine();
+                if (parsing == null) break;
+                result += parsing+"\n";
+            }
+
+            JSONObject obj = new JSONObject(result);
+
+            JSONObject item2 = (JSONObject) obj.get("pageInfo");
+            effective = ((Integer)item2.get("totalResults")).intValue();
+            JSONArray arr = (JSONArray) obj.get("items");
+            JSONObject item = (JSONObject) arr.get(0);
+            JSONObject snippet = (JSONObject) item.get("snippet");
+            title = (String) snippet.get("title");
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return title;
     }
 }

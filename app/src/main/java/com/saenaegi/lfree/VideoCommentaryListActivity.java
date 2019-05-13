@@ -1,6 +1,7 @@
 package com.saenaegi.lfree;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -29,9 +30,11 @@ import com.google.firebase.database.ValueEventListener;
 import com.saenaegi.lfree.ListviewController.ListviewAdapter;
 import com.saenaegi.lfree.ListviewController.ListviewItem;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import com.saenaegi.lfree.Data.Video;
+import com.squareup.picasso.Picasso;
 
 public class VideoCommentaryListActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -44,6 +47,8 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
     private ListView listView;
     private ArrayList<Video> videos=new ArrayList<>();
     private ArrayList<ListviewItem> data = new ArrayList<>();
+    private Bitmap thumb;
+    private String url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,9 +122,20 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
                         for(DataSnapshot snapshot:dataSnapshot.getChildren()){
                             Video video=snapshot.getValue(Video.class);
                             videos.add( video );
+                            url = "https://img.youtube.com/vi/"+video.getLink()+"/maxresdefault.jpg";
+
+                            Runnable r = new BackgroundTask();
+                            Thread thread = new Thread(r);
+                            thread.start();
+                            try {
+                                thread.join();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+
                             if (video.isLookstate() && video.isListenstate()) {
-                                ListviewItem temp = new ListviewItem( R.drawable.icon, video.getLink(), String.valueOf( video.getView() ) );
-                                data.add( temp );
+                                ListviewItem temp = new ListviewItem( thumb, video.getTitle(), String.valueOf( video.getView() ) );
+                                data.add(0,temp);
                             }
                         }
                         adapter.notifyDataSetChanged();
@@ -135,32 +151,30 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
                 data.clear();
                 StringBuilder stringBuilder;
                 for(Video video:videos){
-                    if(!video.isListenstate()&&!video.isLookstate()){
-                        stringBuilder=new StringBuilder();
-                        stringBuilder.append( "조회수 : " );
-                        stringBuilder.append( video.getView() );
+                    if(!(video.isLookstate() && video.isListenstate())) {
+                        url = "https://img.youtube.com/vi/"+video.getLink()+"/maxresdefault.jpg";
+
+                        Runnable r = new BackgroundTask();
+                        Thread thread = new Thread(r);
+                        thread.start();
+                        try {
+                            thread.join();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                        stringBuilder = new StringBuilder();
+                        stringBuilder.append("조회수 : ");
+                        stringBuilder.append(video.getView());
                         stringBuilder.append(" / ");
-                        stringBuilder.append( video.noTrueAllState() );
-                        ListviewItem temp = new ListviewItem(R.drawable.icon,video.getLink(),stringBuilder.toString());
-                        data.add( temp );
-                    }
-                    else if(video.isListenstate()==false){
-                        stringBuilder=new StringBuilder();
-                        stringBuilder.append( "조회수 : " );
-                        stringBuilder.append( video.getView() );
-                        stringBuilder.append(" / ");
-                        stringBuilder.append( video.noTrueListenstate() );
-                        ListviewItem temp = new ListviewItem(R.drawable.icon,video.getLink(),stringBuilder.toString());
-                        data.add( temp );
-                    }
-                    else if(video.isLookstate()==false){
-                        stringBuilder=new StringBuilder();
-                        stringBuilder.append( "조회수 : " );
-                        stringBuilder.append( video.getView() );
-                        stringBuilder.append(" / ");
-                        stringBuilder.append( video.noTrueLookstate() );
-                        ListviewItem temp = new ListviewItem(R.drawable.icon,video.getLink(),stringBuilder.toString());
-                        data.add( temp );
+                        if (!video.isListenstate() && !video.isLookstate())
+                            stringBuilder.append(video.noTrueAllState());
+                        else if (video.isListenstate() == false)
+                            stringBuilder.append(video.noTrueListenstate());
+                        else if (video.isLookstate() == false)
+                            stringBuilder.append(video.noTrueLookstate());
+                        ListviewItem temp = new ListviewItem(thumb, video.getTitle(), stringBuilder.toString());
+                        data.add(0,temp);
                     }
                 }
                 adapter.notifyDataSetChanged();
@@ -269,6 +283,18 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+        }
+    }
+
+    /* 썸네일 추출 쓰레드 */
+    class BackgroundTask implements Runnable {
+        @Override
+        public void run() {
+            try {
+                thumb = Picasso.with(VideoCommentaryListActivity.this).load(url).get();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
