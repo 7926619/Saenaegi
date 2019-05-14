@@ -40,6 +40,7 @@ public class aLfreeMainActivity extends AppCompatActivity {
         if(!checkAccessibilityPermissions()) {
             setAccessibilityPermissions();
         }
+        getDataQuery();
     }
 
     // 접근성 권한이 있는지 없는지 확인하는 부분
@@ -113,7 +114,6 @@ public class aLfreeMainActivity extends AppCompatActivity {
                         }
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 

@@ -23,6 +23,7 @@ public class aRequestVideoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_a_request_video);
+        getRequestQuery();
     }
 
     public void getRequestQuery(){

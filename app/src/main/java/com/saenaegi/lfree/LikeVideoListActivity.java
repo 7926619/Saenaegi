@@ -2,6 +2,7 @@ package com.saenaegi.lfree;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -23,15 +24,32 @@ import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.saenaegi.lfree.Data.LIkevideo;
+import com.saenaegi.lfree.Data.Video;
 import com.saenaegi.lfree.ListviewController.ListviewAdapter;
 import com.saenaegi.lfree.ListviewController.ListviewItem;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class LikeVideoListActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
+    private FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
+    private DatabaseReference databaseReference=firebaseDatabase.getReference().child( "LFREE" ).child( "LIKEVIDEO" );
+    private DatabaseReference vdatabaseRefereence=firebaseDatabase.getReference().child( "LFREE" ).child( "VIDEO" );
+    private HashMap<String,Video> videos=new HashMap<>();
+    private ArrayList<Video> lvideos=new ArrayList<>();
+    private ListView listView;
+    private ListviewAdapter adapter;
+    private ArrayList<ListviewItem> data=new ArrayList<>(  );
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,13 +85,57 @@ public class LikeVideoListActivity extends AppCompatActivity implements Navigati
         navigationView.setNavigationItemSelectedListener(this);
 
         /* list view */
-        ListView listView = (ListView) findViewById(R.id.listview);
-        ArrayList<ListviewItem> data = new ArrayList<>();
-        ListviewItem test = new ListviewItem(R.drawable.icon,"test", "test입니다.");
-        data.add(test);
-        ListviewAdapter adapter = new ListviewAdapter(this, R.layout.listview_item, data);
+        listView = (ListView) findViewById(R.id.listview);
+        adapter = new ListviewAdapter(this, R.layout.listview_item, data);
         listView.setAdapter(adapter);
-        setListViewHeightBasedOnChildren(listView);
+
+        vdatabaseRefereence.addListenerForSingleValueEvent( new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                videos.clear();
+                for(DataSnapshot snapshot:dataSnapshot.getChildren()){
+                    Video video=snapshot.getValue(Video.class);
+                    videos.put( snapshot.getKey(),video );
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        } );
+
+        databaseReference.addListenerForSingleValueEvent( new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                data.clear();
+                lvideos.clear();
+                for(DataSnapshot snapshot:dataSnapshot.getChildren()){
+
+                    if(snapshot.getKey().equals( "userid" )){
+                        for(DataSnapshot temp:snapshot.getChildren()){
+                            LIkevideo likeVideo=temp.getValue(LIkevideo.class);
+                            Video video=videos.get(likeVideo.getIdvideo());
+                            lvideos.add( video );
+                            ListviewItem listviewItem = new ListviewItem(R.drawable.icon,video.getLink(), String.valueOf(video.getView()));
+                            data.add(listviewItem);
+                        }
+                        break;
+                    }
+
+                }
+                adapter.notifyDataSetChanged();
+                setListViewHeightBasedOnChildren(listView);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        } );
+
     }
 
     public void setListViewHeightBasedOnChildren(ListView listView) {
