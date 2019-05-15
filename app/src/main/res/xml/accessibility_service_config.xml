@@ -3,15 +3,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:packageNames="com.saenaegi.lfree"
     android:accessibilityEventTypes="typeViewAccessibilityFocused|typeViewClicked|typeViewFocused|typeGestureDetectionStart|typeGestureDetectionEnd|typeViewTextChanged|typeViewTextSelectionChanged|typeViewSelected"
-    android:accessibilityFeedbackType="feedbackSpoken"
+    android:accessibilityFeedbackType="feedbackSpoken|feedbackHaptic"
     android:notificationTimeout="100"
+    android:settingsActivity="com.saenaegi.lfree.aAccessibilityService"
     android:description="@string/accessibility_description"
     android:canRetrieveWindowContent="true"
-    android:canRequestTouchExplorationMode="true"
-    android:canRequestFingerprintGestures="true"
-    android:canPerformGestures="true" />
-    <!-- android:accessibilityEventTypes="typeAllMask" -->
-    <!-- android:accessibilityFlags="flagReportViewIds" -->
-    <!-- android:accessibilityFlags="flagRequestFingerprintGestures" -->
-    <!-- android:canRequestFingerprintGestures="true" -->
-
+    android:canPerformGestures="true"
+    android:canRequestTouchExplorationMode="true" />
+    <!-- android:accessibilityEventTypes="typeViewAccessibilityFocused|typeViewClicked|typeViewFocused|typeGestureDetectionStart|typeGestureDetectionEnd|typeViewTextChanged|typeViewTextSelectionChanged|typeViewSelected" -->
+    <!-- android:accessibilityFeedbackType="feedbackSpoken|feedbackHaptic" -->
+    <!-- android:accessibilityFlags="flagIncludeNotImportantViews" -->

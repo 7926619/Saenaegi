@@ -1,5 +1,6 @@
 package com.saenaegi.lfree;
 
+import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.AccessibilityServiceInfo;
 import android.os.Build;
 import android.util.Log;
@@ -10,26 +11,48 @@ import android.widget.Toast;
 //import android.speech.tts.Voice;
 import java.util.Locale;
 
-public class aAccessibilityService extends android.accessibilityservice.AccessibilityService {
+public class aAccessibilityService extends AccessibilityService {
     private static final String TAG = "AccessibilityService";
     private TextToSpeech tts;              // TTS 변수 선언
 
-    /*
+
     @Override
     public void onCreate() {
         // getServiceInfo().flags = AccessibilityServiceInfo.FLAG_REQUEST_TOUCH_EXPLORATION_MODE;
+        /*
         tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
                 tts.setLanguage(Locale.KOREAN);
             }
         });
+        */
+        tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS) {
+                    int result = tts.setLanguage(Locale.KOREAN);
+                    if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                        Toast.makeText(getApplication(), "TTS : Korean Language Not Supported!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else
+                    Toast.makeText(getApplication(), "TTS : TTS's Initialization is Failed!", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
-    */
+
 
     // 이벤트가 발생할때마다 실행되는 부분
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
+        Log.e(TAG, "=========================================================================");
+        Log.e(TAG, "Catch Event : " + event.toString());
+        Log.e(TAG, "Catch Event Package Name : " + event.getPackageName());
+        Log.e(TAG, "Catch Event TEXT : " + event.getText());
+        Log.e(TAG, "Catch Event ContentDescription : " + event.getContentDescription());
+        Log.e(TAG, "Catch Event getSource : " + event.getSource());
+        Log.e(TAG, "=========================================================================");
         // 발생한 이벤트로부터 Source를 get
         AccessibilityNodeInfo source = event.getSource();
         // 실현 시간 상수로서 접근성 서비스에 대한 이벤트 타입 변수 선언 및 생성
@@ -106,26 +129,14 @@ public class aAccessibilityService extends android.accessibilityservice.Accessib
             Log.e(TAG, "Catch Event getSource : " + event.getSource());
             Log.e(TAG, "=========================================================================");
             */
+
         }
     }
 
     // 접근성 권한을 가지고, 연결이 되면 호출되는 함수
     @Override
     public void onServiceConnected() {
-        //Toast.makeText(getApplication(), "Accessibility Service : Connected", Toast.LENGTH_SHORT).show();
-        tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if (status == TextToSpeech.SUCCESS) {
-                    int result = tts.setLanguage(Locale.KOREAN);
-                    if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                        Toast.makeText(getApplication(), "TTS : Korean Language Not Supported!", Toast.LENGTH_SHORT).show();
-                    }
-                }
-                else
-                    Toast.makeText(getApplication(), "TTS : TTS's Initialization is Failed!", Toast.LENGTH_SHORT).show();
-            }
-        });
+        Toast.makeText(getApplication(), "LFREE Accessibility Service : Connected!", Toast.LENGTH_LONG).show();
 
         AccessibilityServiceInfo info = new AccessibilityServiceInfo();
 
@@ -133,6 +144,7 @@ public class aAccessibilityService extends android.accessibilityservice.Accessib
         info.packageNames = new String[]{"com.saenaegi.lfree"};
 
         // 뷰 클릭 시, 뷰 포커싱 시, 제스처 인식 시, 검색창 텍스트 변경 시 접근성 서비스 이용을 위한 이벤트 타입 수집
+
         info.eventTypes = AccessibilityEvent.TYPE_VIEW_CLICKED | AccessibilityEvent.TYPE_VIEW_FOCUSED
                 | AccessibilityEvent.TYPE_GESTURE_DETECTION_START | AccessibilityEvent.TYPE_GESTURE_DETECTION_END
                 | AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED | AccessibilityEvent.TYPE_VIEW_TEXT_SELECTION_CHANGED
@@ -141,16 +153,18 @@ public class aAccessibilityService extends android.accessibilityservice.Accessib
         //info.eventTypes = AccessibilityEvent.TYPES_ALL_MASK; // 전체 이벤트 가져오기
 
         // 이벤트 발생 시 음성 피드백 제공
-        info.feedbackType = AccessibilityServiceInfo.FEEDBACK_SPOKEN;
+        info.feedbackType = AccessibilityServiceInfo.FEEDBACK_SPOKEN | AccessibilityServiceInfo.FEEDBACK_HAPTIC;
         //info.feedbackType = AccessibilityServiceInfo.DEFAULT | AccessibilityServiceInfo.FEEDBACK_HAPTIC;
+        //info.feedbackType = AccessibilityServiceInfo.FEEDBACK_ALL_MASK;
 
         // 제스처 기능 수행을 위한 터치 모드 수행 플래그 설정
-        info.flags = AccessibilityServiceInfo.FLAG_REQUEST_TOUCH_EXPLORATION_MODE;
+        //info.flags = AccessibilityServiceInfo.FLAG_REQUEST_TOUCH_EXPLORATION_MODE;
+        //info.flags = AccessibilityServiceInfo.FLAG_REQUEST_TOUCH_EXPLORATION_MODE | AccessibilityServiceInfo.FLAG_INCLUDE_NOT_IMPORTANT_VIEWS;
         //info.flags = AccessibilityServiceInfo.FLAG_REQUEST_FINGERPRINT_GESTURES;
-        info.notificationTimeout = 10; // millisecond
-
+        info.notificationTimeout = 100; // millisecond
         // 서비스 설정
-        this.setServiceInfo(info);
+        setServiceInfo(info);
+
     }
 
     @Override
