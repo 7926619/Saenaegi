@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -14,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,6 +40,7 @@ import com.saenaegi.lfree.ListviewController.ListviewAdapter;
 import com.saenaegi.lfree.ListviewController.ListviewItem;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -131,7 +134,7 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
         adapter = new ListviewAdapter(this, R.layout.listview_item, data);
         listView.setAdapter(adapter);
         setListViewHeightBasedOnChildren(listView);
-        databaseReference.addValueEventListener( new ValueEventListener() {
+/*        databaseReference.addValueEventListener( new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 data.clear();
@@ -139,10 +142,10 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
                 for(DataSnapshot snapshot:dataSnapshot.getChildren()){
                     Request request = snapshot.getValue(Request.class);
                     requests.add( request );
-                    /* 썸네일 주소 설정 */
+
                     url = "https://img.youtube.com/vi/"+request.getLink()+"/maxresdefault.jpg";
 
-                    /* 썸네일 쓰레드 실행 */
+
                     Runnable r = new BackgroundTask();
                     Thread thread = new Thread(r);
                     thread.start();
@@ -152,7 +155,7 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
                         e.printStackTrace();
                     }
 
-                    /* 데이터 담기 */
+
                     ListviewItem temp = new ListviewItem(thumb, request.getTitle(), request.seeType());
                     data.add(0,temp);
                 }
@@ -163,8 +166,28 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        } );
+        } ); */
 
+        databaseReference2.addValueEventListener( new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                data.clear();
+                videos.clear();
+                for(DataSnapshot snapshot:dataSnapshot.getChildren()){
+                    Video video = snapshot.getValue(Video.class);
+                    videos.add( video );
+
+                    ListviewItem temp = new ListviewItem(StringToBitMap(video.getBitt()), video.getTitle(), video.getLink());
+                    data.add(0,temp);
+                }
+                adapter.notifyDataSetChanged();
+                setListViewHeightBasedOnChildren(listView);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        } );
     }
 
     @SuppressLint("RestrictedApi")
@@ -196,9 +219,22 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
                                         Looper.loop();
                                     }
                                     else {
+                                        /* 썸네일 주소 설정 */
+                                        url = "https://img.youtube.com/vi/"+videoID+"/maxresdefault.jpg";
+
+                                        /* 썸네일 쓰레드 실행 */
+                                        Runnable r = new BackgroundTask();
+                                        Thread thread = new Thread(r);
+                                        thread.start();
+                                        try {
+                                            thread.join();
+                                        } catch (InterruptedException e) {
+                                            e.printStackTrace();
+                                        }
+
                                         /* 영상 ID 저장 */
                                         setRequestQuery("user_id", true, videoID, title);
-                                        setVideoQuery(videoID, title, false, false, 0, 0);
+                                        setVideoQuery(videoID, title, false, false, 0, 0,BitMapToString(thumb));
                                     }
                                 }
                             }.start();
@@ -224,8 +260,8 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
         return true;
     }
 
-    public boolean setVideoQuery(String link, String title, boolean lookstate, boolean listenstate, int sectionCount,int view) {
-        Video video=new Video(link,title,lookstate,listenstate,sectionCount,view);
+    public boolean setVideoQuery(String link, String title, boolean lookstate, boolean listenstate, int sectionCount,int view,String thumbnail) {
+        Video video=new Video(link,title,lookstate,listenstate,sectionCount,view,thumbnail);
         databaseReference2.push().setValue(video);
         return true;
     }
@@ -372,5 +408,23 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
             e.printStackTrace();
         }
         return title;
+    }
+
+    public String BitMapToString(Bitmap bitmap){
+        ByteArrayOutputStream baos=new  ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG,100, baos);
+        byte [] arr=baos.toByteArray();
+        String result=Base64.encodeToString(arr, Base64.DEFAULT);
+        return result;
+    }
+
+    public Bitmap StringToBitMap(String image){
+        try{
+            byte [] encodeByte=Base64.decode(image,Base64.DEFAULT);
+            Bitmap bitmap=BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            return bitmap;
+        }catch(Exception e){
+            return null;
+        }
     }
 }

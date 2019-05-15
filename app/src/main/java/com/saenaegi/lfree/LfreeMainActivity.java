@@ -2,6 +2,7 @@ package com.saenaegi.lfree;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -11,6 +12,8 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -148,31 +151,19 @@ public class LfreeMainActivity extends AppCompatActivity implements NavigationVi
                 recyclerView2.setAdapter( adapter2 );
                 for(DataSnapshot snapshot:dataSnapshot.getChildren()){
                     Video video=snapshot.getValue(Video.class);
-                    /* 썸네일 주소 설정 */
-                    url = "https://img.youtube.com/vi/"+video.getLink()+"/maxresdefault.jpg";
-
-                    /* 썸네일 쓰레드 실행 */
-                    Runnable r = new BackgroundTask();
-                    Thread thread = new Thread(r);
-                    thread.start();
-                    try {
-                        thread.join();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
 
                     if(video.isListenstate()&&video.isLookstate()) {
                         pvideos.add(video);
                         Data data=new Data();
                         data.setTitle( video.getTitle() );
-                        data.setBit( thumb );
+                        data.setBit( StringToBitMap(video.getBitt()) );
                         adapter1.addItem( data );
                     }
                     else{
                         mvideos.add(video);
                         Data data=new Data();
                         data.setTitle( video.getTitle() );
-                        data.setBit( thumb );
+                        data.setBit( StringToBitMap(video.getBitt()) );
                         adapter2.addItem( data );
                     }
                 }
@@ -243,15 +234,14 @@ public class LfreeMainActivity extends AppCompatActivity implements NavigationVi
         }
     }
 
-    /* 썸네일 추출 쓰레드 */
-    class BackgroundTask implements Runnable {
-        @Override
-        public void run() {
-            try {
-                thumb = Picasso.with(LfreeMainActivity.this).load(url).get();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+    public Bitmap StringToBitMap(String image){
+        try{
+            byte [] encodeByte= Base64.decode(image,Base64.DEFAULT);
+            Bitmap bitmap= BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            return bitmap;
+        }catch(Exception e){
+            e.getMessage();
+            return null;
         }
     }
 }

@@ -1,8 +1,11 @@
 package com.saenaegi.lfree.Data;
 
+import android.graphics.Bitmap;
+
 public class Video {
     private String link;
     private String title;
+    private String bitt;
     private boolean lookstate;
     private boolean listenstate;
     private int sectionCount;
@@ -11,13 +14,14 @@ public class Video {
     public Video(){
 
     }
-    public  Video(String link, String title, boolean lookstate, boolean listenstate, int sectionCount,int view){
+    public  Video(String link, String title, boolean lookstate, boolean listenstate, int sectionCount,int view, String bitt){
         this.link=link;
         this.title=title;
         this.lookstate=lookstate;
         this.listenstate=listenstate;
         this.sectionCount=sectionCount;
         this.view=view;
+        this.bitt=bitt;
     }
 
     public void setLink(String link){
@@ -83,5 +87,13 @@ public class Video {
 
     public int getSectionCount() {
         return sectionCount;
+    }
+
+    public String getBitt() {
+        return bitt;
+    }
+
+    public void setBitt(String bitt) {
+        this.bitt = bitt;
     }
 }

@@ -2,6 +2,7 @@ package com.saenaegi.lfree;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -11,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -122,19 +124,9 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
                         for(DataSnapshot snapshot:dataSnapshot.getChildren()){
                             Video video=snapshot.getValue(Video.class);
                             videos.add( video );
-                            url = "https://img.youtube.com/vi/"+video.getLink()+"/maxresdefault.jpg";
-
-                            Runnable r = new BackgroundTask();
-                            Thread thread = new Thread(r);
-                            thread.start();
-                            try {
-                                thread.join();
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
 
                             if (video.isLookstate() && video.isListenstate()) {
-                                ListviewItem temp = new ListviewItem( thumb, video.getTitle(), String.valueOf( video.getView() ) );
+                                ListviewItem temp = new ListviewItem( StringToBitMap(video.getBitt()), video.getTitle(), String.valueOf( video.getView() ) );
                                 data.add(0,temp);
                             }
                         }
@@ -152,16 +144,6 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
                 StringBuilder stringBuilder;
                 for(Video video:videos){
                     if(!(video.isLookstate() && video.isListenstate())) {
-                        url = "https://img.youtube.com/vi/"+video.getLink()+"/maxresdefault.jpg";
-
-                        Runnable r = new BackgroundTask();
-                        Thread thread = new Thread(r);
-                        thread.start();
-                        try {
-                            thread.join();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
 
                         stringBuilder = new StringBuilder();
                         stringBuilder.append("조회수 : ");
@@ -173,7 +155,7 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
                             stringBuilder.append(video.noTrueListenstate());
                         else if (video.isLookstate() == false)
                             stringBuilder.append(video.noTrueLookstate());
-                        ListviewItem temp = new ListviewItem(thumb, video.getTitle(), stringBuilder.toString());
+                        ListviewItem temp = new ListviewItem(StringToBitMap(video.getBitt()), video.getTitle(), stringBuilder.toString());
                         data.add(0,temp);
                     }
                 }
@@ -286,15 +268,14 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
         }
     }
 
-    /* 썸네일 추출 쓰레드 */
-    class BackgroundTask implements Runnable {
-        @Override
-        public void run() {
-            try {
-                thumb = Picasso.with(VideoCommentaryListActivity.this).load(url).get();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+    public Bitmap StringToBitMap(String image){
+        try{
+            byte [] encodeByte= Base64.decode(image,Base64.DEFAULT);
+            Bitmap bitmap= BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            return bitmap;
+        }catch(Exception e){
+            e.getMessage();
+            return null;
         }
     }
 }

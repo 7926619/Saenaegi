@@ -1,6 +1,8 @@
 package com.saenaegi.lfree;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -9,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -101,7 +104,7 @@ public class MyVideoListActivity extends AppCompatActivity implements Navigation
                     Subtitle subtitle=snapshot.getValue(Subtitle.class);
                     if(subtitle.getIdgoogle().equals( "userid" )){
                         Video video=videosKey.get( subtitle.getIdvideo());
-                        ListviewItem temp=new ListviewItem( R.drawable.icon,video.getLink(), String.valueOf( video.getView()));
+                        ListviewItem temp=new ListviewItem(StringToBitMap(video.getBitt()),video.getTitle(), String.valueOf( video.getView()));
                         data.add( temp );
                     }
                 }
@@ -225,6 +228,16 @@ public class MyVideoListActivity extends AppCompatActivity implements Navigation
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+        }
+    }
+
+    public Bitmap StringToBitMap(String image){
+        try{
+            byte [] encodeByte= Base64.decode(image,Base64.DEFAULT);
+            Bitmap bitmap= BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            return bitmap;
+        }catch(Exception e){
+            return null;
         }
     }
 }
