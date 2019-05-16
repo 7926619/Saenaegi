@@ -48,8 +48,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 import com.saenaegi.lfree.Data.Request;
@@ -84,6 +82,7 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
     private String url;
     private String videoID;
     private int effective;
+    private String time;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -204,9 +203,12 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
                     public void onClick(DialogInterface dialog, int which) {
                         String link = edittext.getText().toString();
                         /* 링크 형식 필터링 */
-                        if (Pattern.matches("^(https://www.youtube.com/watch\\?v=)\\S+$", link)) {
+                        if ((Pattern.matches("^(https://www.youtube.com/watch\\?v=)\\S+$", link)) || (Pattern.matches("^(https://youtu.be/)\\S+$", link))){
                             /* 유튜브 영상 ID 추출 */
-                            videoID = link.substring(link.indexOf("=")+1);
+                            if(Pattern.matches("^(https://www.youtube.com/watch\\?v=)\\S+$", link))
+                                videoID = link.substring(link.indexOf("=")+1);
+                            else
+                                videoID = link.substring(link.indexOf("be/")+3);
                             if(videoID.indexOf("&")!=-1)
                                 videoID = videoID.substring(0,videoID.indexOf("&"));
 
@@ -219,6 +221,7 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
                                         Looper.loop();
                                     }
                                     else {
+                                        Log.e("time",""+ time +" "+effective);
                                         /* 썸네일 주소 설정 */
                                         url = "https://img.youtube.com/vi/"+videoID+"/maxresdefault.jpg";
 
@@ -232,7 +235,11 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
                                             e.printStackTrace();
                                         }
 
+                                        /* 영상 시간 섹션 쪼개기 */
+
+
                                         /* 영상 ID 저장 */
+
                                         setRequestQuery("user_id", true, videoID, title);
                                         setVideoQuery(videoID, title, false, false, 0, 0,BitMapToString(thumb));
                                     }
@@ -374,12 +381,12 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
         }
     }
 
-    /* 제목 파싱 쓰레드 */
+    /* 제목&시간 파싱 쓰레드 */
     private String Title() {
         String result ="";
         String title ="";
         try {
-            URL aURL = new URL("https://www.googleapis.com/youtube/v3/videos?id="+videoID+"&key=AIzaSyCxaTSJkqWjCLbh4UzPXb1jOHrVX5-gmxs&part=snippet");
+            URL aURL = new URL("https://www.googleapis.com/youtube/v3/videos?id="+videoID+"&key=AIzaSyCxaTSJkqWjCLbh4UzPXb1jOHrVX5-gmxs&part=snippet,contentDetails");
             URLConnection con = aURL.openConnection();
             InputStream is = con.getInputStream();
             InputStreamReader isr = new InputStreamReader(is);
@@ -398,6 +405,8 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
             JSONArray arr = (JSONArray) obj.get("items");
             JSONObject item = (JSONObject) arr.get(0);
             JSONObject snippet = (JSONObject) item.get("snippet");
+            JSONObject content = (JSONObject) item.get("contentDetails");
+            time = ((String) content.get("duration")).substring(2);
             title = (String) snippet.get("title");
 
         } catch (MalformedURLException e) {

@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatCallback;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Display;
 import android.view.MenuItem;
 import android.view.View;
@@ -114,12 +115,14 @@ public class WatchVideoActivity extends YouTubeBaseActivity implements Navigatio
 
         /* 동영상 로드 및 초기화 */
 
+        final Intent data = getIntent();
         youtubeScreen = (YouTubePlayerView)findViewById(R.id.youtube_screen);
         listener = new YouTubePlayer.OnInitializedListener() {
+
             @Override
             public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
                 player = youTubePlayer;
-                player.cueVideo("bw5Dy_0EmuE");
+                player.loadVideo(data.getExtras().getString("link"));
 
                 player.setPlayerStateChangeListener(new YouTubePlayer.PlayerStateChangeListener() {
                     @Override
@@ -128,6 +131,11 @@ public class WatchVideoActivity extends YouTubeBaseActivity implements Navigatio
 
                     @Override
                     public void onLoaded(String s) {
+                        //총시간 부분 시작
+                        int min = player.getDurationMillis()/60000;
+                        int sec = (player.getDurationMillis()%60000)/1000;
+                        Log.e("타임",min+":"+sec);
+                        // 총시간 부분 끝
                     }
 
                     @Override
@@ -136,10 +144,12 @@ public class WatchVideoActivity extends YouTubeBaseActivity implements Navigatio
 
                     @Override
                     public void onVideoStarted() {
+
                     }
 
                     @Override
                     public void onVideoEnded() {
+
                     }
 
                     @Override

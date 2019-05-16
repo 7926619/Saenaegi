@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,6 +25,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ScrollView;
 
+import com.google.android.youtube.player.YouTubePlayer;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -167,6 +169,7 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(VideoCommentaryListActivity.this, WatchVideoActivity.class);
+                intent.putExtra("link",videos.get(videos.size()-position-1).getLink());
                 startActivity(intent);
             }
         });
