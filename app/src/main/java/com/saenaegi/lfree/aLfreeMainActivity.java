@@ -1,15 +1,18 @@
 package com.saenaegi.lfree;
 
+import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import android.accessibilityservice.AccessibilityServiceInfo;
+import android.view.View;
 import android.view.accessibility.AccessibilityManager;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.provider.Settings;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -24,6 +27,62 @@ public class aLfreeMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_a_lfree_main);
+
+        TextView tv1 = (TextView) findViewById(R.id.textView18);
+        tv1.setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick(View v) {
+                Intent intent = new Intent(aLfreeMainActivity.this, aHowToUseActivity.class);
+                startActivity(intent);
+            }
+        });
+        TextView tv2 = (TextView) findViewById(R.id.textView17);
+        tv2.setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick(View v) {
+                Intent intent = new Intent(aLfreeMainActivity.this, aWatchVideoMenuActivitiy.class);
+                startActivity(intent);
+            }
+        });
+        TextView tv3 = (TextView) findViewById(R.id.textView16);
+        tv3.setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick(View v) {
+                Intent intent = new Intent(aLfreeMainActivity.this, aRequestVideoActivity.class);
+                startActivity(intent);
+            }
+        });
+        TextView tv4 = (TextView) findViewById(R.id.textView15);
+        tv4.setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick(View v) {
+                Intent intent = new Intent(aLfreeMainActivity.this, aLikeVideoActivity.class);
+                startActivity(intent);
+            }
+        });
+        TextView tv5 = (TextView) findViewById(R.id.textView14);
+        tv5.setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick(View v) {
+                Intent intent = new Intent(aLfreeMainActivity.this, aNoticeActivity.class);
+                startActivity(intent);
+            }
+        });
+        TextView tv6 = (TextView) findViewById(R.id.textView13);
+        tv6.setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick(View v) {
+                Intent intent = new Intent(aLfreeMainActivity.this, aSettingsActivity.class);
+                startActivity(intent);
+            }
+        });
+        TextView tv7 = (TextView) findViewById(R.id.textView12);
+        tv7.setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         // 접근성 권한이 없으면 접근성 권한 설정하는 다이얼로그 띄워주는 부분
         check();

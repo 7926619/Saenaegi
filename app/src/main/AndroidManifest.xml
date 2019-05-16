@@ -33,7 +33,8 @@
         </activity>
         <activity android:name=".NoticeActivity" />
         <activity android:name=".SettingsActivity" />
-        <activity android:name=".LikeVideoListActivity" />
+        <activity android:name=".LikeVideoListActivity" >
+        </activity>
         <activity android:name=".MyVideoListActivity" >
         </activity>
         <activity android:name=".VideoRequestListActivity" />
@@ -53,15 +54,16 @@
         <activity android:name=".aRecentVideoActivity" />
         <activity android:name=".aWatchVideoMenuActivitiy" />
         <activity android:name=".aHowToUseActivity" />
-        <activity android:name=".aLfreeMainActivity" />
+        <activity android:name=".aLfreeMainActivity" >
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+        </activity>
         <activity android:name=".VideoCommentaryListActivity" />
         <activity android:name=".ChoiceActivity"/>
         <activity android:name=".LfreeMainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".MainActivity">
         </activity>
