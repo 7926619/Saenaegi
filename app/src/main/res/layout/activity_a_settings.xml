@@ -31,6 +31,8 @@
                 android:focusableInTouchMode="true"
                 android:nextFocusDown="@+id/textView18"
                 android:nextFocusUp="@+id/back"
+                android:accessibilityTraversalAfter="@+id/textView18"
+                android:accessibilityTraversalBefore="@+id/back"
                 android:text="설정" />
 
             <View
@@ -62,6 +64,8 @@
                 android:focusableInTouchMode="true"
                 android:nextFocusDown="@+id/textView17"
                 android:nextFocusUp="@+id/back"
+                android:accessibilityTraversalAfter="@+id/textView17"
+                android:accessibilityTraversalBefore="@+id/back"
                 android:text="Push 알림 설정" />
 
             <TextView
@@ -76,6 +80,8 @@
                 android:focusableInTouchMode="true"
                 android:nextFocusDown="@+id/textView16"
                 android:nextFocusUp="@+id/textView18"
+                android:accessibilityTraversalAfter="@+id/textView16"
+                android:accessibilityTraversalBefore="@+id/textView18"
                 android:text="앱 소개" />
 
             <TextView
@@ -90,6 +96,8 @@
                 android:focusableInTouchMode="true"
                 android:nextFocusDown="@+id/textView15"
                 android:nextFocusUp="@+id/textView17"
+                android:accessibilityTraversalAfter="@+id/textView15"
+                android:accessibilityTraversalBefore="@+id/textView17"
                 android:text="버전 정보" />
 
             <TextView
@@ -104,6 +112,8 @@
                 android:focusableInTouchMode="true"
                 android:nextFocusDown="@+id/textView14"
                 android:nextFocusUp="@+id/textView16"
+                android:accessibilityTraversalAfter="@+id/textView14"
+                android:accessibilityTraversalBefore="@+id/textView16"
                 android:text="오픈소스 라이선스" />
 
             <TextView
@@ -118,6 +128,8 @@
                 android:focusableInTouchMode="true"
                 android:nextFocusDown="@+id/textView18"
                 android:nextFocusUp="@+id/textView15"
+                android:accessibilityTraversalAfter="@+id/textView18"
+                android:accessibilityTraversalBefore="@+id/textView15"
                 android:text="뒤로가기" />
 
         </LinearLayout>
@@ -135,6 +147,10 @@
             android:background="#8e8e8e"
             android:gravity="center"
             android:text="제스처"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:clickable="false"
+            android:importantForAccessibility="no"
             android:textColor="#fff"
             android:textSize="100sp" />
 

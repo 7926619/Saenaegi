@@ -7,22 +7,26 @@
     android:orientation="vertical"
     android:fitsSystemWindows="true"
     tools:openDrawer="start"
+    android:importantForAccessibility="no"
     android:id="@+id/drawerLayout"
     tools:context=".LfreeMainActivity">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:importantForAccessibility="no"
         android:background="#ffffff">
 
         <ScrollView
             android:id="@+id/scroll_view"
             android:layout_width="match_parent"
+            android:importantForAccessibility="no"
             android:layout_height="match_parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:importantForAccessibility="no"
                 android:orientation="vertical" >
 
                 <include layout="@layout/layout_main_toolbar" />
@@ -33,6 +37,7 @@
                     android:layout_marginBottom="30dp"
                     android:orientation="vertical"
                     android:paddingHorizontal="30dp"
+                    android:importantForAccessibility="no"
                     android:paddingTop="30dp">
 
                     <TextView
@@ -42,11 +47,13 @@
                         android:text="완성 영상"
                         android:textStyle="bold"
                         android:textColor="#363636"
+                        android:importantForAccessibility="no"
                         android:textSize="20sp" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:importantForAccessibility="no">
 
                         <android.support.v7.widget.RecyclerView
                             android:id="@+id/complete_list"
@@ -55,7 +62,8 @@
                             android:background="#fff"
                             android:layout_marginTop="10dp"
                             android:layout_marginBottom="20dp"
-                            android:scrollbars="horizontal" />
+                            android:scrollbars="horizontal"
+                            android:importantForAccessibility="no"/>
 
                     </RelativeLayout>
 
@@ -65,12 +73,14 @@
                         android:layout_height="wrap_content"
                         android:text="제작중인 영상"
                         android:textStyle="bold"
+                        android:importantForAccessibility="no"
                         android:textColor="#363636"
                         android:textSize="20sp" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:importantForAccessibility="no">
 
                         <android.support.v7.widget.RecyclerView
                             android:id="@+id/making_list"
@@ -79,14 +89,16 @@
                             android:background="#fff"
                             android:layout_marginTop="10dp"
                             android:layout_marginBottom="30dp"
-                            android:scrollbars="horizontal"/>
+                            android:scrollbars="horizontal"
+                            android:importantForAccessibility="no"/>
 
                     </RelativeLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:importantForAccessibility="no">
 
                         <ImageButton
                             android:id="@+id/commentButton"
@@ -96,11 +108,13 @@
                             android:adjustViewBounds="true"
                             android:background="@android:color/transparent"
                             android:scaleType="centerInside"
-                            app:srcCompat="@drawable/button1" />
+                            app:srcCompat="@drawable/button1"
+                            android:importantForAccessibility="no"/>
 
                         <Space
                             android:layout_width="30dp"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            android:importantForAccessibility="no"/>
 
                         <ImageButton
                             android:id="@+id/requestButton"
@@ -110,7 +124,8 @@
                             android:adjustViewBounds="true"
                             android:background="@android:color/transparent"
                             android:scaleType="centerInside"
-                            app:srcCompat="@drawable/button2" />
+                            app:srcCompat="@drawable/button2"
+                            android:importantForAccessibility="no"/>
 
                     </LinearLayout>
 
@@ -131,6 +146,7 @@
         android:background="#fff"
         android:visibility="visible"
         app:headerLayout="@layout/layout_nav_header"
-        app:menu="@menu/main_navigation_menu" />
+        app:menu="@menu/main_navigation_menu"
+        android:importantForAccessibility="no"/>
 
 </android.support.v4.widget.DrawerLayout>
