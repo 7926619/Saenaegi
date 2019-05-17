@@ -24,6 +24,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:adjustViewBounds="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:src="@drawable/top_title" />
 
         </RelativeLayout>
@@ -45,6 +47,8 @@
                 android:contentDescription="이용 방법"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                android:nextFocusDown="@+id/textView17"
+                android:nextFocusUp="@+id/textView12"
                 android:text="이용 방법" />
 
             <TextView
@@ -57,6 +61,8 @@
                 android:contentDescription="영상 시청하기"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                android:nextFocusDown="@+id/textView16"
+                android:nextFocusUp="@+id/textView18"
                 android:text="영상 시청하기" />
 
             <TextView
@@ -69,6 +75,8 @@
                 android:contentDescription="영상 요청하기"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                android:nextFocusDown="@+id/textView15"
+                android:nextFocusUp="@+id/textView17"
                 android:text="영상 요청하기" />
 
             <TextView
@@ -81,6 +89,8 @@
                 android:contentDescription="좋아요 표시한 동영상"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                android:nextFocusDown="@+id/textView14"
+                android:nextFocusUp="@+id/textView16"
                 android:text="좋아요 표시한 동영상" />
 
             <TextView
@@ -93,6 +103,8 @@
                 android:contentDescription="공지사항"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                android:nextFocusDown="@+id/textView13"
+                android:nextFocusUp="@+id/textView15"
                 android:text="공지사항" />
 
             <TextView
@@ -105,6 +117,8 @@
                 android:contentDescription="설정"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                android:nextFocusDown="@+id/textView12"
+                android:nextFocusUp="@+id/textView14"
                 android:text="설정" />
 
             <TextView
@@ -117,6 +131,8 @@
                 android:contentDescription="종료"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                android:nextFocusDown="@+id/textView18"
+                android:nextFocusUp="@+id/textView13"
                 android:text="종료" />
 
         </LinearLayout>

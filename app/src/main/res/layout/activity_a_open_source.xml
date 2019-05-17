@@ -29,6 +29,8 @@
                 android:contentDescription="오픈소스 라이선스"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                android:nextFocusDown="@+id/textView18"
+                android:nextFocusUp="@+id/textView18"
                 android:text="오픈소스 라이선스" />
 
             <View
@@ -58,6 +60,8 @@
                 android:contentDescription="흠"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                android:nextFocusDown="@+id/textView9"
+                android:nextFocusUp="@+id/textView9"
                 android:text="흠" />
 
         </LinearLayout>

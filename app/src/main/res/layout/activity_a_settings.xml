@@ -29,6 +29,8 @@
                 android:contentDescription="설정"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                android:nextFocusDown="@+id/textView18"
+                android:nextFocusUp="@+id/back"
                 android:text="설정" />
 
             <View
@@ -58,6 +60,8 @@
                 android:contentDescription="Push 알림 설정"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                android:nextFocusDown="@+id/textView17"
+                android:nextFocusUp="@+id/back"
                 android:text="Push 알림 설정" />
 
             <TextView
@@ -70,6 +74,8 @@
                 android:contentDescription="앱 소개"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                android:nextFocusDown="@+id/textView16"
+                android:nextFocusUp="@+id/textView18"
                 android:text="앱 소개" />
 
             <TextView
@@ -82,6 +88,8 @@
                 android:contentDescription="버전 정보"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                android:nextFocusDown="@+id/textView15"
+                android:nextFocusUp="@+id/textView17"
                 android:text="버전 정보" />
 
             <TextView
@@ -94,6 +102,8 @@
                 android:contentDescription="오픈소스 라이선스"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                android:nextFocusDown="@+id/textView14"
+                android:nextFocusUp="@+id/textView16"
                 android:text="오픈소스 라이선스" />
 
             <TextView
@@ -106,6 +116,8 @@
                 android:contentDescription="뒤로가기"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                android:nextFocusDown="@+id/textView18"
+                android:nextFocusUp="@+id/textView15"
                 android:text="뒤로가기" />
 
         </LinearLayout>

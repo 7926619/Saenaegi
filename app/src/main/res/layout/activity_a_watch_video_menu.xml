@@ -29,6 +29,8 @@
                 android:contentDescription="영상 시청하기"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                android:nextFocusDown="@+id/textView18"
+                android:nextFocusUp="@+id/back"
                 android:text="영상 시청하기" />
 
             <View
@@ -58,6 +60,8 @@
                 android:contentDescription="최근 영상 시청"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                android:nextFocusDown="@+id/textView17"
+                android:nextFocusUp="@+id/back"
                 android:text="최근 영상 시청" />
 
             <TextView
@@ -70,6 +74,8 @@
                 android:contentDescription="검색"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                android:nextFocusDown="@+id/back"
+                android:nextFocusUp="@+id/textView18"
                 android:text="검색" />
 
             <TextView
@@ -82,6 +88,8 @@
                 android:contentDescription="뒤로가기"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                android:nextFocusDown="@+id/textView18"
+                android:nextFocusUp="@+id/textView17"
                 android:text="뒤로가기" />
 
         </LinearLayout>

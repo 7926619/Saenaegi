@@ -29,6 +29,8 @@
                 android:contentDescription="Push 알림 설정"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                android:nextFocusDown="@+id/textView18"
+                android:nextFocusUp="@+id/back"
                 android:text="Push 알림 설정" />
 
             <View
@@ -58,6 +60,8 @@
                 android:contentDescription="알림 켜기"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                android:nextFocusDown="@+id/textView17"
+                android:nextFocusUp="@+id/back"
                 android:text="알림 켜기" />
 
             <TextView
@@ -70,6 +74,8 @@
                 android:contentDescription="알림 끄기"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                android:nextFocusDown="@+id/back"
+                android:nextFocusUp="@+id/textView18"
                 android:text="알림 끄기" />
 
             <TextView
@@ -82,6 +88,8 @@
                 android:contentDescription="뒤로 가기"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                android:nextFocusDown="@+id/textView18"
+                android:nextFocusUp="@+id/textView17"
                 android:text="뒤로 가기" />
 
         </LinearLayout>

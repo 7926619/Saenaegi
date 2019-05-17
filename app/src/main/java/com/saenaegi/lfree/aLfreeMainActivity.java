@@ -147,7 +147,6 @@ public class aLfreeMainActivity extends AppCompatActivity {
             case 0:
                 for (int i = 0; i < list.size(); i++) {
                     AccessibilityServiceInfo info = list.get(i);
-
                     // 접근성 권한을 가진 앱의 패키지 네임과 패키지 네임이 같으면 현재앱이 접근성 권한을 가지고 있다고 판단함
                     if (info.getResolveInfo().serviceInfo.packageName.equals(getApplication().getPackageName())) {
                         Toast.makeText(getApplicationContext(), "Accessibility Service : Connected", Toast.LENGTH_LONG).show();
@@ -155,8 +154,8 @@ public class aLfreeMainActivity extends AppCompatActivity {
                     }
                 }
                 if(count == 0){
-                    Toast.makeText(getApplicationContext(), "Accessibility Service : Not Connected", Toast.LENGTH_LONG).show();
                     check();
+                    Toast.makeText(getApplicationContext(), "Accessibility Service : Not Connected", Toast.LENGTH_LONG).show();
                 }
                 break;
         }
