@@ -161,6 +161,15 @@ public class MyVideoListActivity extends AppCompatActivity implements Navigation
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                data.clear();
+                for(Video video:videos){
+                    if(video.getTitle().contains( query )){
+                        ListviewItem tmp = new ListviewItem( StringToBitMap(video.getBitt()), video.getTitle(), String.valueOf( video.getView() ) );
+                        data.add( tmp );
+                    }
+                }
+                adapter.notifyDataSetChanged();
+                setListViewHeightBasedOnChildren( listView );
                 return false;
             }
 
