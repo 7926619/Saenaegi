@@ -1,19 +1,20 @@
 package com.saenaegi.lfree;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Point;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatCallback;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.view.ActionMode;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Display;
 import android.view.MenuItem;
@@ -21,18 +22,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ScrollView;
-import android.widget.TextView;
 
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerView;
+import com.saenaegi.lfree.RecycleviewController_p.Data;
+import com.saenaegi.lfree.RecycleviewController_p.RecyclerAdapter;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class WatchVideoActivity extends YouTubeBaseActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private YouTubePlayerView youtubeScreen;
+    private RecyclerAdapter adapter;
+    private RecyclerView recyclerView;
     private YouTubePlayer.OnInitializedListener listener;
     private YouTubePlayer player;
 
@@ -107,10 +114,20 @@ public class WatchVideoActivity extends YouTubeBaseActivity implements Navigatio
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(WatchVideoActivity.this, MakeVideoActivity.class);
-                startActivity(intent);
+                type_choice();
             }
         });
+
+        /* recycle view */
+        recyclerView = findViewById(R.id.part_list);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recyclerView.setLayoutManager(linearLayoutManager);
+
+        adapter = new RecyclerAdapter();
+        recyclerView.setAdapter(adapter);
+        getData();
 
         /* 동영상 로드 및 초기화 */
 
@@ -153,6 +170,56 @@ public class WatchVideoActivity extends YouTubeBaseActivity implements Navigatio
             }
         };
         youtubeScreen.initialize("AIzaSyAn_HFubCwx1rbM2q45hMGGhCPUx2AEOz4", listener);
+    }
+
+    private void getData() {
+        int partNum = 7; // 파트 5개 있다고 가정
+        List<Boolean> listState = Arrays.asList(true, true, false, true, false, false, false);
+        for (int i = 0; i < partNum; i++) {
+            // 각 List의 값들을 data 객체에 set 해줍니다.
+            Data data = new Data();
+            data.setNum(i+1);
+            data.setState(listState.get(i));
+
+            // 각 값이 들어간 data를 adapter에 추가합니다.
+            adapter.addItem(data);
+        }
+
+        // adapter의 값이 변경되었다는 것을 알려줍니다.
+        adapter.notifyDataSetChanged();
+    }
+
+    void type_choice() {
+        AlertDialog levelDialog;
+        final CharSequence[] items = {"자막", "소리"};
+
+        // Creating and Building the Dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle("해설 타입 선택");
+
+        builder.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+            }
+        });
+
+        builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(WatchVideoActivity.this, MakeVideoActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        levelDialog = builder.create();
+        levelDialog.show();
     }
 
     @Override
