@@ -50,6 +50,7 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
     private ListView listView;
     private ArrayList<Video> pvideos =new ArrayList<>();
     private ArrayList<Video> mvideos=new ArrayList<>();
+    private ArrayList<Video> videos=new ArrayList<>();
     private ArrayList<ListviewItem> data = new ArrayList<>();
     private int index=0;
     private Bitmap thumb;
@@ -124,12 +125,14 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         data.clear();
+                        videos.clear();
                         pvideos.clear();
                         for(DataSnapshot snapshot:dataSnapshot.getChildren()){
                             Video video=snapshot.getValue(Video.class);
                             if (video.isLookstate() && video.isListenstate()) {
                                 ListviewItem temp = new ListviewItem( StringToBitMap(video.getBitt()), video.getTitle(), String.valueOf( video.getView() ) );
                                 pvideos.add( video );
+                                videos.add( video );
                                 data.add(0,temp);
                             }
                         }
@@ -147,6 +150,7 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         data.clear();
+                        videos.clear();
                         mvideos.clear();
                         for(DataSnapshot snapshot:dataSnapshot.getChildren()){
                             Video video=snapshot.getValue(Video.class);
@@ -154,6 +158,7 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
                                 String Stemp=returnType( video );
                                 ListviewItem temp = new ListviewItem(StringToBitMap(video.getBitt()), video.getTitle(), Stemp);
                                 mvideos.add( video );
+                                videos.add( video );
                                 data.add(0,temp);
                             }
                         }
@@ -233,10 +238,12 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
             @Override
             public boolean onQueryTextSubmit(String query) {
                 data.clear();
+                videos.clear();
                 if(index==0){
                     for(Video video:pvideos){
                         if(video.getTitle().contains( query )){
                             ListviewItem temp = new ListviewItem( StringToBitMap(video.getBitt()), video.getTitle(), String.valueOf( video.getView() ) );
+                            videos.add(video);
                             data.add( 0,temp );
                         }
                     }
@@ -246,7 +253,8 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
                         if(video.getTitle().contains(query)){
                             String Stemp=returnType( video );
                             ListviewItem temp = new ListviewItem(StringToBitMap(video.getBitt()), video.getTitle(), Stemp);
-                            data.add( temp );
+                            videos.add(video);
+                            data.add( 0,temp );
                         }
                     }
                 }

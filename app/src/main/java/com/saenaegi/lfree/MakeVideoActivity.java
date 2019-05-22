@@ -1,5 +1,6 @@
 package com.saenaegi.lfree;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -29,22 +30,30 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.saenaegi.lfree.Data.Subtitle;
+import com.saenaegi.lfree.SubtitleController.InputDataController;
+
+import java.io.File;
+import java.util.ArrayList;
+
 import static android.text.InputType.TYPE_CLASS_DATETIME;
 import static android.text.InputType.TYPE_DATETIME_VARIATION_TIME;
-import static android.text.InputType.TYPE_TEXT_FLAG_CAP_SENTENCES;
-import static android.text.InputType.TYPE_TEXT_FLAG_MULTI_LINE;
 
 public class MakeVideoActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private View view1;
-
+    private ArrayList<String> subtitles =new ArrayList<>();
+    private Subtitle subtitle=new Subtitle();
+    private InputDataController inputDataController;
+    private File filedirectory;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_make_video);
+        filedirectory=this.getCacheDir();
 
         /* scroll on top */
         final ScrollView scroll_view = (ScrollView) findViewById(R.id.scroll_view);
@@ -90,6 +99,8 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                inputDataController=new InputDataController();
+                inputDataController.storeData(subtitle,subtitles,"-LfS8Ugd_5pIYaN4f81r", filedirectory);
                 Intent intent = new Intent(MakeVideoActivity.this, VideoCommentaryListActivity.class);  // 이동할 액티비티 수정해야됨
                 startActivity(intent);
             }
@@ -111,6 +122,15 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         TableRow tr = new TableRow(this);
         TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
         tr.setLayoutParams(lp);
+
+        // section의 처음과 끝 시간-> 유투브 시간을 불러와서 넣어 주어야 한다. 미리 넣어 줘야 하는 것들
+        subtitle.setSectionS("00:00");
+        subtitle.setSectionF("10:00");
+        subtitle.setSectionNum( 1 );
+        subtitle.setIdgoogle("userid");
+        subtitle.setName( "username" );
+        subtitle.setRecommend(0);
+        subtitle.setType( true );
 
         /* EditText */
         EditText startTime = new EditText(this);
@@ -152,7 +172,7 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
                 /* change to String */
                 String start = ((EditText) row.getChildAt(0)).getText().toString();
                 String end = ((EditText) row.getChildAt(1)).getText().toString();
-                String sub = ((EditText) row.getChildAt(2)).getText().toString();
+                final String sub = ((EditText) row.getChildAt(2)).getText().toString();
 
                 /* remove buttons */
                 parentView2.removeView(parentView2.getChildAt(index));
@@ -167,6 +187,7 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
                 t1.setText(start);
                 t1.setGravity(Gravity.CENTER);
                 t1.setPadding(15, 0, 15, 0);
+
                 TextView t2 = new TextView(MakeVideoActivity.this);
                 t2.setText(end);
                 t2.setGravity(Gravity.CENTER);
@@ -198,14 +219,18 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
                             public boolean onMenuItemClick(MenuItem item) {
                                 switch (item.getItemId()) {
                                     case R.id.m1:
+
                                         Toast.makeText(getApplication(), "수정", Toast.LENGTH_SHORT).show();
                                         break;
+
                                     case R.id.m2:
                                         ViewGroup parentView = (ViewGroup) view1.getParent();
                                         ViewGroup parentView1 = (ViewGroup) parentView.getParent();
                                         ViewGroup parentView2 = (ViewGroup) parentView1.getParent();
                                         ViewGroup parentView3 = (ViewGroup) parentView2.getParent();
                                         int index = parentView3.indexOfChild(parentView2);  // (TableRow) tr's number
+                                        int index2= subtitles.size()-index;
+                                        subtitles.remove( index2 );
                                         parentView3.removeView(parentView3.getChildAt(index));
                                         parentView3.removeView(parentView3.getChildAt(index));  // line remove
                                         break;
@@ -237,6 +262,9 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
                 tr.addView(t1);
                 tr.addView(t2);
                 tr.addView(sub_col);
+
+                String temp=start+"\t"+end+"\t"+sub;
+                subtitles.add( temp );
 
                 /* line */
                 View line = new View(MakeVideoActivity.this);
