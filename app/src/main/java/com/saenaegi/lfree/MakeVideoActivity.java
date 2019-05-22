@@ -3,12 +3,16 @@ package com.saenaegi.lfree;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatCallback;
+import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
 import android.text.InputFilter;
 import android.util.TypedValue;
@@ -29,6 +33,12 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.youtube.player.YouTubeBaseActivity;
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerSupportFragment;
+import com.google.android.youtube.player.YouTubePlayerView;
+
 import static android.text.InputType.TYPE_CLASS_DATETIME;
 import static android.text.InputType.TYPE_DATETIME_VARIATION_TIME;
 import static android.text.InputType.TYPE_TEXT_FLAG_CAP_SENTENCES;
@@ -39,6 +49,8 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private View view1;
+    private YouTubePlayer player;
+    private String videoID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +58,24 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         this.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_make_video);
 
+        /* 액션바 상속 안하고 하기
+        AppCompatCallback callback = new AppCompatCallback() {
+            @Override
+            public void onSupportActionModeStarted(ActionMode actionMode) {
+            }
+
+            @Override
+            public void onSupportActionModeFinished(ActionMode actionMode) {
+            }
+
+            @Nullable
+            @Override
+            public ActionMode onWindowStartingSupportActionMode(ActionMode.Callback callback) {
+                return null;
+            }
+        };
+
+        AppCompatDelegate delegate = AppCompatDelegate.create(this, callback);*/
         /* scroll on top */
         final ScrollView scroll_view = (ScrollView) findViewById(R.id.scroll_view);
         scroll_view.post(new Runnable() {
@@ -57,15 +87,16 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         /* Action Bar */
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(null);
+        //delegate.setSupportActionBar(toolbar);
+        //delegate.getSupportActionBar().setDisplayShowTitleEnabled(false);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         /* navigation */
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
 
-        final ImageButton drawerButton = (ImageButton)findViewById(R.id.drawer_icon);
-        drawerButton.setOnClickListener(new View.OnClickListener()
-        {
+        final ImageButton drawerButton = (ImageButton) findViewById(R.id.drawer_icon);
+        drawerButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 drawerLayout.openDrawer(GravityCompat.START);
             }
@@ -104,7 +135,53 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
                 createTableRow(view);
             }
         });
+
+        /* 동영상 로드 및 초기화 */
+
+        final Intent data = getIntent();
+        YouTubePlayerSupportFragment frag = (YouTubePlayerSupportFragment) getSupportFragmentManager().findFragmentById(R.id.youtube_screen);
+        frag.initialize("AIzaSyAn_HFubCwx1rbM2q45hMGGhCPUx2AEOz4", new YouTubePlayer.OnInitializedListener() {
+            @Override
+            public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
+                player = youTubePlayer;
+                videoID = data.getExtras().getString("link");
+                player.loadVideo(videoID);
+
+                player.setPlayerStateChangeListener(new YouTubePlayer.PlayerStateChangeListener() {
+                    @Override
+                    public void onLoading() {
+                    }
+
+                    @Override
+                    public void onLoaded(String s) {
+                    }
+
+                    @Override
+                    public void onAdStarted() {
+                    }
+
+                    @Override
+                    public void onVideoStarted() {
+
+                    }
+
+                    @Override
+                    public void onVideoEnded() {
+
+                    }
+
+                    @Override
+                    public void onError(YouTubePlayer.ErrorReason errorReason) {
+                    }
+                });
+            }
+
+            @Override
+            public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
+            }
+        });
     }
+
 
     public void createTableRow(View v) {
         TableLayout tl = (TableLayout) findViewById(R.id.tableLayout);

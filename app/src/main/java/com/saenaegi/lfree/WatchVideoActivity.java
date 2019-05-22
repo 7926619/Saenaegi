@@ -10,6 +10,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatCallback;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.view.ActionMode;
@@ -27,6 +28,7 @@ import android.widget.ScrollView;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 import com.google.android.youtube.player.YouTubePlayerView;
 import com.saenaegi.lfree.RecycleviewController_p.Data;
 import com.saenaegi.lfree.RecycleviewController_p.RecyclerAdapter;
@@ -34,15 +36,14 @@ import com.saenaegi.lfree.RecycleviewController_p.RecyclerAdapter;
 import java.util.Arrays;
 import java.util.List;
 
-public class WatchVideoActivity extends YouTubeBaseActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class WatchVideoActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
-    private YouTubePlayerView youtubeScreen;
     private RecyclerAdapter adapter;
     private RecyclerView recyclerView;
-    private YouTubePlayer.OnInitializedListener listener;
     private YouTubePlayer player;
+    private String videoID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,25 +51,6 @@ public class WatchVideoActivity extends YouTubeBaseActivity implements Navigatio
         super.onCreate(savedInstanceState);
         this.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_watch_video);
-
-        /* 액션바 상속 안하고 하기 */
-        AppCompatCallback callback = new AppCompatCallback() {
-            @Override
-            public void onSupportActionModeStarted(ActionMode actionMode) {
-            }
-
-            @Override
-            public void onSupportActionModeFinished(ActionMode actionMode) {
-            }
-
-            @Nullable
-            @Override
-            public ActionMode onWindowStartingSupportActionMode(ActionMode.Callback callback) {
-                return null;
-            }
-        };
-
-        AppCompatDelegate delegate = AppCompatDelegate.create(this,callback);
 
         /* scroll on top */
         final ScrollView scroll_view = (ScrollView) findViewById(R.id.scroll_view);
@@ -81,10 +63,8 @@ public class WatchVideoActivity extends YouTubeBaseActivity implements Navigatio
         /* Action Bar */
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(null);
-        delegate.setSupportActionBar(toolbar);
-        delegate.getSupportActionBar().setDisplayShowTitleEnabled(false);
-        //setSupportActionBar(toolbar);
-        //getSupportActionBar().setDisplayShowTitleEnabled(false);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         /* navigation */
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
@@ -133,13 +113,13 @@ public class WatchVideoActivity extends YouTubeBaseActivity implements Navigatio
         /* 동영상 로드 및 초기화 */
 
         final Intent data = getIntent();
-        youtubeScreen = (YouTubePlayerView)findViewById(R.id.youtube_screen);
-        listener = new YouTubePlayer.OnInitializedListener() {
-
+        YouTubePlayerSupportFragment frag = (YouTubePlayerSupportFragment) getSupportFragmentManager().findFragmentById(R.id.youtube_screen);
+        frag.initialize("AIzaSyAn_HFubCwx1rbM2q45hMGGhCPUx2AEOz4", new YouTubePlayer.OnInitializedListener() {
             @Override
             public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
                 player = youTubePlayer;
-                player.loadVideo(data.getExtras().getString("link"));
+                videoID = data.getExtras().getString("link");
+                player.loadVideo(videoID);
 
                 player.setPlayerStateChangeListener(new YouTubePlayer.PlayerStateChangeListener() {
                     @Override
@@ -148,11 +128,6 @@ public class WatchVideoActivity extends YouTubeBaseActivity implements Navigatio
 
                     @Override
                     public void onLoaded(String s) {
-                        //총시간 부분 시작
-                        int min = player.getDurationMillis()/60000;
-                        int sec = (player.getDurationMillis()%60000)/1000;
-                        Log.e("타임",min+":"+sec);
-                        // 총시간 부분 끝
                     }
 
                     @Override
@@ -178,8 +153,7 @@ public class WatchVideoActivity extends YouTubeBaseActivity implements Navigatio
             @Override
             public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
             }
-        };
-        youtubeScreen.initialize("AIzaSyAn_HFubCwx1rbM2q45hMGGhCPUx2AEOz4", listener);
+        });
     }
 
     private void getData() {
@@ -217,6 +191,7 @@ public class WatchVideoActivity extends YouTubeBaseActivity implements Navigatio
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent(WatchVideoActivity.this, MakeVideoActivity.class);
+                intent.putExtra("link",videoID);
                 startActivity(intent);
             }
         });
