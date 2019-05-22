@@ -77,13 +77,11 @@
                     android:orientation="vertical"
                     android:importantForAccessibility="no">
 
-                    <view
+                    <fragment
+                        android:name="com.google.android.youtube.player.YouTubePlayerSupportFragment"
                         android:id="@+id/youtube_screen"
-                        class="com.google.android.youtube.player.YouTubePlayerView"
-                        id="@+id/view4"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:importantForAccessibility="no"/>
+                        android:layout_height="wrap_content"/>
 
                     <TextView
                         android:id="@+id/subtitle"

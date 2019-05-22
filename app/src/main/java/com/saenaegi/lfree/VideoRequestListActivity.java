@@ -211,6 +211,8 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
                                 videoID = link.substring(link.indexOf("be/")+3);
                             if(videoID.indexOf("&")!=-1)
                                 videoID = videoID.substring(0,videoID.indexOf("&"));
+                            else if(videoID.indexOf("?")!=-1)
+                                videoID = videoID.substring(0,videoID.indexOf("?"));
 
                             new Thread() {
                                 public void run() {
@@ -236,12 +238,32 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
                                         }
 
                                         /* 영상 시간 섹션 쪼개기 */
+                                        int hour=0, min=0, section;
+                                        if(time.indexOf("H") > -1 && time.indexOf("M") > -1) {
+                                            String tmp = time.substring(0,time.indexOf("H"));
+                                            hour = Integer.parseInt(tmp);
+                                            tmp = time.substring(time.indexOf("H")+1,time.indexOf("M"));
+                                            min = Integer.parseInt(tmp);
+                                        }
+                                        else if(time.indexOf("H") == -1 && time.indexOf("M") > -1){
+                                            String tmp = time.substring(0,time.indexOf("M"));
+                                            min = Integer.parseInt(tmp);
+                                        }
+                                        else if(time.indexOf("H") > -1 && time.indexOf("M") == -1) {
+                                            String tmp = time.substring(0,time.indexOf("H"));
+                                            hour = Integer.parseInt(tmp);
+                                        }
 
+                                        int tmp = (hour * 60) + min;
+                                        if((tmp % 10) < 4)
+                                            section = (tmp / 10);
+                                        else
+                                            section = (tmp / 10) + 1;
 
                                         /* 영상 ID 저장 */
 
                                         setRequestQuery("user_id", true, videoID, title);
-                                        setVideoQuery(videoID, title, false, false, 0, 0,BitMapToString(thumb));
+                                        setVideoQuery(videoID, title, false, false,  section, 0,BitMapToString(thumb));
                                     }
                                 }
                             }.start();
