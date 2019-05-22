@@ -29,6 +29,10 @@
                 android:contentDescription="영상 시청"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                android:nextFocusDown="@+id/textView18"
+                android:nextFocusUp="@+id/back"
+                android:accessibilityTraversalAfter="@+id/textView18"
+                android:accessibilityTraversalBefore="@+id/back"
                 android:text="영상 시청" />
 
             <View
@@ -63,6 +67,12 @@
                 android:gravity="center"
                 android:text="[ 영상 제목 ]"
                 android:textColor="#363636"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:nextFocusDown="@+id/textView22"
+                android:nextFocusUp="@+id/back"
+                android:accessibilityTraversalAfter="@+id/textView22"
+                android:accessibilityTraversalBefore="@+id/back"
                 android:textSize="20sp" />
 
             <LinearLayout
@@ -82,6 +92,10 @@
                     android:contentDescription="재생"
                     android:focusable="true"
                     android:focusableInTouchMode="true"
+                    android:nextFocusRight="@+id/textView22"
+                    android:nextFocusUp="@+id/textView18"
+                    android:accessibilityTraversalAfter="@+id/textView22"
+                    android:accessibilityTraversalBefore="@+id/textView18"
                     android:text="재생" />
 
                 <TextView
@@ -95,6 +109,10 @@
                     android:contentDescription="정지"
                     android:focusable="true"
                     android:focusableInTouchMode="true"
+                    android:nextFocusRight="@+id/textView21"
+                    android:nextFocusLeft="@+id/textView22"
+                    android:accessibilityTraversalAfter="@+id/textView21"
+                    android:accessibilityTraversalBefore="@+id/textView22"
                     android:text="정지" />
 
                 <TextView
@@ -108,6 +126,10 @@
                     android:contentDescription="10초 앞으로"
                     android:focusable="true"
                     android:focusableInTouchMode="true"
+                    android:nextFocusRight="@+id/textView20"
+                    android:nextFocusLeft="@+id/textView19"
+                    android:accessibilityTraversalAfter="@+id/textView20"
+                    android:accessibilityTraversalBefore="@+id/textView19"
                     android:text=" 10초 앞으로" />
 
                 <TextView
@@ -121,6 +143,10 @@
                     android:contentDescription="10초 뒤로"
                     android:focusable="true"
                     android:focusableInTouchMode="true"
+                    android:nextFocusDown="@+id/textView16"
+                    android:nextFocusLeft="@+id/textView21"
+                    android:accessibilityTraversalAfter="@+id/textView16"
+                    android:accessibilityTraversalBefore="@+id/textView21"
                     android:text=" 10초 뒤로" />
 
             </LinearLayout>
@@ -135,6 +161,10 @@
                 android:contentDescription="파트 선택"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                android:nextFocusDown="@+id/textView15"
+                android:nextFocusUp="@+id/textView20"
+                android:accessibilityTraversalAfter="@+id/textView15"
+                android:accessibilityTraversalBefore="@+id/textView20"
                 android:text="파트 선택" />
 
             <TextView
@@ -147,6 +177,10 @@
                 android:contentDescription="추천하기"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                android:nextFocusDown="@+id/back"
+                android:nextFocusUp="@+id/textView16"
+                android:accessibilityTraversalAfter="@+id/back"
+                android:accessibilityTraversalBefore="@+id/textView16"
                 android:text="추천하기" />
 
             <TextView
@@ -159,6 +193,10 @@
                 android:contentDescription="뒤로가기"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                android:nextFocusDown="@+id/textView18"
+                android:nextFocusUp="@+id/textView15"
+                android:accessibilityTraversalAfter="@+id/textView18"
+                android:accessibilityTraversalBefore="@+id/textView15"
                 android:text="뒤로가기" />
 
         </LinearLayout>
@@ -176,6 +214,10 @@
             android:background="#8e8e8e"
             android:gravity="center"
             android:text="제스처"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:clickable="false"
+            android:importantForAccessibility="no"
             android:textColor="#fff"
             android:textSize="100sp" />
 

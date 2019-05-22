@@ -181,6 +181,15 @@ public class LikeVideoListActivity extends AppCompatActivity implements Navigati
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                data.clear();
+                for(Video video:lvideos){
+                    if(video.getTitle().contains( query )){
+                        ListviewItem listviewItem = new ListviewItem(StringToBitMap(video.getBitt()),video.getTitle(), String.valueOf(video.getView()));
+                        data.add(listviewItem);
+                    }
+                }
+                adapter.notifyDataSetChanged();
+                setListViewHeightBasedOnChildren( listView );
                 return false;
             }
 

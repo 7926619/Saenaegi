@@ -4,11 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:importantForAccessibility="no"
     tools:context=".ChoiceActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:importantForAccessibility="no"
         android:orientation="vertical">
 
         <ImageButton
@@ -18,6 +20,7 @@
             android:layout_weight="1"
             android:background="#6cb143"
             android:padding="70dp"
+            android:importantForAccessibility="no"
             android:scaleType="centerInside"
             app:srcCompat="@drawable/no" />
 
@@ -28,6 +31,7 @@
             android:layout_weight="1"
             app:srcCompat="@drawable/yes"
             android:padding="70dp"
+            android:importantForAccessibility="no"
             android:scaleType="centerInside"
             android:background="#754d49" />
 

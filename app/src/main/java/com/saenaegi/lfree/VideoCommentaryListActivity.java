@@ -34,11 +34,10 @@ import com.google.firebase.database.ValueEventListener;
 import com.saenaegi.lfree.ListviewController.ListviewAdapter;
 import com.saenaegi.lfree.ListviewController.ListviewItem;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import com.saenaegi.lfree.Data.Video;
-import com.squareup.picasso.Picasso;
+import com.saenaegi.lfree.RecycleviewController.Data;
 
 public class VideoCommentaryListActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -49,8 +48,10 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
 
     private ListviewAdapter adapter;
     private ListView listView;
-    private ArrayList<Video> videos=new ArrayList<>();
+    private ArrayList<Video> pvideos =new ArrayList<>();
+    private ArrayList<Video> mvideos=new ArrayList<>();
     private ArrayList<ListviewItem> data = new ArrayList<>();
+    private int index=0;
     private Bitmap thumb;
     private String url;
 
@@ -88,15 +89,19 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
         navigationView = (NavigationView) findViewById(R.id.navigationView);
         navigationView.setNavigationItemSelectedListener(this);
 
+        listView = (ListView) findViewById(R.id.listview);
+        adapter = new ListviewAdapter(this, R.layout.listview_item, data);
+        listView.setAdapter(adapter);
         /* Tab */
-        changeView(0);
+        changeView();
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tablayout1);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 // TODO : tab의 상태가 선택 상태로 변경.
-                int pos = tab.getPosition() ;
-                changeView(pos);
+                index = tab.getPosition() ;
+                changeView();
             }
 
             @Override
@@ -111,24 +116,20 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
         });
     }
 
-    private void changeView(int index) {
-        listView = (ListView) findViewById(R.id.listview);
-        adapter = new ListviewAdapter(this, R.layout.listview_item, data);
-        listView.setAdapter(adapter);
+    private void changeView() {
 
         switch (index) {
             case 0 :
-                databaseReference.addValueEventListener( new ValueEventListener() {
+                databaseReference.addListenerForSingleValueEvent(  new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         data.clear();
-                        videos.clear();
+                        pvideos.clear();
                         for(DataSnapshot snapshot:dataSnapshot.getChildren()){
                             Video video=snapshot.getValue(Video.class);
-                            videos.add( video );
-
                             if (video.isLookstate() && video.isListenstate()) {
                                 ListviewItem temp = new ListviewItem( StringToBitMap(video.getBitt()), video.getTitle(), String.valueOf( video.getView() ) );
+                                pvideos.add( video );
                                 data.add(0,temp);
                             }
                         }
@@ -142,27 +143,28 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
                 break;
 
             case 1 :
-                data.clear();
-                StringBuilder stringBuilder;
-                for(Video video:videos){
-                    if(!(video.isLookstate() && video.isListenstate())) {
-
-                        stringBuilder = new StringBuilder();
-                        stringBuilder.append("조회수 : ");
-                        stringBuilder.append(video.getView());
-                        stringBuilder.append(" / ");
-                        if (!video.isListenstate() && !video.isLookstate())
-                            stringBuilder.append(video.noTrueAllState());
-                        else if (video.isListenstate() == false)
-                            stringBuilder.append(video.noTrueListenstate());
-                        else if (video.isLookstate() == false)
-                            stringBuilder.append(video.noTrueLookstate());
-                        ListviewItem temp = new ListviewItem(StringToBitMap(video.getBitt()), video.getTitle(), stringBuilder.toString());
-                        data.add(0,temp);
+                databaseReference.addListenerForSingleValueEvent( new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        data.clear();
+                        mvideos.clear();
+                        for(DataSnapshot snapshot:dataSnapshot.getChildren()){
+                            Video video=snapshot.getValue(Video.class);
+                            if(!(video.isLookstate() && video.isListenstate())) {
+                                String Stemp=returnType( video );
+                                ListviewItem temp = new ListviewItem(StringToBitMap(video.getBitt()), video.getTitle(), Stemp);
+                                mvideos.add( video );
+                                data.add(0,temp);
+                            }
+                        }
+                        adapter.notifyDataSetChanged();
+                        setListViewHeightBasedOnChildren(listView);
                     }
-                }
-                adapter.notifyDataSetChanged();
-                setListViewHeightBasedOnChildren(listView);
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                    }
+                } );
+
                 break;
         }
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -175,6 +177,21 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
         });
     }
 
+    public String returnType(Video video){
+        StringBuilder stringBuilder;
+        stringBuilder = new StringBuilder();
+        stringBuilder.append( "조회수 : " );
+        stringBuilder.append( video.getView() );
+        stringBuilder.append( " / " );
+        if (!video.isListenstate() && !video.isLookstate())
+            stringBuilder.append( video.noTrueAllState() );
+        else if (video.isListenstate() == false)
+            stringBuilder.append( video.noTrueListenstate() );
+        else if (video.isLookstate() == false)
+            stringBuilder.append( video.noTrueLookstate() );
+
+        return stringBuilder.toString();
+    }
     public void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
         if (listAdapter == null) {
@@ -215,7 +232,27 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                return false;
+                data.clear();
+                if(index==0){
+                    for(Video video:pvideos){
+                        if(video.getTitle().contains( query )){
+                            ListviewItem temp = new ListviewItem( StringToBitMap(video.getBitt()), video.getTitle(), String.valueOf( video.getView() ) );
+                            data.add( 0,temp );
+                        }
+                    }
+                }
+                else{
+                    for(Video video:mvideos){
+                        if(video.getTitle().contains(query)){
+                            String Stemp=returnType( video );
+                            ListviewItem temp = new ListviewItem(StringToBitMap(video.getBitt()), video.getTitle(), Stemp);
+                            data.add( temp );
+                        }
+                    }
+                }
+                adapter.notifyDataSetChanged();
+                setListViewHeightBasedOnChildren(listView);
+                return true;
             }
 
             @Override

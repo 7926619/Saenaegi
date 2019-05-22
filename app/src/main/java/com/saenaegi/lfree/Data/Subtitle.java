@@ -4,7 +4,7 @@ public class Subtitle {
 
     private String directory;
     private String idgoogle;
-    private String idvideo;
+
     private String name;
     private int recommend;
     private String sectionF;
@@ -16,10 +16,9 @@ public class Subtitle {
 
     }
 
-    public Subtitle(String directory, String idgoogle, String idvideo, String name, int recommend, String sectionF, String sectionS, int sectionNum, boolean type){
+    public Subtitle(String directory, String idgoogle, String name, int recommend, String sectionF, String sectionS, int sectionNum, boolean type){
         this.idgoogle=idgoogle;
         this.directory=directory;
-        this.idvideo=idvideo;
         this.name=name;
         this.recommend=recommend;
         this.sectionF=sectionF;
@@ -35,10 +34,6 @@ public class Subtitle {
 
     public String getIdgoogle() {
         return idgoogle;
-    }
-
-    public String getIdvideo() {
-        return idvideo;
     }
 
     public String getName() {
@@ -75,10 +70,6 @@ public class Subtitle {
 
     public void setDirectory(String directory) {
         this.directory = directory;
-    }
-
-    public void setIdvideo(String idvideo) {
-        this.idvideo = idvideo;
     }
 
     public void setName(String name) {

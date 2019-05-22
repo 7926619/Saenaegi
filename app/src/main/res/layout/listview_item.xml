@@ -7,7 +7,7 @@
 
     <ImageView
         android:id="@+id/list_image"
-        android:layout_width="60dp"
+        android:layout_width="107dp"
         android:layout_height="60dp"
         android:layout_marginRight="10dp"/>
 
@@ -20,8 +20,10 @@
             android:id="@+id/list_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:maxLines="2"
+            android:ellipsize="end"
             android:textColor="#363636"
-            android:textSize="18sp"/>
+            android:textSize="16sp"/>
 
         <TextView
             android:id="@+id/list_sub"

@@ -29,6 +29,10 @@
                 android:contentDescription="앱 소개"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                android:nextFocusDown="@+id/textView18"
+                android:nextFocusUp="@+id/textView18"
+                android:accessibilityTraversalAfter="@+id/textView18"
+                android:accessibilityTraversalBefore="@+id/textView18"
                 android:text="앱 소개" />
 
             <View
@@ -58,6 +62,10 @@
                 android:contentDescription="흠"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                android:nextFocusDown="@+id/textView9"
+                android:nextFocusUp="@+id/textView9"
+                android:accessibilityTraversalAfter="@+id/textView9"
+                android:accessibilityTraversalBefore="@+id/textView9"
                 android:text="흠" />
 
         </LinearLayout>
@@ -75,6 +83,10 @@
             android:background="#8e8e8e"
             android:gravity="center"
             android:text="제스처"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:clickable="false"
+            android:importantForAccessibility="no"
             android:textColor="#fff"
             android:textSize="100sp" />
 
