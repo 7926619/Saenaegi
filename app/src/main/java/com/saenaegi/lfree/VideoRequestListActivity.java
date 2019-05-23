@@ -139,7 +139,7 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
                 for(DataSnapshot snapshot:dataSnapshot.getChildren()){
                     Video video=snapshot.getValue(Video.class);
                     if (!(video.isLookstate() && video.isListenstate())) {
-                        ListviewItem temp = new ListviewItem( StringToBitMap(video.getBitt()), video.getTitle(), String.valueOf( video.getView() ) );
+                        ListviewItem temp = new ListviewItem( StringToBitMap(video.getBitt()), video.getTitle(), null );
                         videos.add( video );
                         data.add(0,temp);
                     }
@@ -295,7 +295,7 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
                 data.clear();
                 for(Video video:videos){
                     if(video.getTitle().contains( query )){
-                        ListviewItem tmp = new ListviewItem( StringToBitMap(video.getBitt()), video.getTitle(), String.valueOf( video.getView() ) );
+                        ListviewItem tmp = new ListviewItem( StringToBitMap(video.getBitt()), video.getTitle(), null );
                         data.add( tmp );
                     }
                 }

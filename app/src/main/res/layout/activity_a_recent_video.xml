@@ -21,15 +21,15 @@
                 android:id="@+id/textView9"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center"
                 android:adjustViewBounds="true"
-                android:textSize="25sp"
-                android:textColor="#363636"
-                android:textStyle="bold"
-                android:contentDescription="최근 영상 시청"
+                android:contentDescription="영상 목록"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
-                android:text="최근 영상 시청" />
+                android:gravity="center"
+                android:text="영상 목록"
+                android:textColor="#363636"
+                android:textSize="25sp"
+                android:textStyle="bold" />
 
             <View
                 android:id="@+id/view"

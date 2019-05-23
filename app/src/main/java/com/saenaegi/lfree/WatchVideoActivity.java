@@ -23,8 +23,11 @@ import android.view.Display;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ScrollView;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
@@ -219,7 +222,7 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
     }
 
     void type_choice() {
-        AlertDialog levelDialog;
+        AlertDialog dialog;
         final CharSequence[] items = {"자막", "소리"};
 
         // Creating and Building the Dialog
@@ -231,6 +234,12 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
             public void onClick(DialogInterface dialog, int item) {
             }
         });
+
+        Spinner dropdown = new Spinner(this);
+        String[] options = new String[]{"파트 선택", "1", "2", "3", "4", "5", "6", "7"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, options);
+        dropdown.setAdapter(adapter);
+        builder.setView(dropdown);
 
         builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
             @Override
@@ -248,8 +257,8 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
             }
         });
 
-        levelDialog = builder.create();
-        levelDialog.show();
+        dialog = builder.create();
+        dialog.show();
     }
 
     @Override
