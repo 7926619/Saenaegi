@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
 import android.text.InputFilter;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.Gravity;
@@ -227,6 +228,7 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         EditText subTitle = new EditText(this);
         subTitle.setHint("해설을 입력해주세요.");
         subTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
+        setEditTextMaxLength(subTitle, 20);
 
         tr.addView(startTime);
         tr.addView(endTime);
@@ -239,6 +241,25 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
 
         ImageButton sub_ok = (ImageButton) childLayout.findViewById(R.id.sub_ok);
         sub_ok.setOnClickListener(new View.OnClickListener() {
+            boolean checkInput(String start, String end, String sub) {
+                if(start.length() == 0 || end.length() == 0 || sub.length() == 0) {
+                    Toast.makeText(getApplicationContext(), "빈칸이 존재합니다.", Toast.LENGTH_LONG).show();
+                    return true;
+                }
+                else if(start.length() != 5 || start.charAt(2) != ':') {
+                    if(end.length() != 5 || end.charAt(2) != ':') {
+                        Toast.makeText(getApplicationContext(), "시간의 형식이 알맞지 않습니다.", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "시작 시간의 형식이 알맞지 않습니다.", Toast.LENGTH_LONG).show();
+                    }
+                    return true;
+                }
+                else if(end.length() != 5 || end.charAt(2) != ':') {
+                    Toast.makeText(getApplicationContext(), "종료 시간의 형식이 알맞지 않습니다.", Toast.LENGTH_LONG).show();
+                    return true;
+                }
+                return false;
+            }
             @Override
             public void onClick(View v) {
                 // 등록 버튼
@@ -252,6 +273,9 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
                 String start = ((EditText) row.getChildAt(0)).getText().toString();
                 String end = ((EditText) row.getChildAt(1)).getText().toString();
                 final String sub = ((EditText) row.getChildAt(2)).getText().toString();
+                if(checkInput(start, end, sub)) {
+                    return;
+                }
 
                 /* remove buttons */
                 parentView2.removeView(parentView2.getChildAt(index));
@@ -380,6 +404,12 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         /* add to TableLayout */
         tl.addView(tr, new TableLayout.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
         tl.addView(ll, new TableLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+    }
+
+    public void setEditTextMaxLength(EditText edt_text, int length) {
+        InputFilter[] filterArray = new InputFilter[1];
+        filterArray[0] = new InputFilter.LengthFilter(length);
+        edt_text.setFilters(filterArray);
     }
 
     @Override
