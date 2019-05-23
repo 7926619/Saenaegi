@@ -30,7 +30,7 @@ public class InputDataController {
     private final String Listen_URL="gs://lfree-c8021.appspot.com/ListenSubtitle";
     private final String Look_URL="gs://lfree-c8021.appspot.com/LookSubtitle";
 
-    public void storeData(Subtitle subtitle,ArrayList<String> subtitles, String idvideo,File filedirectory){
+    public void storeData(Subtitle subtitle,ArrayList<String> subtitles, String idvideo,File filedirectory, int sectionNum){
 
         DatabaseReference dataRef=databaseReference.child( idvideo ).child( "SUBTITLE" );
 
@@ -41,7 +41,7 @@ public class InputDataController {
         Uri file=Uri.fromFile(storagefile);
         UploadTask uploadTask;
         if(subtitle.isType()) {
-            uploadTask=ListorageReference.child(idvideo+"/"+subtitle.getSectionNum()+"/"+file.getLastPathSegment()).putFile(file);
+            uploadTask=ListorageReference.child(idvideo+"/"+sectionNum+"/"+file.getLastPathSegment()).putFile(file);
             uploadTask.addOnFailureListener( new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
@@ -68,7 +68,7 @@ public class InputDataController {
                 }
             } );
         }
-        dataRef.child( String.valueOf( subtitle.getSectionNum() ) ).child( key ).setValue( subtitle );
+        dataRef.child( String.valueOf( sectionNum) ).child( key ).setValue( subtitle );
     }
 
     public File writeFile(ArrayList<String> subtitle, String filename, File filedirectory) {

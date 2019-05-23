@@ -62,6 +62,7 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
     private File filedirectory;
     private YouTubePlayer player;
     private String videoID;
+    private int sectionNum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,7 +135,7 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
             @Override
             public void onClick(View view) {
                 inputDataController=new InputDataController();
-                inputDataController.storeData(subtitle,subtitles,"-LfS8Ugd_5pIYaN4f81r", filedirectory);
+                inputDataController.storeData(subtitle,subtitles,"-LetQ6AWMqYsO1RnURxu", filedirectory, sectionNum);
                 Intent intent = new Intent(MakeVideoActivity.this, VideoCommentaryListActivity.class);  // 이동할 액티비티 수정해야됨
                 startActivity(intent);
             }
@@ -151,7 +152,6 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         });
 
         /* 동영상 로드 및 초기화 */
-
         final Intent data = getIntent();
         YouTubePlayerSupportFragment frag = (YouTubePlayerSupportFragment) getSupportFragmentManager().findFragmentById(R.id.youtube_screen);
         frag.initialize("AIzaSyAn_HFubCwx1rbM2q45hMGGhCPUx2AEOz4", new YouTubePlayer.OnInitializedListener() {
@@ -205,9 +205,9 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         // section의 처음과 끝 시간-> 유투브 시간을 불러와서 넣어 주어야 한다. 미리 넣어 줘야 하는 것들
         subtitle.setSectionS("00:00");
         subtitle.setSectionF("10:00");
-        subtitle.setSectionNum(2);
         subtitle.setIdgoogle("userid");
         subtitle.setName( "username" );
+        sectionNum =2;
         subtitle.setRecommend(0);
         subtitle.setType( true );
 

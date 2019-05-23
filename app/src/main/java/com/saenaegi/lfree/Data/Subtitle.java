@@ -6,7 +6,6 @@ public class Subtitle {
     private String name;
     private int recommend;
     private String sectionF;
-    private int sectionNum;
     private String sectionS;
     private boolean type;
 
@@ -20,7 +19,6 @@ public class Subtitle {
         this.recommend=recommend;
         this.sectionF=sectionF;
         this.sectionS=sectionS;
-        this.sectionNum=sectionNum;
         this.type=type;
 
     }
@@ -35,10 +33,6 @@ public class Subtitle {
 
     public int getRecommend() {
         return recommend;
-    }
-
-    public int getSectionNum() {
-        return sectionNum;
     }
 
     public String getSectionF() {
@@ -71,10 +65,6 @@ public class Subtitle {
 
     public void setSectionF(String sectionF) {
         this.sectionF = sectionF;
-    }
-
-    public void setSectionNum(int sectionNum) {
-        this.sectionNum = sectionNum;
     }
 
     public void setSectionS(String sectionS) {

@@ -66,8 +66,7 @@ import org.json.JSONObject;
 public class VideoRequestListActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
-    private DatabaseReference databaseReference=firebaseDatabase.getReference().child("LFREE").child( "REQUEST" );
-    private DatabaseReference databaseReference2=firebaseDatabase.getReference().child("LFREE").child("VIDEO");
+    private DatabaseReference databaseReference =firebaseDatabase.getReference().child("LFREE").child("VIDEO");
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
@@ -132,14 +131,14 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
         listView.setAdapter(adapter);
         setListViewHeightBasedOnChildren(listView);
 
-        databaseReference2.addValueEventListener( new ValueEventListener() {
+        databaseReference.addValueEventListener( new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 data.clear();
                 videos.clear();
                 for(DataSnapshot snapshot:dataSnapshot.getChildren()){
                     Video video=snapshot.getValue(Video.class);
-                    if (video.isLookstate() && video.isListenstate()) {
+                    if (!(video.isLookstate() && video.isListenstate())) {
                         ListviewItem temp = new ListviewItem( StringToBitMap(video.getBitt()), video.getTitle(), String.valueOf( video.getView() ) );
                         videos.add( video );
                         data.add(0,temp);
@@ -249,7 +248,7 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
 
     public boolean setVideoQuery(String link, String title, boolean lookstate, boolean listenstate, int sectionCount,int view,String thumbnail) {
         Video video=new Video(link,title,lookstate,listenstate,sectionCount,view,thumbnail);
-        databaseReference2.push().setValue(video);
+        databaseReference.push().setValue(video);
         return true;
     }
 
