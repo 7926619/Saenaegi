@@ -23,6 +23,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 
 import com.google.android.youtube.player.YouTubePlayer;
@@ -55,6 +56,7 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
     private int index=0;
     private Bitmap thumb;
     private String url;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +95,7 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
         listView = (ListView) findViewById(R.id.listview);
         adapter = new ListviewAdapter(this, R.layout.listview_item, data);
         listView.setAdapter(adapter);
+
         /* Tab */
         changeView();
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tablayout1);
@@ -115,6 +118,9 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
                 // TODO : 이미 선택된 tab이 다시
             }
         });
+
+        progressBar = findViewById(R.id.progressBar);
+        progressBar.setMax(100);
     }
 
     private void changeView() {
@@ -138,6 +144,7 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
                         }
                         adapter.notifyDataSetChanged();
                         setListViewHeightBasedOnChildren(listView);
+                        progressBar.setVisibility(View.GONE);
                     }
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {

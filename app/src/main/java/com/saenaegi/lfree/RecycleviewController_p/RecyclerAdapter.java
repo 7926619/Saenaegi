@@ -20,7 +20,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemVi
     // Item의 클릭 상태를 저장할 array 객체
     private SparseBooleanArray selectedItems = new SparseBooleanArray();
     // 직전에 클릭됐던 Item의 position
-    private int prePosition = 1;
+    private int prePosition = -1;
 
     @NonNull
     @Override
@@ -75,9 +75,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemVi
             else
                 imageView.setImageResource(R.drawable.off_button);
 
-            if(data.getNum() == 1)
-                imageView.setColorFilter(Color.argb(128, 0, 0, 0));
-
             changeVisibility(selectedItems.get(position));
 
             imageView.setOnClickListener(this);
@@ -85,15 +82,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemVi
 
         @Override
         public void onClick(View v) {
-            if (selectedItems.get(position)) {
-                // 펼쳐진 Item을 클릭 시
-                selectedItems.delete(position);
-            } else {
-                // 직전의 클릭됐던 Item의 클릭상태를 지움
-                selectedItems.delete(prePosition);
-                // 클릭한 Item의 position을 저장
-                selectedItems.put(position, true);
-            }
+            // 직전의 클릭됐던 Item의 클릭상태를 지움
+            selectedItems.delete(prePosition);
+            // 클릭한 Item의 position을 저장
+            selectedItems.put(position, true);
             // 해당 포지션의 변화를 알림
             if (prePosition != -1) notifyItemChanged(prePosition);
             notifyItemChanged(position);
