@@ -176,10 +176,7 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(VideoCommentaryListActivity.this, WatchVideoActivity.class);
-                if(index == 0)
-                    intent.putExtra("link",pvideos.get(pvideos.size()-position-1).getLink());
-                else
-                    intent.putExtra("link",mvideos.get(mvideos.size()-position-1).getLink());
+                intent.putExtra("link",videos.get(videos.size()-position-1).getLink());
                 startActivity(intent);
             }
         });
