@@ -219,12 +219,15 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
 
         builder.setTitle("해설 타입 선택");
 
+        final CharSequence [] type = new String[1];
         builder.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
+                type[0] = items[item];
             }
         });
 
-        Spinner dropdown = new Spinner(this);
+
+        final Spinner dropdown = new Spinner(this);
         String[] options = new String[]{"파트 선택", "1", "2", "3", "4", "5", "6", "7"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, options);
         dropdown.setAdapter(adapter);
@@ -235,6 +238,8 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent(WatchVideoActivity.this, MakeVideoActivity.class);
                 intent.putExtra("link",videoID);
+                intent.putExtra("type",type[0]);
+                intent.putExtra("part",dropdown.getSelectedItem().toString());
                 startActivity(intent);
             }
         });

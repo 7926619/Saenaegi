@@ -65,6 +65,8 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
     private YouTubePlayer player;
     private String videoID;
     private int sectionNum;
+    private int min;
+    private int sec;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,24 +75,6 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         setContentView(R.layout.activity_make_video);
         filedirectory=this.getCacheDir();
 
-        /* 액션바 상속 안하고 하기
-        AppCompatCallback callback = new AppCompatCallback() {
-            @Override
-            public void onSupportActionModeStarted(ActionMode actionMode) {
-            }
-
-            @Override
-            public void onSupportActionModeFinished(ActionMode actionMode) {
-            }
-
-            @Nullable
-            @Override
-            public ActionMode onWindowStartingSupportActionMode(ActionMode.Callback callback) {
-                return null;
-            }
-        };
-
-        AppCompatDelegate delegate = AppCompatDelegate.create(this, callback);*/
         /* scroll on top */
         final ScrollView scroll_view = (ScrollView) findViewById(R.id.scroll_view);
         scroll_view.post(new Runnable() {
@@ -102,8 +86,6 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         /* Action Bar */
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(null);
-        //delegate.setSupportActionBar(toolbar);
-        //delegate.getSupportActionBar().setDisplayShowTitleEnabled(false);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
@@ -170,6 +152,8 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
 
                     @Override
                     public void onLoaded(String s) {
+                        min = player.getDurationMillis()/60000;
+                        sec = (player.getDurationMillis()%60000)/1000;
                     }
 
                     @Override
@@ -204,14 +188,33 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
         tr.setLayoutParams(lp);
 
+        Intent data = getIntent();
         // section의 처음과 끝 시간-> 유투브 시간을 불러와서 넣어 주어야 한다. 미리 넣어 줘야 하는 것들
         subtitle.setSectionS("00:00");
         subtitle.setSectionF("10:00");
+
+        sectionNum = Integer.parseInt(data.getExtras().getString("part"));
+        if((sectionNum > (min / 10)) && ((min % 10) > 3)){
+            subtitle.setSectionS((sectionNum-1)+"0:00");
+            subtitle.setSectionF(min+":"+sec);
+        }
+        else if(sectionNum == (min / 10) && ((min % 10) < 4)) {
+            subtitle.setSectionS((sectionNum-1)+"0:00");
+            subtitle.setSectionF(min+":"+sec);
+        }
+        else {
+            subtitle.setSectionS((sectionNum-1)+"0:00");
+            subtitle.setSectionF(sectionNum+"0:00");
+        }
         subtitle.setIdgoogle("userid");
         subtitle.setName( "username" );
         sectionNum =2;
         subtitle.setRecommend(0);
         subtitle.setType( true );
+        if(data.getExtras().getString("type").equals("자막"))
+            subtitle.setType( true );
+        else
+            subtitle.setType( false );
 
         /* EditText */
         EditText startTime = new EditText(this);
