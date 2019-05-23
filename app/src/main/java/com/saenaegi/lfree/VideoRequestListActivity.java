@@ -73,6 +73,7 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
 
     private ArrayList<ListviewItem> data = new ArrayList<>();
     private ArrayList<Video> videos = new ArrayList<>();
+    private ArrayList<Video> rvideos=new ArrayList<>();
     private ListView listView;
     private ListviewAdapter adapter;
     private Bitmap thumb;
@@ -135,12 +136,14 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 data.clear();
+                rvideos.clear();
                 videos.clear();
                 for(DataSnapshot snapshot:dataSnapshot.getChildren()){
                     Video video=snapshot.getValue(Video.class);
+                    rvideos.add(video);
                     if (!(video.isLookstate() && video.isListenstate())) {
                         ListviewItem temp = new ListviewItem( StringToBitMap(video.getBitt()), video.getTitle(), null );
-                        videos.add( video );
+                        //videos.add( video );
                         data.add(0,temp);
                     }
                 }
