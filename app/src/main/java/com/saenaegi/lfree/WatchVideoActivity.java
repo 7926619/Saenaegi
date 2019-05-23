@@ -219,13 +219,14 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
 
         builder.setTitle("해설 타입 선택");
 
+        final CharSequence [] type = new String[1];
         builder.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
-
+                type[0] = items[item];
             }
         });
 
-        Spinner dropdown = new Spinner(this);
+        final Spinner dropdown = new Spinner(this);
         String[] options = new String[sectionCount+1];
         options[0]="파트 선택" ;
         for(int i=0;i<sectionCount;i++)
@@ -239,9 +240,12 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent(WatchVideoActivity.this, MakeVideoActivity.class);
                 intent.putExtra("link",videoID);
+                intent.putExtra("type",type[0]);
+                intent.putExtra("part",dropdown.getSelectedItem().toString());
                 startActivity(intent);
             }
         });
+
         builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

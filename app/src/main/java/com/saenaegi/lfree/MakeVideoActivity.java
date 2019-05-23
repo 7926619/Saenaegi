@@ -76,6 +76,8 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
     private String idvideo;
     private FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference=firebaseDatabase.getReference().child( "LFREE" ).child( "VIDEO" );
+    private int min;
+    private int sec;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,8 +116,6 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         /* Action Bar */
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(null);
-        //delegate.setSupportActionBar(toolbar);
-        //delegate.getSupportActionBar().setDisplayShowTitleEnabled(false);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
@@ -182,6 +182,8 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
 
                     @Override
                     public void onLoaded(String s) {
+                        min = player.getDurationMillis()/60000;
+                        sec = (player.getDurationMillis()%60000)/1000;
                     }
 
                     @Override
@@ -216,14 +218,33 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
         tr.setLayoutParams(lp);
 
+        Intent data = getIntent();
         // section의 처음과 끝 시간-> 유투브 시간을 불러와서 넣어 주어야 한다. 미리 넣어 줘야 하는 것들
         subtitle.setSectionS("00:00");
         subtitle.setSectionF("10:00");
+
+        sectionNum = Integer.parseInt(data.getExtras().getString("part"));
+        if((sectionNum > (min / 10)) && ((min % 10) > 3)){
+            subtitle.setSectionS((sectionNum-1)+"0:00");
+            subtitle.setSectionF(min+":"+sec);
+        }
+        else if(sectionNum == (min / 10) && ((min % 10) < 4)) {
+            subtitle.setSectionS((sectionNum-1)+"0:00");
+            subtitle.setSectionF(min+":"+sec);
+        }
+        else {
+            subtitle.setSectionS((sectionNum-1)+"0:00");
+            subtitle.setSectionF(sectionNum+"0:00");
+        }
         subtitle.setIdgoogle("userid");
         subtitle.setName( "username" );
         sectionNum =2;
         subtitle.setRecommend(0);
         subtitle.setType( true );
+        if(data.getExtras().getString("type").equals("자막"))
+            subtitle.setType( true );
+        else
+            subtitle.setType( false );
 
         /* EditText */
         EditText startTime = new EditText(this);
@@ -254,7 +275,15 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
 
         ImageButton sub_ok = (ImageButton) childLayout.findViewById(R.id.sub_ok);
         sub_ok.setOnClickListener(new View.OnClickListener() {
+            int subTime(String buf) {
+                if(buf.charAt(0) == '0')
+                    return Integer.parseInt(buf.substring(1, 2));
+                return Integer.parseInt(buf.substring(0, 2));
+            }
             boolean checkInput(String start, String end, String sub) {
+                int startTime, endTime, preEndTime;
+                SubtitleData preSub;
+
                 if(start.length() == 0 || end.length() == 0 || sub.length() == 0) {
                     Toast.makeText(getApplicationContext(), "빈칸이 존재합니다.", Toast.LENGTH_LONG).show();
                     return true;
@@ -271,6 +300,23 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
                     Toast.makeText(getApplicationContext(), "종료 시간의 형식이 알맞지 않습니다.", Toast.LENGTH_LONG).show();
                     return true;
                 }
+
+                if(subtitles.size() != 0) {
+                    preSub = subtitles.get(subtitles.size() - 1);
+
+                    startTime = subTime(start.substring(0, 2)) * 60 + subTime(start.substring(3, 5));
+                    endTime = subTime(end.substring(0, 2)) * 60 + subTime(end.substring(3, 5));
+                    preEndTime = subTime(preSub.getSectionE().substring(0, 2)) * 60 + subTime(preSub.getSectionE().substring(3, 5));
+
+                    if (startTime > endTime) {
+                        Toast.makeText(getApplicationContext(), "종료 시간이 시작 시간보다 빠릅니다.", Toast.LENGTH_LONG).show();
+                        return true;
+                    } else if (preEndTime > startTime) {
+                        Toast.makeText(getApplicationContext(), "시작 시간이 이전 종료 시간보다 빠릅니다.", Toast.LENGTH_LONG).show();
+                        return true;
+                    }
+                }
+
                 return false;
             }
             @Override
@@ -343,8 +389,7 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
                                         ViewGroup parentView2 = (ViewGroup) parentView1.getParent();
                                         ViewGroup parentView3 = (ViewGroup) parentView2.getParent();
                                         int index = parentView3.indexOfChild(parentView2);  // (TableRow) tr's number
-                                        int index2= subtitles.size()-index;
-                                        subtitles.remove( index2 );
+                                        subtitles.remove((index - 1) / 2);
                                         parentView3.removeView(parentView3.getChildAt(index));
                                         parentView3.removeView(parentView3.getChildAt(index));  // line remove
                                         break;

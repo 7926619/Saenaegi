@@ -1,25 +1,37 @@
 package com.saenaegi.lfree.SubtitleController;
 
 public class SubtitleData {
-    private String context;
+    private String subString;
     private String sectionS;
-    private String sectionF;
+    private String sectionE;
 
     public SubtitleData(){}
-    public SubtitleData(String sectionS, String sectionF, String context){
+    public SubtitleData(String sectionS, String sectionE, String subString){
         this.sectionS=sectionS;
-        this.sectionF=sectionF;
-        this.context=context;
+        this.sectionE=sectionE;
+        this.subString =subString;
     }
     public String getString(){
         StringBuilder stringBuilder=new StringBuilder(  );
         stringBuilder.append( sectionS );
         stringBuilder.append( "\t" );
-        stringBuilder.append( sectionF );
+        stringBuilder.append( sectionE );
         stringBuilder.append( "\t" );
-        stringBuilder.append( context );
+        stringBuilder.append(subString);
         stringBuilder.append( "\n" );
         return stringBuilder.toString();
+    }
+
+    public String getSubString() {
+        return subString;
+    }
+
+    public String getSectionS() {
+        return sectionS;
+    }
+
+    public String getSectionE() {
+        return sectionE;
     }
 
 }
