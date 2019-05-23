@@ -27,13 +27,15 @@ public class InputDataController {
     private FirebaseStorage firebaseStorage=FirebaseStorage.getInstance();
     private StorageReference ListorageReference=firebaseStorage.getReference().child( "ListenSubtitle");
     private StorageReference LostorageReference=firebaseStorage.getReference().child( "LookSubtitle");
-    private final String Listen_URL="gs://lfree-c8021.appspot.com/ListenSubtitle";
-    private final String Look_URL="gs://lfree-c8021.appspot.com/LookSubtitle";
 
-    public void storeData(Subtitle subtitle,ArrayList<String> subtitles, String idvideo,File filedirectory, int sectionNum){
+    public void storeData(Subtitle subtitle,ArrayList<SubtitleData> subtitlesData, String idvideo,File filedirectory, int sectionNum){
 
         DatabaseReference dataRef=databaseReference.child( idvideo ).child( "SUBTITLE" );
 
+        ArrayList<String> subtitles=new ArrayList<>();
+        for(SubtitleData subtitleData:subtitlesData){
+            subtitles.add(subtitleData.getString());
+        }
         String key=dataRef.push().getKey();
         String filename=key+".txt";
         File storagefile=writeFile( subtitles, filename,filedirectory );

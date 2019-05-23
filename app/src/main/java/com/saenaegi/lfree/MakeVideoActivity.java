@@ -50,13 +50,14 @@ import static android.text.InputType.TYPE_CLASS_DATETIME;
 import static android.text.InputType.TYPE_DATETIME_VARIATION_TIME;
 import static android.text.InputType.TYPE_TEXT_FLAG_CAP_SENTENCES;
 import static android.text.InputType.TYPE_TEXT_FLAG_MULTI_LINE;
+import com.saenaegi.lfree.SubtitleController.SubtitleData;
 
 public class MakeVideoActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private View view1;
-    private ArrayList<String> subtitles =new ArrayList<>();
+    private ArrayList<SubtitleData> subtitles =new ArrayList<>();
     private Subtitle subtitle=new Subtitle();
     private InputDataController inputDataController;
     private File filedirectory;
@@ -306,7 +307,7 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
                                         ViewGroup parentView2 = (ViewGroup) parentView1.getParent();
                                         ViewGroup parentView3 = (ViewGroup) parentView2.getParent();
                                         int index = parentView3.indexOfChild(parentView2);  // (TableRow) tr's number
-                                        int index2= subtitles.size()-index;
+                                        int index2= subtitles.size()-index+1;
                                         subtitles.remove( index2 );
                                         parentView3.removeView(parentView3.getChildAt(index));
                                         parentView3.removeView(parentView3.getChildAt(index));  // line remove
@@ -340,8 +341,8 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
                 tr.addView(t2);
                 tr.addView(sub_col);
 
-                String temp=start+"\t"+end+"\t"+sub;
-                subtitles.add( temp );
+                SubtitleData subtitleData=new SubtitleData(start,end,sub);
+                subtitles.add( subtitleData );
 
                 /* line */
                 View line = new View(MakeVideoActivity.this);
