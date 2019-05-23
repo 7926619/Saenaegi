@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Point;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,13 +11,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatCallback;
-import android.support.v7.app.AppCompatDelegate;
-import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Display;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,27 +22,23 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ScrollView;
 import android.widget.Spinner;
-import android.widget.TextView;
 
-import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
-import com.google.android.youtube.player.YouTubePlayerView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.saenaegi.lfree.Data.Video;
 import com.saenaegi.lfree.RecycleviewController_p.Data;
 import com.saenaegi.lfree.RecycleviewController_p.RecyclerAdapter;
 
 import com.saenaegi.lfree.SubtitleController.outputDataController;
 import java.util.Arrays;
-import java.util.List;
+import java.util.ArrayList;
 
 public class WatchVideoActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -57,8 +48,9 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
     private RecyclerView recyclerView;
     private YouTubePlayer player;
     private String videoID;
+    private int sectionCount;
     private outputDataController output=new outputDataController();
-    private List<Boolean> listState;
+    private ArrayList<Boolean> listState=new ArrayList<>();
 
     private FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference=firebaseDatabase.getReference().child( "LFREE" ).child( "VIDEO" );
@@ -129,7 +121,7 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
         adapter = new RecyclerAdapter();
         recyclerView.setAdapter(adapter);
 
-        getData();
+        getSections();
 
         /* 동영상 로드 및 초기화 */
         final Intent data = getIntent();
@@ -182,31 +174,28 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot snapshot:dataSnapshot.getChildren()){
-                    if(snapshot.getKey().equals(videoID)) {
-                        Video video=snapshot.getValue(Video.class);
-                        final int count=video.getSectionCount();
-                        boolean [] list;
-                        list=new boolean[count];
-                        Arrays.fill( list,false );
+                    Video video=snapshot.getValue(Video.class);
+                    if(video.getLink().equals( videoID )){
+                        sectionCount=video.getSectionCount();
+                        for(int i=0;i<sectionCount;i++){
+                            listState.add( false );
+                        }
                         for(DataSnapshot subtitleSnap:snapshot.child( "SUBTITLE" ).getChildren()){
-
+                            int index= Integer.parseInt(subtitleSnap.getKey());
+                            listState.set(index-1, true);
                         }
                     }
                 }
+                setData();
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         } );
     }
-    private void getData() {
-
-        //getSections();
-        //int partNum = listState.size(); // 파트 5개 있다고 가정
-        int partNum=7;
-        listState = Arrays.asList(true, true, false, true, false, false, false);
+    private void setData() {
+        int partNum = listState.size()+2; // 파트 5개 있다고 가정
         for (int i = 0; i < partNum; i++) {
             // 각 List의 값들을 data 객체에 set 해줍니다.
             Data data = new Data();
