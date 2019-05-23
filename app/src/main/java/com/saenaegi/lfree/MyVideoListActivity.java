@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
@@ -101,12 +102,14 @@ public class MyVideoListActivity extends AppCompatActivity implements Navigation
                 for(DataSnapshot snapshot:dataSnapshot.getChildren()){
                     Video video = snapshot.getValue( Video.class );
                     for(DataSnapshot temp:snapshot.child( "SUBTITLE" ).getChildren()) {
-                        Subtitle subtitle=temp.getValue(Subtitle.class);
-                        if (subtitle.getIdgoogle().equals( "userid" )) {
-                            videos.add( video );
-                            ListviewItem tmp = new ListviewItem( StringToBitMap(video.getBitt()), video.getTitle(), String.valueOf( video.getView() ) );
-                            data.add( tmp );
-                            break;
+                        for(DataSnapshot tmp:temp.getChildren()) {
+                            Subtitle subtitle = tmp.getValue( Subtitle.class );
+                            if (subtitle.getIdgoogle().equals( "userid" )) {
+                                videos.add( video );
+                                ListviewItem item = new ListviewItem( StringToBitMap( video.getBitt() ), video.getTitle(), String.valueOf( video.getView() ) );
+                                data.add( item );
+                                break;
+                            }
                         }
                     }
                 }
@@ -119,6 +122,15 @@ public class MyVideoListActivity extends AppCompatActivity implements Navigation
 
             }
         } );
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(MyVideoListActivity.this, WatchVideoActivity.class);
+                intent.putExtra("link",videos.get(videos.size()-position-1).getLink());
+                intent.putExtra("count",videos.get(videos.size()-position-1).getSectionCount());
+                startActivity(intent);
+            }
+        });
     }
 
     public void setListViewHeightBasedOnChildren(ListView listView) {

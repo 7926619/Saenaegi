@@ -55,8 +55,6 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
     private FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference=firebaseDatabase.getReference().child( "LFREE" ).child( "VIDEO" );
 
-    private FirebaseStorage firebaseStorage=FirebaseStorage.getInstance();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -178,12 +176,14 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
                     if(video.getLink().equals( videoID )){
                         sectionCount=video.getSectionCount();
                         for(int i=0;i<sectionCount;i++){
-                            listState.add( false );
+                            listState.add( 0,false );
                         }
                         for(DataSnapshot subtitleSnap:snapshot.child( "SUBTITLE" ).getChildren()){
-                            int index= Integer.parseInt(subtitleSnap.getKey());
-                            listState.set(index-1, true);
+                            int index=Integer.parseInt(subtitleSnap.getKey());
+                            if(index!=0)
+                                listState.set( index-1 ,true);
                         }
+                        break;
                     }
                 }
                 setData();
@@ -195,7 +195,7 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
         } );
     }
     private void setData() {
-        int partNum = listState.size()+2; // 파트 5개 있다고 가정
+        int partNum = listState.size(); // 파트 5개 있다고 가정
         for (int i = 0; i < partNum; i++) {
             // 각 List의 값들을 data 객체에 set 해줍니다.
             Data data = new Data();
@@ -221,11 +221,15 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
 
         builder.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
+
             }
         });
 
         Spinner dropdown = new Spinner(this);
-        String[] options = new String[]{"파트 선택", "1", "2", "3", "4", "5", "6", "7"};
+        String[] options = new String[sectionCount+1];
+        options[0]="파트 선택" ;
+        for(int i=0;i<sectionCount;i++)
+            options[i+1]=String.valueOf( i+1 );
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, options);
         dropdown.setAdapter(adapter);
         builder.setView(dropdown);
@@ -238,7 +242,6 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
                 startActivity(intent);
             }
         });
-
         builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

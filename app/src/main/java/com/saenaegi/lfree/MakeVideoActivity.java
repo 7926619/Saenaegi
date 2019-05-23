@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -35,7 +36,14 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
 import com.saenaegi.lfree.Data.Subtitle;
+import com.saenaegi.lfree.Data.Video;
 import com.saenaegi.lfree.SubtitleController.InputDataController;
 
 import java.io.File;
@@ -65,6 +73,9 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
     private YouTubePlayer player;
     private String videoID;
     private int sectionNum;
+    private String idvideo;
+    private FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
+    private DatabaseReference databaseReference=firebaseDatabase.getReference().child( "LFREE" ).child( "VIDEO" );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +83,7 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         this.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_make_video);
         filedirectory=this.getCacheDir();
+        getIdvideo();
 
         /* 액션바 상속 안하고 하기
         AppCompatCallback callback = new AppCompatCallback() {
@@ -137,7 +149,7 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
             @Override
             public void onClick(View view) {
                 inputDataController=new InputDataController();
-                inputDataController.storeData(subtitle,subtitles,"-LetQ6AWMqYsO1RnURxu", filedirectory, sectionNum);
+                inputDataController.storeData(subtitle,subtitles,idvideo, filedirectory, sectionNum);
                 Intent intent = new Intent(MakeVideoActivity.this, VideoCommentaryListActivity.class);  // 이동할 액티비티 수정해야됨
                 startActivity(intent);
             }
@@ -331,7 +343,7 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
                                         ViewGroup parentView2 = (ViewGroup) parentView1.getParent();
                                         ViewGroup parentView3 = (ViewGroup) parentView2.getParent();
                                         int index = parentView3.indexOfChild(parentView2);  // (TableRow) tr's number
-                                        int index2= subtitles.size()-index+1;
+                                        int index2= subtitles.size()-index;
                                         subtitles.remove( index2 );
                                         parentView3.removeView(parentView3.getChildAt(index));
                                         parentView3.removeView(parentView3.getChildAt(index));  // line remove
@@ -407,6 +419,23 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         tl.addView(ll, new TableLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
     }
 
+    public void getIdvideo(){
+        databaseReference.addListenerForSingleValueEvent( new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot snapshot:dataSnapshot.getChildren()){
+                    Video video=snapshot.getValue( Video.class );
+                    if(video.getLink().equals( videoID ))
+                        idvideo=snapshot.getKey();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        } );
+    }
     public void setEditTextMaxLength(EditText edt_text, int length) {
         InputFilter[] filterArray = new InputFilter[1];
         filterArray[0] = new InputFilter.LengthFilter(length);
