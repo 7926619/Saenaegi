@@ -57,7 +57,7 @@ public class InputDataController {
             } );
         }
         else {
-            uploadTask=LostorageReference.child( idvideo ).putFile(file);
+            uploadTask=LostorageReference.child(idvideo+"/"+sectionNum+"/"+file.getLastPathSegment()).putFile(file);
             uploadTask.addOnFailureListener( new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
