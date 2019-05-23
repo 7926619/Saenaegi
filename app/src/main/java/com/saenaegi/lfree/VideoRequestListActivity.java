@@ -74,7 +74,6 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
     private NavigationView navigationView;
 
     private ArrayList<ListviewItem> data = new ArrayList<>();
-    private ArrayList<Request> requests=new ArrayList<>();
     private ArrayList<Video> videos = new ArrayList<>();
     private ListView listView;
     private ListviewAdapter adapter;
@@ -133,39 +132,6 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
         adapter = new ListviewAdapter(this, R.layout.listview_item, data);
         listView.setAdapter(adapter);
         setListViewHeightBasedOnChildren(listView);
-/*        databaseReference.addValueEventListener( new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                data.clear();
-                videos.clear();
-                for(DataSnapshot snapshot:dataSnapshot.getChildren()){
-                    Request request = snapshot.getValue(Request.class);
-                    requests.add( request );
-
-                    url = "https://img.youtube.com/vi/"+request.getLink()+"/maxresdefault.jpg";
-
-
-                    Runnable r = new BackgroundTask();
-                    Thread thread = new Thread(r);
-                    thread.start();
-                    try {
-                        thread.join();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
-
-                    ListviewItem temp = new ListviewItem(thumb, request.getTitle(), request.seeType());
-                    data.add(0,temp);
-                }
-                adapter.notifyDataSetChanged();
-                setListViewHeightBasedOnChildren(listView);
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        } ); */
 
         databaseReference2.addValueEventListener( new ValueEventListener() {
             @Override
