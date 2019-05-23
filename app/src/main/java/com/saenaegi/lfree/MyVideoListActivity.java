@@ -170,7 +170,7 @@ public class MyVideoListActivity extends AppCompatActivity implements Navigation
                 }
                 adapter.notifyDataSetChanged();
                 setListViewHeightBasedOnChildren( listView );
-                return false;
+                return true;
             }
 
             @Override

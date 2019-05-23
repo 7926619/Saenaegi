@@ -190,7 +190,7 @@ public class LikeVideoListActivity extends AppCompatActivity implements Navigati
                 }
                 adapter.notifyDataSetChanged();
                 setListViewHeightBasedOnChildren( listView );
-                return false;
+                return true;
             }
 
             @Override
