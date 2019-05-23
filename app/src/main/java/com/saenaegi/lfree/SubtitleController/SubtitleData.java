@@ -1,12 +1,12 @@
 package com.saenaegi.lfree.SubtitleController;
 
-public class InputData {
+public class SubtitleData {
     private String context;
     private String sectionS;
     private String sectionF;
 
-    public InputData(){}
-    public  InputData(String sectionS,String sectionF,String context){
+    public SubtitleData(){}
+    public SubtitleData(String sectionS, String sectionF, String context){
         this.sectionS=sectionS;
         this.sectionF=sectionF;
         this.context=context;

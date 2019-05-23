@@ -136,7 +136,7 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
                         for(DataSnapshot snapshot:dataSnapshot.getChildren()){
                             Video video=snapshot.getValue(Video.class);
                             if (video.isLookstate() && video.isListenstate()) {
-                                ListviewItem temp = new ListviewItem( StringToBitMap(video.getBitt()), video.getTitle(), String.valueOf( video.getView() ) );
+                                ListviewItem temp = new ListviewItem( StringToBitMap(video.getBitt()), video.getTitle(), "조회수 : "+video.getView() );
                                 pvideos.add( video );
                                 videos.add( video );
                                 data.add(0,temp);

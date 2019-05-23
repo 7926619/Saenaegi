@@ -56,17 +56,17 @@
                 android:id="@+id/textView18"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
                 android:layout_marginBottom="10dp"
-                android:textColor="#363636"
-                android:contentDescription="최근 영상 시청"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:nextFocusDown="@+id/textView17"
-                android:nextFocusUp="@+id/back"
                 android:accessibilityTraversalAfter="@+id/textView17"
                 android:accessibilityTraversalBefore="@+id/back"
-                android:text="최근 영상 시청" />
+                android:contentDescription="영상 목록"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:nextFocusUp="@+id/back"
+                android:nextFocusDown="@+id/textView17"
+                android:text="영상 목록"
+                android:textColor="#363636"
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/textView17"

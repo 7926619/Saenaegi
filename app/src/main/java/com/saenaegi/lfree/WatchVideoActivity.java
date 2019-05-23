@@ -3,6 +3,7 @@ package com.saenaegi.lfree;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Point;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -33,9 +34,18 @@ import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 import com.google.android.youtube.player.YouTubePlayerView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.saenaegi.lfree.Data.Video;
 import com.saenaegi.lfree.RecycleviewController_p.Data;
 import com.saenaegi.lfree.RecycleviewController_p.RecyclerAdapter;
 
+import com.saenaegi.lfree.SubtitleController.outputDataController;
 import java.util.Arrays;
 import java.util.List;
 
@@ -47,6 +57,13 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
     private RecyclerView recyclerView;
     private YouTubePlayer player;
     private String videoID;
+    private outputDataController output=new outputDataController();
+    private List<Boolean> listState;
+
+    private FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
+    private DatabaseReference databaseReference=firebaseDatabase.getReference().child( "LFREE" ).child( "VIDEO" );
+
+    private FirebaseStorage firebaseStorage=FirebaseStorage.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,10 +128,10 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
 
         adapter = new RecyclerAdapter();
         recyclerView.setAdapter(adapter);
+
         getData();
 
         /* 동영상 로드 및 초기화 */
-
         final Intent data = getIntent();
         YouTubePlayerSupportFragment frag = (YouTubePlayerSupportFragment) getSupportFragmentManager().findFragmentById(R.id.youtube_screen);
         frag.initialize("AIzaSyAn_HFubCwx1rbM2q45hMGGhCPUx2AEOz4", new YouTubePlayer.OnInitializedListener() {
@@ -159,9 +176,37 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
         });
     }
 
+    public void getSections(){
+
+        databaseReference.addListenerForSingleValueEvent( new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot snapshot:dataSnapshot.getChildren()){
+                    if(snapshot.getKey().equals(videoID)) {
+                        Video video=snapshot.getValue(Video.class);
+                        final int count=video.getSectionCount();
+                        boolean [] list;
+                        list=new boolean[count];
+                        Arrays.fill( list,false );
+                        for(DataSnapshot subtitleSnap:snapshot.child( "SUBTITLE" ).getChildren()){
+
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        } );
+    }
     private void getData() {
-        int partNum = 7; // 파트 5개 있다고 가정
-        List<Boolean> listState = Arrays.asList(true, true, false, true, false, false, false);
+
+        //getSections();
+        //int partNum = listState.size(); // 파트 5개 있다고 가정
+        int partNum=7;
+        listState = Arrays.asList(true, true, false, true, false, false, false);
         for (int i = 0; i < partNum; i++) {
             // 각 List의 값들을 data 객체에 set 해줍니다.
             Data data = new Data();
