@@ -2,9 +2,7 @@ package com.saenaegi.lfree.Data;
 
 public class Subtitle {
 
-    private String directory;
     private String idgoogle;
-
     private String name;
     private int recommend;
     private String sectionF;
@@ -16,9 +14,8 @@ public class Subtitle {
 
     }
 
-    public Subtitle(String directory, String idgoogle, String name, int recommend, String sectionF, String sectionS, int sectionNum, boolean type){
+    public Subtitle(String idgoogle, String name, int recommend, String sectionF, String sectionS, int sectionNum, boolean type){
         this.idgoogle=idgoogle;
-        this.directory=directory;
         this.name=name;
         this.recommend=recommend;
         this.sectionF=sectionF;
@@ -26,10 +23,6 @@ public class Subtitle {
         this.sectionNum=sectionNum;
         this.type=type;
 
-    }
-
-    public String getDirectory() {
-        return directory;
     }
 
     public String getIdgoogle() {
@@ -66,10 +59,6 @@ public class Subtitle {
 
     public void setIdgoogle(String idgoogle) {
         this.idgoogle = idgoogle;
-    }
-
-    public void setDirectory(String directory) {
-        this.directory = directory;
     }
 
     public void setName(String name) {

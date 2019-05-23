@@ -50,7 +50,6 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
-import com.saenaegi.lfree.Data.Request;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -74,7 +73,6 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
     private NavigationView navigationView;
 
     private ArrayList<ListviewItem> data = new ArrayList<>();
-    private ArrayList<Request> requests=new ArrayList<>();
     private ArrayList<Video> videos = new ArrayList<>();
     private ListView listView;
     private ListviewAdapter adapter;
@@ -133,39 +131,6 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
         adapter = new ListviewAdapter(this, R.layout.listview_item, data);
         listView.setAdapter(adapter);
         setListViewHeightBasedOnChildren(listView);
-/*        databaseReference.addValueEventListener( new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                data.clear();
-                videos.clear();
-                for(DataSnapshot snapshot:dataSnapshot.getChildren()){
-                    Request request = snapshot.getValue(Request.class);
-                    requests.add( request );
-
-                    url = "https://img.youtube.com/vi/"+request.getLink()+"/maxresdefault.jpg";
-
-
-                    Runnable r = new BackgroundTask();
-                    Thread thread = new Thread(r);
-                    thread.start();
-                    try {
-                        thread.join();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
-
-                    ListviewItem temp = new ListviewItem(thumb, request.getTitle(), request.seeType());
-                    data.add(0,temp);
-                }
-                adapter.notifyDataSetChanged();
-                setListViewHeightBasedOnChildren(listView);
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        } ); */
 
         databaseReference2.addValueEventListener( new ValueEventListener() {
             @Override
@@ -173,11 +138,12 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
                 data.clear();
                 videos.clear();
                 for(DataSnapshot snapshot:dataSnapshot.getChildren()){
-                    Video video = snapshot.getValue(Video.class);
-                    videos.add( video );
-
-                    ListviewItem temp = new ListviewItem(StringToBitMap(video.getBitt()), video.getTitle(), video.getLink());
-                    data.add(0,temp);
+                    Video video=snapshot.getValue(Video.class);
+                    if (video.isLookstate() && video.isListenstate()) {
+                        ListviewItem temp = new ListviewItem( StringToBitMap(video.getBitt()), video.getTitle(), String.valueOf( video.getView() ) );
+                        videos.add( video );
+                        data.add(0,temp);
+                    }
                 }
                 adapter.notifyDataSetChanged();
                 setListViewHeightBasedOnChildren(listView);
@@ -260,9 +226,6 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
                                         else
                                             section = (tmp / 10) + 1;
 
-                                        /* 영상 ID 저장 */
-
-                                        setRequestQuery("user_id", true, videoID, title);
                                         setVideoQuery(videoID, title, false, false,  section, 0,BitMapToString(thumb));
                                     }
                                 }
@@ -283,11 +246,6 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
         builder.show();
     }
 
-    public boolean setRequestQuery(String idgoogle, boolean type, String link, String title) {
-        Request request=new Request(idgoogle,type,link,title);
-        databaseReference.push().setValue(request);
-        return true;
-    }
 
     public boolean setVideoQuery(String link, String title, boolean lookstate, boolean listenstate, int sectionCount,int view,String thumbnail) {
         Video video=new Video(link,title,lookstate,listenstate,sectionCount,view,thumbnail);

@@ -205,7 +205,7 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         // section의 처음과 끝 시간-> 유투브 시간을 불러와서 넣어 주어야 한다. 미리 넣어 줘야 하는 것들
         subtitle.setSectionS("00:00");
         subtitle.setSectionF("10:00");
-        subtitle.setSectionNum( 1 );
+        subtitle.setSectionNum(2);
         subtitle.setIdgoogle("userid");
         subtitle.setName( "username" );
         subtitle.setRecommend(0);

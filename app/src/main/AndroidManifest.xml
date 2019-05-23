@@ -57,13 +57,13 @@
         <activity android:name=".aLfreeMainActivity" >
         </activity>
         <activity android:name=".VideoCommentaryListActivity" >
+        </activity>
+        <activity android:name=".ChoiceActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity android:name=".ChoiceActivity">
         </activity>
         <activity android:name=".LfreeMainActivity">
         </activity>

@@ -40,10 +40,7 @@ public class InputDataController {
 
         Uri file=Uri.fromFile(storagefile);
         UploadTask uploadTask;
-
-        String directory=null;
         if(subtitle.isType()) {
-            directory=Listen_URL;
             uploadTask=ListorageReference.child(idvideo+"/"+subtitle.getSectionNum()+"/"+file.getLastPathSegment()).putFile(file);
             uploadTask.addOnFailureListener( new OnFailureListener() {
                 @Override
@@ -58,7 +55,6 @@ public class InputDataController {
             } );
         }
         else {
-            directory=Look_URL;
             uploadTask=LostorageReference.child( idvideo ).putFile(file);
             uploadTask.addOnFailureListener( new OnFailureListener() {
                 @Override
@@ -72,9 +68,7 @@ public class InputDataController {
                 }
             } );
         }
-        directory=directory+"/"+idvideo+"/"+key+".txt";
-        subtitle.setDirectory( directory );
-        dataRef.child( key ).setValue( subtitle );
+        dataRef.child( String.valueOf( subtitle.getSectionNum() ) ).child( key ).setValue( subtitle );
     }
 
     public File writeFile(ArrayList<String> subtitle, String filename, File filedirectory) {
