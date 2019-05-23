@@ -242,7 +242,15 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
 
         ImageButton sub_ok = (ImageButton) childLayout.findViewById(R.id.sub_ok);
         sub_ok.setOnClickListener(new View.OnClickListener() {
+            int subTime(String buf) {
+                if(buf.charAt(0) == '0')
+                    return Integer.parseInt(buf.substring(1, 2));
+                return Integer.parseInt(buf.substring(0, 2));
+            }
             boolean checkInput(String start, String end, String sub) {
+                int startTime, endTime, preEndTime;
+                SubtitleData preSub;
+
                 if(start.length() == 0 || end.length() == 0 || sub.length() == 0) {
                     Toast.makeText(getApplicationContext(), "빈칸이 존재합니다.", Toast.LENGTH_LONG).show();
                     return true;
@@ -259,6 +267,23 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
                     Toast.makeText(getApplicationContext(), "종료 시간의 형식이 알맞지 않습니다.", Toast.LENGTH_LONG).show();
                     return true;
                 }
+
+                if(subtitles.size() != 0) {
+                    preSub = subtitles.get(subtitles.size() - 1);
+
+                    startTime = subTime(start.substring(0, 2)) * 60 + subTime(start.substring(3, 5));
+                    endTime = subTime(end.substring(0, 2)) * 60 + subTime(end.substring(3, 5));
+                    preEndTime = subTime(preSub.getSectionE().substring(0, 2)) * 60 + subTime(preSub.getSectionE().substring(3, 5));
+
+                    if (startTime > endTime) {
+                        Toast.makeText(getApplicationContext(), "종료 시간이 시작 시간보다 빠릅니다.", Toast.LENGTH_LONG).show();
+                        return true;
+                    } else if (preEndTime > startTime) {
+                        Toast.makeText(getApplicationContext(), "시작 시간이 이전 종료 시간보다 빠릅니다.", Toast.LENGTH_LONG).show();
+                        return true;
+                    }
+                }
+
                 return false;
             }
             @Override
@@ -327,12 +352,11 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
                                         break;
                                     case R.id.m2:
                                         ViewGroup parentView = (ViewGroup) view1.getParent();
-                                        ViewGroup parentView1 = (ViewGroup) parentView.getParent();
-                                        ViewGroup parentView2 = (ViewGroup) parentView1.getParent();
-                                        ViewGroup parentView3 = (ViewGroup) parentView2.getParent();
+                                        ViewGroup parentView1 = (ViewGroup) parentView.getParent();     // ll
+                                        ViewGroup parentView2 = (ViewGroup) parentView1.getParent();    // sub_col
+                                        ViewGroup parentView3 = (ViewGroup) parentView2.getParent();    // tr
                                         int index = parentView3.indexOfChild(parentView2);  // (TableRow) tr's number
-                                        int index2= subtitles.size()-index+1;
-                                        subtitles.remove( index2 );
+                                        subtitles.remove((index - 1) / 2);
                                         parentView3.removeView(parentView3.getChildAt(index));
                                         parentView3.removeView(parentView3.getChildAt(index));  // line remove
                                         break;
