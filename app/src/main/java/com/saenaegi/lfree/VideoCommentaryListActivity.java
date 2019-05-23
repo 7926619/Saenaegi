@@ -162,8 +162,7 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
                         for(DataSnapshot snapshot:dataSnapshot.getChildren()){
                             Video video=snapshot.getValue(Video.class);
                             if(!(video.isLookstate() && video.isListenstate())) {
-                                String Stemp=returnType( video );
-                                ListviewItem temp = new ListviewItem(StringToBitMap(video.getBitt()), video.getTitle(), Stemp);
+                                ListviewItem temp = new ListviewItem(StringToBitMap(video.getBitt()), video.getTitle(), "제작중");
                                 mvideos.add( video );
                                 videos.add( video );
                                 data.add(0,temp);
@@ -190,21 +189,6 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
         });
     }
 
-    public String returnType(Video video){
-        StringBuilder stringBuilder;
-        stringBuilder = new StringBuilder();
-        stringBuilder.append( "조회수 : " );
-        stringBuilder.append( video.getView() );
-        stringBuilder.append( " / " );
-        if (!video.isListenstate() && !video.isLookstate())
-            stringBuilder.append( video.noTrueAllState() );
-        else if (video.isListenstate() == false)
-            stringBuilder.append( video.noTrueListenstate() );
-        else if (video.isLookstate() == false)
-            stringBuilder.append( video.noTrueLookstate() );
-
-        return stringBuilder.toString();
-    }
     public void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
         if (listAdapter == null) {
@@ -259,8 +243,7 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
                 else{
                     for(Video video:mvideos){
                         if(video.getTitle().contains(query)){
-                            String Stemp=returnType( video );
-                            ListviewItem temp = new ListviewItem(StringToBitMap(video.getBitt()), video.getTitle(), Stemp);
+                            ListviewItem temp = new ListviewItem(StringToBitMap(video.getBitt()), video.getTitle(), "제작중");
                             videos.add(video);
                             data.add( 0,temp );
                         }

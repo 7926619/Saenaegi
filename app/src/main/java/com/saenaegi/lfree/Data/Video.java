@@ -48,23 +48,6 @@ public class Video {
         this.view=view;
     }
 
-    public String noTrueListenstate(){
-        if(this.listenstate==false)
-            return "청각 자료 제직중";
-        else
-            return "청각 자료 완성";
-    }
-
-    public String noTrueLookstate(){
-        if(this.lookstate==false)
-            return "시각 자료 제작중";
-        else
-            return "시각 자료 완성";
-    }
-    public String noTrueAllState(){
-        return "시각 청각 둘 다 제작중";
-    }
-
     public String getLink() {
         return link;
     }
