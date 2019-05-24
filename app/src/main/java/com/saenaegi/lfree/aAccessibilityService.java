@@ -140,6 +140,12 @@ public class aAccessibilityService extends AccessibilityService {
 
         if(source.getViewIdResourceName() == null || source.getContentDescription() == null) {
             Toast.makeText(getApplicationContext(), "VIEW ID or Content is NULL!", Toast.LENGTH_LONG).show();
+            /*
+            AccessibilityNodeInfo root = getRootInActiveWindow();
+            if(root == null)
+                return;
+            source = root.findAccessibilityNodeInfosByViewId("com.saenaegi.lfree:id/textView9").get(0);
+            */
             return;
         }
 
