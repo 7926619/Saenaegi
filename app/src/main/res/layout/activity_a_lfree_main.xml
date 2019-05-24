@@ -22,7 +22,7 @@
             android:background="@color/background_green"
             android:focusable="true"
             android:focusableInTouchMode="true"
-            android:contentDescription="Lfree 시각장애인용 목록"
+            android:contentDescription="엘프리 시각장애인용 목록"
             android:nextFocusDown="@+id/textView18"
             android:nextFocusUp="@+id/textView12"
             android:accessibilityTraversalAfter="@+id/textView18"

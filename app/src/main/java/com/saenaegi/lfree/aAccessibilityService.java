@@ -57,6 +57,8 @@ public class aAccessibilityService extends AccessibilityService {
             //GESTURE_SWIPE_RIGHT = 4
             //GESTURE_SWIPE_UP = 1
             //GESTURE_SWIPE_DOWN = 2
+
+            // 오른쪽에서 왼쪽으로 스와이프를 진행하는 경우, 해당 레이아웃 내에서 선택되어 있던 UI 컴포넌트의 다음 컴포넌트를 포커싱 및 선택
             case GESTURE_SWIPE_LEFT:
                 Toast.makeText(getApplication(), "SWIPE_LEFT", Toast.LENGTH_LONG).show();
                 //source.findAccessibilityNodeInfosByViewId()
@@ -73,6 +75,8 @@ public class aAccessibilityService extends AccessibilityService {
                     source = findFocus(AccessibilityNodeInfo.FOCUS_ACCESSIBILITY);
                 }
                 return true;
+
+            // 왼쪽에서 오른쪽으로 스와이프를 진행하는 경우, 해당 레이아웃 내에서 선택되어 있던 UI 컴포넌트의 이전 컴포넌트를 포커싱 및 선택
             case GESTURE_SWIPE_RIGHT:
                 Toast.makeText(getApplication(), "SWIPE_RIGHT", Toast.LENGTH_LONG).show();
                 if(source.getViewIdResourceName() != null) {
@@ -88,11 +92,19 @@ public class aAccessibilityService extends AccessibilityService {
                     source = findFocus(AccessibilityNodeInfo.FOCUS_ACCESSIBILITY);
                 }
                 return true;
+
+            // 아래쪽에서 위쪽으로 스와이프를 진행하는 경우, 해당 레이아웃 UI에서 이전 레이아웃 UI로 이동
             case GESTURE_SWIPE_UP:
                 Toast.makeText(getApplication(), "SWIPE_UP", Toast.LENGTH_LONG).show();
+                performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
+                //source = findFocus(AccessibilityNodeInfo.FOCUS_ACCESSIBILITY);
                 return true;
+
+            // 위쪽에서 아래쪽으로 스와이프를 진행하는 경우, 해당 레이아웃 UI에서 홈으로 이동
             case GESTURE_SWIPE_DOWN:
                 Toast.makeText(getApplication(), "SWIPE_DOWN", Toast.LENGTH_LONG).show();
+                performGlobalAction(AccessibilityService.GLOBAL_ACTION_HOME);
+                //source = findFocus(AccessibilityNodeInfo.FOCUS_ACCESSIBILITY);
                 return true;
             default:
                 Toast.makeText(getApplication(), "SWIPE_ETC", Toast.LENGTH_LONG).show();
@@ -133,48 +145,35 @@ public class aAccessibilityService extends AccessibilityService {
 
         if(eventType == AccessibilityEvent.TYPE_VIEW_CLICKED || eventType == AccessibilityEvent.TYPE_VIEW_HOVER_ENTER) {
             // 이벤트를 발생시킨 해당 소스에 대한 Action 실행. 이 때의 Action은 접근성 서비스를 위한 FOCUS
+            eventText = "클릭됨 : ";
+            eventText = eventText + event.getContentDescription();
             source.performAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS);
+            Toast.makeText(getApplication(), eventText, Toast.LENGTH_SHORT).show();
             // 다시 사용할 수 있도록 해당 인스턴스를 반환
             source.recycle();
         }
-
-        // 제스처 발생 시에는 해당 제스처에 대한 기능을 먼저 수행토록 하고, TTS 기능은 사용되지 않도록 유도
-        else if(eventType == AccessibilityEvent.TYPE_TOUCH_INTERACTION_START) {
-            Toast.makeText(getApplicationContext(), "1111111111111111111111111111111111111", Toast.LENGTH_LONG).show();
-        }
-
+        /*
         else if(eventType == AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED) {
 
 
 
-            if (eventType != AccessibilityEvent.TYPE_VIEW_SCROLLED) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    tts.speak(eventText, TextToSpeech.QUEUE_FLUSH, null, "TextToSpeech_ID");
-                } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                    tts.speak(eventText, TextToSpeech.QUEUE_FLUSH, null);
-                }
-            } else if (eventType == AccessibilityEvent.TYPE_VIEW_SCROLLED) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    tts.speak("스크롤 중", TextToSpeech.QUEUE_FLUSH, null, "TextToSpeech_ID");
-                } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                    tts.speak("스크롤 중", TextToSpeech.QUEUE_FLUSH, null);
-                }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                tts.speak(eventText, TextToSpeech.QUEUE_FLUSH, null, "TextToSpeech_ID");
+            } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                tts.speak(eventText, TextToSpeech.QUEUE_FLUSH, null);
             }
-        }
 
+            return;
+        }
+        */
         else{
             switch (eventType) {
                 // 특정 컴포넌트에 대해 접근성 관련 포커싱이 발생하면
                 case AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUSED:
                     eventText = "접근성 포커싱됨 : ";
                     break;
-                // 특정 컴포넌트에 대해 사용자의 직접적인 클릭이 발생하면
-                /*
-                case AccessibilityEvent.TYPE_VIEW_CLICKED:
-                    eventText = "클릭됨 : ";
-                    break;
-                    */
-                case AccessibilityEvent.TYPE_VIEW_SELECTED:         // AdapterView에 적재되어 있는 특정 갯수의 아이템이 선택될 시
+                // AdapterView에 적재되어 있는 특정 갯수의 아이템이 선택될 시
+                case AccessibilityEvent.TYPE_VIEW_SELECTED:
                     eventText = "선택됨 : ";
                     break;
                 case AccessibilityEvent.TYPE_VIEW_FOCUSED:
@@ -187,7 +186,7 @@ public class aAccessibilityService extends AccessibilityService {
             // 이벤트의 대상이 된 컴포넌트의 ContentDescription 내용을 String에 저장 및 출력
             if(eventText != null) {
                 eventText = eventText + event.getContentDescription();
-                if(eventText.length() < 30)
+                if(eventText.length() < 30 && eventType != AccessibilityEvent.TYPE_VIEW_SELECTED && eventType != AccessibilityEvent.TYPE_VIEW_FOCUSED && eventType != AccessibilityEvent.TYPE_VIEW_SCROLLED && eventType != AccessibilityEvent.TYPE_VIEW_CLICKED && !source.getViewIdResourceName().equalsIgnoreCase("com.saenaegi.lfree:id/textView9") && !source.getViewIdResourceName().equalsIgnoreCase("com.saenaegi.lfree:id/lfree"))
                     eventText = eventText + introText;
                 Toast.makeText(getApplication(), eventText, Toast.LENGTH_SHORT).show();
 

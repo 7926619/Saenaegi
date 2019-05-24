@@ -44,7 +44,7 @@ public class ChoiceActivity extends AppCompatActivity {
                         startActivity(intent);
                         finish();
                     }
-                }, 4000);
+                }, 6000);
             }
         });
 
@@ -63,7 +63,7 @@ public class ChoiceActivity extends AppCompatActivity {
                         startActivity(intent);
                         finish();
                     }
-                }, 4000);
+                }, 6000);
             }
         });
 
