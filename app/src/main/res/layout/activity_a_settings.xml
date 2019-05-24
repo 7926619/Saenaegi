@@ -112,7 +112,7 @@
                 android:focusableInTouchMode="true"
                 android:nextFocusDown="@+id/textView14"
                 android:nextFocusUp="@+id/textView16"
-                android:accessibilityTraversalAfter="@+id/textView14"
+                android:accessibilityTraversalAfter="@+id/back"
                 android:accessibilityTraversalBefore="@+id/textView16"
                 android:text="오픈소스 라이선스" />
 

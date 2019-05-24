@@ -4,13 +4,10 @@
     android:packageNames="com.saenaegi.lfree"
     android:accessibilityEventTypes="typeViewAccessibilityFocused|typeViewClicked|typeViewFocused|typeTouchExplorationGestureStart|typeTouchExplorationGestureEnd|typeViewTextChanged|typeViewTextSelectionChanged|typeViewSelected|typeViewHoverEnter"
     android:accessibilityFeedbackType="feedbackSpoken|feedbackHaptic"
+    android:accessibilityFlags="flagIncludeNotImportantViews|flagRequestTouchExplorationMode|flagReportViewIds|flagRetrieveInteractiveWindows"
     android:notificationTimeout="100"
     android:settingsActivity="com.saenaegi.lfree.aAccessibilityService"
     android:description="@string/accessibility_description"
-    android:canRetrieveWindowContent="true"
     android:canPerformGestures="true"
+    android:canRetrieveWindowContent="true"
     android:canRequestTouchExplorationMode="true" />
-    <!-- android:accessibilityEventTypes="typeViewAccessibilityFocused|typeViewClicked|typeViewFocused|typeGestureDetectionStart|typeGestureDetectionEnd|typeViewTextChanged|typeViewTextSelectionChanged|typeViewSelected" -->
-    <!-- android:accessibilityFeedbackType="feedbackSpoken|feedbackHaptic" -->
-    <!-- android:accessibilityFlags="flagIncludeNotImportantViews" -->
-    <!-- android:accessibilityFlags="flagRequestTouchExplorationMode" -->

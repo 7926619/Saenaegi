@@ -14,7 +14,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#ffffff"
-        android:importantForAccessibility="no">
+        android:importantForAccessibility="no"
+        android:focusable="false"
+        android:focusableInTouchMode="false">
 
         <ScrollView
             android:id="@+id/scroll_view"
@@ -138,7 +140,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_horizontal"
-                            android:text="파트를 선택해주세요."
+                            android:text="등록된 해설이 없습니다."
                             android:paddingTop="10dp"
                             android:textColor="#606060"
                             android:textSize="12sp"
@@ -173,14 +175,14 @@
 
     </FrameLayout>
 
-        <android.support.design.widget.NavigationView
-            android:id="@+id/navigationView"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
-            android:background="#fff"
-            android:importantForAccessibility="no"
-            app:headerLayout="@layout/layout_nav_header"
-            app:menu="@menu/main_navigation_menu" />
+    <android.support.design.widget.NavigationView
+        android:id="@+id/navigationView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="#fff"
+        android:importantForAccessibility="no"
+        app:headerLayout="@layout/layout_nav_header"
+        app:menu="@menu/main_navigation_menu" />
 
 </android.support.v4.widget.DrawerLayout>

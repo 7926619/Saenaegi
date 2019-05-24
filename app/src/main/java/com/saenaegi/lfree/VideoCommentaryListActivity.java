@@ -119,7 +119,7 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
             }
         });
 
-        progressBar = findViewById(R.id.progressBar);
+        //progressBar = findViewById(R.id.progressBar);
         progressBar.setMax(100);
     }
 

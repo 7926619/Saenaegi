@@ -16,10 +16,17 @@
         android:layout_weight="1">
 
         <RelativeLayout
+            android:id="@+id/lfree"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:background="@color/background_green"
-            android:importantForAccessibility="no"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:contentDescription="Lfree 시각장애인용 목록"
+            android:nextFocusDown="@+id/textView18"
+            android:nextFocusUp="@+id/textView12"
+            android:accessibilityTraversalAfter="@+id/textView18"
+            android:accessibilityTraversalBefore="@+id/textView12"
             android:paddingHorizontal="10dp">
 
             <ImageView
@@ -27,11 +34,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:adjustViewBounds="true"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:importantForAccessibility="no"
                 android:src="@drawable/top_title" />
-
         </RelativeLayout>
 
         <LinearLayout
