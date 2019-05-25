@@ -120,7 +120,7 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
         });
 
         //progressBar = findViewById(R.id.progressBar);
-        progressBar.setMax(100);
+        //progressBar.setMax(100);
     }
 
     private void changeView() {
@@ -144,7 +144,7 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
                         }
                         adapter.notifyDataSetChanged();
                         setListViewHeightBasedOnChildren(listView);
-                        progressBar.setVisibility(View.GONE);
+                        //progressBar.setVisibility(View.GONE);
                     }
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {

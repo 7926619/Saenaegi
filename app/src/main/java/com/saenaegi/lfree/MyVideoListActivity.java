@@ -51,6 +51,7 @@ public class MyVideoListActivity extends AppCompatActivity implements Navigation
 
     private ListView listView;
     private ListviewAdapter adapter;
+    boolean makevideo=false;
     private ArrayList<ListviewItem> data = new ArrayList<>();
     private ArrayList<Video> videos =new ArrayList<>( );
 
@@ -100,6 +101,7 @@ public class MyVideoListActivity extends AppCompatActivity implements Navigation
                 data.clear();
                 videos.clear();
                 for(DataSnapshot snapshot:dataSnapshot.getChildren()){
+                    makevideo=false;
                     Video video = snapshot.getValue( Video.class );
                     for(DataSnapshot temp:snapshot.child( "SUBTITLE" ).getChildren()) {
                         for(DataSnapshot tmp:temp.getChildren()) {
@@ -108,9 +110,12 @@ public class MyVideoListActivity extends AppCompatActivity implements Navigation
                                 videos.add( video );
                                 ListviewItem item = new ListviewItem( StringToBitMap( video.getBitt() ), video.getTitle(), String.valueOf( video.getView() ) );
                                 data.add( item );
+                                makevideo=true;
                                 break;
                             }
                         }
+                        if(makevideo==true)
+                            break;
                     }
                 }
 
@@ -126,8 +131,8 @@ public class MyVideoListActivity extends AppCompatActivity implements Navigation
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(MyVideoListActivity.this, WatchVideoActivity.class);
-                intent.putExtra("link",videos.get(videos.size()-position-1).getLink());
-                intent.putExtra("count",videos.get(videos.size()-position-1).getSectionCount());
+                intent.putExtra("link",videos.get(position).getLink());
+                intent.putExtra("count",videos.get(position).getSectionCount());
                 startActivity(intent);
             }
         });

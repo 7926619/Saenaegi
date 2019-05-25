@@ -32,13 +32,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.saenaegi.lfree.Data.Subtitle;
 import com.saenaegi.lfree.Data.Video;
 import com.saenaegi.lfree.RecycleviewController_p.Data;
 import com.saenaegi.lfree.RecycleviewController_p.RecyclerAdapter;
 
 import com.saenaegi.lfree.SubtitleController.outputDataController;
-import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class WatchVideoActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -51,7 +52,7 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
     private int sectionCount;
     private outputDataController output=new outputDataController();
     private ArrayList<Boolean> listState=new ArrayList<>();
-
+    private HashMap<String, ArrayList<Subtitle>> sectionSubtitles=new HashMap<>();
     private FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference=firebaseDatabase.getReference().child( "LFREE" ).child( "VIDEO" );
 
@@ -179,9 +180,17 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
                             listState.add( 0,false );
                         }
                         for(DataSnapshot subtitleSnap:snapshot.child( "SUBTITLE" ).getChildren()){
-                            int index=Integer.parseInt(subtitleSnap.getKey());
-                            if(index!=0)
-                                listState.set( index-1 ,true);
+                            ArrayList<Subtitle> subtitles=new ArrayList<>();
+                            for(DataSnapshot temp: subtitleSnap.getChildren()){
+                                Subtitle subtitle=temp.getValue(Subtitle.class);
+                                subtitles.add( subtitle );
+                            }
+
+                            String index=subtitleSnap.getKey();
+                            sectionSubtitles.put( index,subtitles );
+                            int index2=Integer.parseInt(index);
+                            if(index2!=0)
+                                listState.set( index2-1 ,true);
                         }
                         break;
                     }

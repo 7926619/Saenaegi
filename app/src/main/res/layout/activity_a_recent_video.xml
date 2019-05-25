@@ -46,67 +46,15 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:paddingHorizontal="30dp"
-            android:paddingTop="20dp">
+            android:paddingTop="20dp"
+            tools:importantForAccessibility="no">
 
-            <TextView
-                android:id="@+id/textView18"
+            <ListView
+                android:id="@+id/listview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:layout_marginBottom="10dp"
-                android:textColor="#363636"
-                android:contentDescription="영상 1"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:text="영상 1" />
-
-            <TextView
-                android:id="@+id/textView17"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:layout_marginBottom="10dp"
-                android:textColor="#363636"
-                android:contentDescription="영상 2"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:text="영상 2" />
-
-            <TextView
-                android:id="@+id/textView16"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:layout_marginBottom="10dp"
-                android:textColor="#363636"
-                android:contentDescription="영상 3"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:text="영상 3" />
-
-            <TextView
-                android:id="@+id/textView15"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:layout_marginBottom="10dp"
-                android:textColor="#363636"
-                android:contentDescription="영상 4"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:text="영상 4" />
-
-            <TextView
-                android:id="@+id/textView14"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:layout_marginBottom="10dp"
-                android:textColor="#363636"
-                android:contentDescription="영상 5"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:text="영상 5" />
+                android:divider="#fff"
+                android:importantForAccessibility="no" />
 
         </LinearLayout>
     </LinearLayout>

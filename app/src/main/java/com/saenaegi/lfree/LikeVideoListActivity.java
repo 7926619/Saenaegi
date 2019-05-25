@@ -45,10 +45,9 @@ public class LikeVideoListActivity extends AppCompatActivity implements Navigati
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
-    private DatabaseReference databaseReference=firebaseDatabase.getReference().child( "LFREE" ).child( "LIKEVIDEO" );
-    private DatabaseReference vdatabaseRefereence=firebaseDatabase.getReference().child( "LFREE" ).child( "VIDEO" );
-    private HashMap<String,Video> videos=new HashMap<>();
-    private ArrayList<Video> lvideos=new ArrayList<>();
+    private DatabaseReference databaseReference=firebaseDatabase.getReference().child( "LFREE" );
+    private ArrayList<Video> videos=new ArrayList<>();
+    private ArrayList<LIkevideo> lvideos=new ArrayList<>();
     private ListView listView;
     private ListviewAdapter adapter;
     private ArrayList<ListviewItem> data=new ArrayList<>(  );
@@ -92,47 +91,32 @@ public class LikeVideoListActivity extends AppCompatActivity implements Navigati
         adapter = new ListviewAdapter(this, R.layout.listview_item, data);
         listView.setAdapter(adapter);
 
-        vdatabaseRefereence.addListenerForSingleValueEvent( new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                videos.clear();
-                for(DataSnapshot snapshot:dataSnapshot.getChildren()){
-                    Video video=snapshot.getValue(Video.class);
-                    videos.put( snapshot.getKey(),video );
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        } );
-
         databaseReference.addListenerForSingleValueEvent( new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                data.clear();
                 lvideos.clear();
-                for(DataSnapshot snapshot:dataSnapshot.getChildren()){
-
+                videos.clear();
+                data.clear();
+                for(DataSnapshot snapshot:dataSnapshot.child( "LIKEVIDEO" ).getChildren()){
                     if(snapshot.getKey().equals( "userid" )){
-                        for(DataSnapshot temp:snapshot.getChildren()){
-                            LIkevideo likeVideo=temp.getValue(LIkevideo.class);
-                            Video video=videos.get(likeVideo.getIdvideo());
-                            lvideos.add( video );
-                            ListviewItem listviewItem = new ListviewItem(StringToBitMap(video.getBitt()),video.getTitle(), String.valueOf(video.getView()));
-                            data.add(listviewItem);
+                        for(DataSnapshot snapshot1:snapshot.getChildren()){
+                            LIkevideo lIkevideo=snapshot1.getValue(LIkevideo.class);
+                            lvideos.add(lIkevideo);
                         }
-                        break;
                     }
-
+                }
+                for(DataSnapshot snapshot:dataSnapshot.child( "VIDEO" ).getChildren()){
+                    for(LIkevideo lIkevideo:lvideos){
+                        if(snapshot.getKey().equals( lIkevideo.getIdvideo() )){
+                            Video video=snapshot.getValue(Video.class);
+                            videos.add( video );
+                            ListviewItem temp = new ListviewItem( StringToBitMap(video.getBitt()), video.getTitle(), "조회수 : "+video.getView() );
+                            data.add( temp );
+                        }
+                    }
                 }
                 adapter.notifyDataSetChanged();
-                setListViewHeightBasedOnChildren(listView);
-
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
@@ -182,7 +166,7 @@ public class LikeVideoListActivity extends AppCompatActivity implements Navigati
             @Override
             public boolean onQueryTextSubmit(String query) {
                 data.clear();
-                for(Video video:lvideos){
+                for(Video video:videos){
                     if(video.getTitle().contains( query )){
                         ListviewItem listviewItem = new ListviewItem(StringToBitMap(video.getBitt()),video.getTitle(), String.valueOf(video.getView()));
                         data.add(listviewItem);
