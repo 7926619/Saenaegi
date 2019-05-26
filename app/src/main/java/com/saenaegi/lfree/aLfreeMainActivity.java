@@ -143,7 +143,7 @@ public class aLfreeMainActivity extends AppCompatActivity {
 
             // 접근성 권한을 가진 앱의 패키지 네임과 패키지 네임이 같으면 현재앱이 접근성 권한을 가지고 있다고 판단함
             if (info.getResolveInfo().serviceInfo.packageName.equals(getApplication().getPackageName())) {
-                Toast.makeText(getApplicationContext(), "Now LFREE is exist in Accessibility Service List", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Now LFREE is exist in Accessibizzlity Service List", Toast.LENGTH_LONG).show();
                 return true;
             }
         }

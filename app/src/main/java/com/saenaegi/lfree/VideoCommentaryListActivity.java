@@ -97,7 +97,7 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
         listView.setAdapter(adapter);
 
         /* Tab */
-        changeView();
+        getData();
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tablayout1);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
 
@@ -123,64 +123,60 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
         //progressBar.setMax(100);
     }
 
+    private void getData(){
+        databaseReference.addValueEventListener(  new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                mvideos.clear();
+                pvideos.clear();
+                for(DataSnapshot snapshot:dataSnapshot.getChildren()){
+                    Video video=snapshot.getValue(Video.class);
+                    if (video.isLookstate() && video.isListenstate()) {
+                        pvideos.add( video );
+                    }
+                    else{
+                        ListviewItem temp = new ListviewItem(StringToBitMap(video.getBitt()), video.getTitle(), "제작중");
+                        mvideos.add( video );
+                    }
+                }
+                changeView();
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        } );
+
+    }
     private void changeView() {
 
+        videos.clear();
+        data.clear();
         switch (index) {
             case 0 :
-                databaseReference.addListenerForSingleValueEvent(  new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        data.clear();
-                        videos.clear();
-                        pvideos.clear();
-                        for(DataSnapshot snapshot:dataSnapshot.getChildren()){
-                            Video video=snapshot.getValue(Video.class);
-                            if (video.isLookstate() && video.isListenstate()) {
-                                ListviewItem temp = new ListviewItem( StringToBitMap(video.getBitt()), video.getTitle(), "조회수 : "+video.getView() );
-                                pvideos.add( video );
-                                videos.add( video );
-                                data.add(0,temp);
-                            }
-                        }
-                        adapter.notifyDataSetChanged();
-                        setListViewHeightBasedOnChildren(listView);
-                        //progressBar.setVisibility(View.GONE);
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                    }
-                } );
+                for(Video video:pvideos){
+                    ListviewItem temp = new ListviewItem( StringToBitMap(video.getBitt()), video.getTitle(), "조회수 : "+video.getView() );
+                    videos.add(video);
+                    data.add( 0,temp );
+                }
+                adapter.notifyDataSetChanged();
+                setListViewHeightBasedOnChildren(listView);
                 break;
 
             case 1 :
-                databaseReference.addListenerForSingleValueEvent( new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        data.clear();
-                        videos.clear();
-                        mvideos.clear();
-                        for(DataSnapshot snapshot:dataSnapshot.getChildren()){
-                            Video video=snapshot.getValue(Video.class);
-                            if(!(video.isLookstate() && video.isListenstate())) {
-                                ListviewItem temp = new ListviewItem(StringToBitMap(video.getBitt()), video.getTitle(), "제작중");
-                                mvideos.add( video );
-                                videos.add( video );
-                                data.add(0,temp);
-                            }
-                        }
-                        adapter.notifyDataSetChanged();
-                        setListViewHeightBasedOnChildren(listView);
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                    }
-                } );
+                for(Video video:mvideos){
+                    ListviewItem temp = new ListviewItem( StringToBitMap(video.getBitt()), video.getTitle(), "조회수 : "+video.getView() );
+                    videos.add( video );
+                    data.add( 0,temp );
+                }
+                adapter.notifyDataSetChanged();
+                setListViewHeightBasedOnChildren(listView);
 
                 break;
         }
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
                 Intent intent = new Intent(VideoCommentaryListActivity.this, WatchVideoActivity.class);
                 intent.putExtra("link",videos.get(videos.size()-position-1).getLink());
                 intent.putExtra("count",videos.get(videos.size()-position-1).getSectionCount());

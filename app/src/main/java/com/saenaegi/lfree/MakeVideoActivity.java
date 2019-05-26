@@ -85,7 +85,6 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         this.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_make_video);
         filedirectory=this.getCacheDir();
-        getIdvideo();
 
         /* 액션바 상속 안하고 하기
         AppCompatCallback callback = new AppCompatCallback() {
@@ -167,12 +166,12 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
 
         /* 동영상 로드 및 초기화 */
         final Intent data = getIntent();
+        videoID = data.getExtras().getString("link");
         YouTubePlayerSupportFragment frag = (YouTubePlayerSupportFragment) getSupportFragmentManager().findFragmentById(R.id.youtube_screen);
         frag.initialize("AIzaSyAn_HFubCwx1rbM2q45hMGGhCPUx2AEOz4", new YouTubePlayer.OnInitializedListener() {
             @Override
             public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
                 player = youTubePlayer;
-                videoID = data.getExtras().getString("link");
                 player.loadVideo(videoID);
 
                 player.setPlayerStateChangeListener(new YouTubePlayer.PlayerStateChangeListener() {
@@ -210,6 +209,8 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
             public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
             }
         });
+
+        getIdvideo();
     }
 
     public void createTableRow(View v) {
@@ -470,7 +471,6 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
                         idvideo=snapshot.getKey();
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 

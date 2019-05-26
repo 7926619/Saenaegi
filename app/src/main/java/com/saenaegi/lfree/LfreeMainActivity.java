@@ -126,16 +126,15 @@ public class LfreeMainActivity extends AppCompatActivity implements NavigationVi
         linearLayoutManager1.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView1.setLayoutManager(linearLayoutManager1);
 
-        adapter1 = new RecyclerAdapter();
-        recyclerView1.setAdapter(adapter1);
-
         recyclerView2 = findViewById(R.id.making_list);
         LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(this);
         linearLayoutManager2.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView2.setLayoutManager(linearLayoutManager2);
 
-        adapter2 = new RecyclerAdapter();
-        recyclerView2.setAdapter(adapter2);
+        adapter1=new RecyclerAdapter();
+        adapter2=new RecyclerAdapter();
+        recyclerView1.setAdapter( adapter1 );
+        recyclerView2.setAdapter( adapter2 );
 
         getData();
     }
@@ -145,10 +144,6 @@ public class LfreeMainActivity extends AppCompatActivity implements NavigationVi
         databaseReference.addValueEventListener( new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                adapter1=new RecyclerAdapter();
-                adapter2=new RecyclerAdapter();
-                recyclerView1.setAdapter( adapter1 );
-                recyclerView2.setAdapter( adapter2 );
                 for(DataSnapshot snapshot:dataSnapshot.getChildren()){
                     Video video=snapshot.getValue(Video.class);
 

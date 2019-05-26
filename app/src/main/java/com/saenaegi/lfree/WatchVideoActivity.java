@@ -120,16 +120,18 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
         adapter = new RecyclerAdapter();
         recyclerView.setAdapter(adapter);
 
+        final Intent activityData=getIntent();
+        videoID = activityData.getExtras().getString("link");
+        sectionCount=activityData.getExtras().getInt( "count" );
+
         getSections();
 
         /* 동영상 로드 및 초기화 */
-        final Intent data = getIntent();
         YouTubePlayerSupportFragment frag = (YouTubePlayerSupportFragment) getSupportFragmentManager().findFragmentById(R.id.youtube_screen);
         frag.initialize("AIzaSyAn_HFubCwx1rbM2q45hMGGhCPUx2AEOz4", new YouTubePlayer.OnInitializedListener() {
             @Override
             public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
                 player = youTubePlayer;
-                videoID = data.getExtras().getString("link");
                 player.loadVideo(videoID);
 
                 player.setPlayerStateChangeListener(new YouTubePlayer.PlayerStateChangeListener() {
@@ -172,30 +174,30 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
         databaseReference.addListenerForSingleValueEvent( new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                listState.clear();
+                for(int i=0;i<sectionCount;i++){
+                    listState.add( 0,false );
+                }
+
                 for(DataSnapshot snapshot:dataSnapshot.getChildren()){
                     Video video=snapshot.getValue(Video.class);
-                    if(video.getLink().equals( videoID )){
-                        sectionCount=video.getSectionCount();
-                        for(int i=0;i<sectionCount;i++){
-                            listState.add( 0,false );
-                        }
-                        for(DataSnapshot subtitleSnap:snapshot.child( "SUBTITLE" ).getChildren()){
-                            ArrayList<Subtitle> subtitles=new ArrayList<>();
-                            for(DataSnapshot temp: subtitleSnap.getChildren()){
-                                Subtitle subtitle=temp.getValue(Subtitle.class);
-                                subtitles.add( subtitle );
+                        if(video.getLink().equals( videoID )){
+                            for(DataSnapshot subtitleSnap:snapshot.child( "SUBTITLE" ).getChildren()) {
+                                ArrayList<Subtitle> subtitles = new ArrayList<>();
+                                for (DataSnapshot temp : subtitleSnap.getChildren()) {
+                                    Subtitle subtitle = temp.getValue( Subtitle.class );
+                                    subtitles.add( subtitle );
+                                }
+                                String index = subtitleSnap.getKey();
+                                sectionSubtitles.put( index, subtitles );
+                                int index2 = Integer.parseInt( index );
+                                if (index2 != 0)
+                                    listState.set( index2 - 1, true );
                             }
-
-                            String index=subtitleSnap.getKey();
-                            sectionSubtitles.put( index,subtitles );
-                            int index2=Integer.parseInt(index);
-                            if(index2!=0)
-                                listState.set( index2-1 ,true);
+                            break;
                         }
-                        break;
                     }
-                }
-                setData();
+                    setData();
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {

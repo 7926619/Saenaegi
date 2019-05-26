@@ -7,6 +7,8 @@ import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.content.Intent;
+
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
@@ -17,6 +19,8 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
     private TextView play, pause, next, pre;
     private YouTubePlayer.OnInitializedListener listener;
     private YouTubePlayer player;
+    private String videoID;
+    private int sectionCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +34,10 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
         next = (TextView) findViewById(R.id.textView20);
         pre = (TextView) findViewById(R.id.textView21);
         youtubeScreen = (YouTubePlayerView)findViewById(R.id.youtube_screen);
+
+        final Intent data=getIntent();
+        videoID = data.getExtras().getString("link");
+        sectionCount=data.getExtras().getInt( "count" );
 
         /* 동영상 로드 및 초기화 */
         listener = new YouTubePlayer.OnInitializedListener() {

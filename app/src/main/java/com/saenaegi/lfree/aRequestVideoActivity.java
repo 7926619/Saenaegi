@@ -16,7 +16,7 @@ import com.saenaegi.lfree.Data.Video;
 public class aRequestVideoActivity extends AppCompatActivity {
 
     private FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
-    private ArrayList<Video> videos=new ArrayList<>(  );
+    private ArrayList<Video> videos=new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

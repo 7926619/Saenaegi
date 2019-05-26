@@ -6,6 +6,7 @@ import android.os.Build;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,12 +14,23 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.saenaegi.lfree.Data.Video;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
 public class aSearchActivity extends AppCompatActivity implements View.OnClickListener {
     private Intent i;
     private SpeechRecognizer mRecognizer;
+
+    private FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
+    private DatabaseReference databaseReference=firebaseDatabase.getReference().child( "LFREE" ).child( "VIDEO" );
+    private ArrayList<Video> videos=new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +49,26 @@ public class aSearchActivity extends AppCompatActivity implements View.OnClickLi
         i = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         i.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, getPackageName());
         i.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "ko-KR");
+
+        getData();
     }
 
+    public void getData(){
+        databaseReference.addListenerForSingleValueEvent( new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot snapshot:dataSnapshot.getChildren()){
+                    Video video=snapshot.getValue(Video.class);
+                    videos.add( video );
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        } );
+    }
     public void onClick(View v) {
         mRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
         mRecognizer.setRecognitionListener(listener);
