@@ -1,5 +1,6 @@
 package com.saenaegi.lfree.SubtitleController;
 
+
 public class SubtitleData {
     private String subString;
     private String sectionS;
@@ -18,7 +19,7 @@ public class SubtitleData {
         stringBuilder.append( sectionE );
         stringBuilder.append( "\t" );
         stringBuilder.append(subString);
-        stringBuilder.append( "\n" );
+        stringBuilder.append( "\r\n" );
         return stringBuilder.toString();
     }
 

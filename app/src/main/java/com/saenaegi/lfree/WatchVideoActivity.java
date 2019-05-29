@@ -31,15 +31,19 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
 import com.saenaegi.lfree.Data.Subtitle;
 import com.saenaegi.lfree.Data.Video;
 import com.saenaegi.lfree.RecycleviewController_p.Data;
 import com.saenaegi.lfree.RecycleviewController_p.RecyclerAdapter;
 
+import com.saenaegi.lfree.SubtitleController.SubtitleAndKey;
+import com.saenaegi.lfree.SubtitleController.SubtitleData;
 import com.saenaegi.lfree.SubtitleController.outputDataController;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class WatchVideoActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -49,12 +53,17 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
     private RecyclerView recyclerView;
     private YouTubePlayer player;
     private String videoID;
+    private String idvideo;
     private int sectionCount;
-    private outputDataController output=new outputDataController();
+    private File filedirectory;
+    private outputDataController output;
     private ArrayList<Boolean> listState=new ArrayList<>();
-    private HashMap<String, ArrayList<Subtitle>> sectionSubtitles=new HashMap<>();
+    private ArrayList<File> file=new ArrayList<>();
+    private HashMap<String, ArrayList<SubtitleAndKey>> sectionSubtitles=new HashMap<>();
+    private LinkedHashMap<String, ArrayList<SubtitleData>> subtitleDatas=new LinkedHashMap<>();
     private FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference=firebaseDatabase.getReference().child( "LFREE" ).child( "VIDEO" );
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +71,7 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
         super.onCreate(savedInstanceState);
         this.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_watch_video);
+        filedirectory=this.getCacheDir();
 
         /* scroll on top */
         final ScrollView scroll_view = (ScrollView) findViewById(R.id.scroll_view);
@@ -169,6 +179,7 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
         });
     }
 
+
     public void getSections(){
 
         databaseReference.addListenerForSingleValueEvent( new ValueEventListener() {
@@ -182,11 +193,15 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
                 for(DataSnapshot snapshot:dataSnapshot.getChildren()){
                     Video video=snapshot.getValue(Video.class);
                         if(video.getLink().equals( videoID )){
+                            idvideo=snapshot.getKey();
+                            int view=video.getView();
+                            databaseReference.child( idvideo ).child( "view" ).setValue(view+1);
                             for(DataSnapshot subtitleSnap:snapshot.child( "SUBTITLE" ).getChildren()) {
-                                ArrayList<Subtitle> subtitles = new ArrayList<>();
+                                ArrayList<SubtitleAndKey> subtitles = new ArrayList<>();
                                 for (DataSnapshot temp : subtitleSnap.getChildren()) {
                                     Subtitle subtitle = temp.getValue( Subtitle.class );
-                                    subtitles.add( subtitle );
+                                    SubtitleAndKey subtitleAndKey=new SubtitleAndKey(subtitle,temp.getKey());
+                                    subtitles.add( subtitleAndKey );
                                 }
                                 String index = subtitleSnap.getKey();
                                 sectionSubtitles.put( index, subtitles );
@@ -219,6 +234,14 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
 
         // adapter의 값이 변경되었다는 것을 알려줍니다.
         adapter.notifyDataSetChanged();
+
+        /*
+            // 자막을 받아오는 부분
+            output=new outputDataController();
+            subtitleDatas = output.getSubtitleData( filedirectory, 3, idvideo, sectionSubtitles.get( String.valueOf( 3 ) ) );
+            // 캐시가 비었을 경우를 대비하여
+            subtitleDatas = output.getSubtitleData( filedirectory, 3, idvideo, sectionSubtitles.get( String.valueOf( 3 ) ) );
+        */
     }
 
     void type_choice() {

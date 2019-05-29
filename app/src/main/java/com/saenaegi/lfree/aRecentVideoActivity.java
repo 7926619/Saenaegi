@@ -65,6 +65,7 @@ public class aRecentVideoActivity extends AppCompatActivity {
                 Intent intent = new Intent(aRecentVideoActivity.this, aWatchVideoActivity.class);
                 intent.putExtra("link",videos.get(position).getLink());
                 intent.putExtra("count",videos.get(position).getSectionCount());
+                intent.putExtra( "nowSection" ,1 );
                 startActivity(intent);
             }
         } );

@@ -21,6 +21,8 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
     private YouTubePlayer player;
     private String videoID;
     private int sectionCount;
+    private int nowSection;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +40,8 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
         final Intent data=getIntent();
         videoID = data.getExtras().getString("link");
         sectionCount=data.getExtras().getInt( "count" );
+        nowSection=data.getExtras().getInt( "nowSection" );
+
 
         /* 동영상 로드 및 초기화 */
         listener = new YouTubePlayer.OnInitializedListener() {
@@ -124,5 +128,17 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
         ViewGroup.LayoutParams params = youtube_screen.getLayoutParams();
         params.height = screen_height;
         youtube_screen.setLayoutParams(params);
+
+        TextView tv1 = (TextView) findViewById(R.id.textView22);
+        tv1.setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick(View v) {
+                Intent intent = new Intent(aWatchVideoActivity.this, aSelectPartActivity.class);
+                intent.putExtra( "link" ,videoID);
+                intent.putExtra( "count",sectionCount );
+                startActivity(intent);
+            }
+        });
     }
+
 }

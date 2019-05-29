@@ -43,7 +43,8 @@
             android:resource="@xml/accessibility_service_config" />
         <activity android:name=".aOpenSourceActivity" />
         <activity android:name=".aIntroductionActivity" />
-        <activity android:name=".aSelectPartActivity" />
+        <activity android:name=".aSelectPartActivity" >
+        </activity>
         <activity android:name=".aWatchVideoActivity" />
         <activity android:name=".aSetPushActivity" />
         <activity android:name=".aSettingsActivity" />
@@ -60,15 +61,15 @@
         <activity android:name=".aLfreeMainActivity" >
         </activity>
         <activity android:name=".VideoCommentaryListActivity" >
-        </activity>
-        <activity android:name=".ChoiceActivity">
-        </activity>
-        <activity android:name=".LfreeMainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".ChoiceActivity">
+        </activity>
+        <activity android:name=".LfreeMainActivity">
         </activity>
         <activity android:name=".MainActivity">
         </activity>

@@ -48,65 +48,12 @@
             android:paddingHorizontal="30dp"
             android:paddingTop="20dp">
 
-            <TextView
-                android:id="@+id/textView18"
+            <ListView
+                android:id="@+id/listview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:layout_marginBottom="10dp"
-                android:textColor="#363636"
-                android:contentDescription="첫번째 파트"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:text="1" />
-
-            <TextView
-                android:id="@+id/textView17"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:layout_marginBottom="10dp"
-                android:textColor="#363636"
-                android:contentDescription="두번째 파트"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:text="2" />
-
-            <TextView
-                android:id="@+id/textView16"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:layout_marginBottom="10dp"
-                android:textColor="#363636"
-                android:contentDescription="세번째 파트"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:text="3" />
-
-            <TextView
-                android:id="@+id/textView15"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:layout_marginBottom="10dp"
-                android:textColor="#363636"
-                android:contentDescription="네번째 파트"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:text="4" />
-
-            <TextView
-                android:id="@+id/textView14"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:layout_marginBottom="10dp"
-                android:textColor="#363636"
-                android:contentDescription="다섯번째 파트"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:text="5" />
+                android:layout_weight="1"
+                android:divider="#fff" />
 
         </LinearLayout>
     </LinearLayout>
