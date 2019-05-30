@@ -58,7 +58,6 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
     private File filedirectory;
     private outputDataController output;
     private ArrayList<Boolean> listState=new ArrayList<>();
-    private ArrayList<File> file=new ArrayList<>();
     private HashMap<String, ArrayList<SubtitleAndKey>> sectionSubtitles=new HashMap<>();
     private LinkedHashMap<String, ArrayList<SubtitleData>> subtitleDatas=new LinkedHashMap<>();
     private FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();

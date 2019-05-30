@@ -19,6 +19,13 @@ public class SubtitleAndKey implements Comparable<SubtitleAndKey> {
         name=subtitle.getName();
     }
 
+    public Subtitle compareToKey(String key){
+        if(key.equals( this.key )){
+            return subtitle;
+        }
+        return null;
+    }
+
     public Subtitle getSubtitle(){
         return subtitle;
     }

@@ -48,7 +48,12 @@
         <activity android:name=".aWatchVideoActivity" />
         <activity android:name=".aSetPushActivity" />
         <activity android:name=".aSettingsActivity" />
-        <activity android:name=".aNoticeActivity" />
+        <activity android:name=".aNoticeActivity" >
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+        </activity>
         <activity android:name=".aLikeVideoActivity" >
         </activity>
         <activity android:name=".aRequestVideoActivity" />
@@ -59,11 +64,6 @@
         </activity>
         <activity android:name=".aHowToUseActivity" />
         <activity android:name=".aLfreeMainActivity" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".VideoCommentaryListActivity" >
         </activity>
