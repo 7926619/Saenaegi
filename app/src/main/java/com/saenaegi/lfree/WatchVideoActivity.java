@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Display;
 import android.view.MenuItem;
 import android.view.View;
@@ -47,6 +48,7 @@ import java.util.LinkedHashMap;
 
 public class WatchVideoActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    private static int posi;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private RecyclerAdapter adapter;
@@ -58,12 +60,10 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
     private File filedirectory;
     private outputDataController output;
     private ArrayList<Boolean> listState=new ArrayList<>();
-    private ArrayList<File> file=new ArrayList<>();
     private HashMap<String, ArrayList<SubtitleAndKey>> sectionSubtitles=new HashMap<>();
     private LinkedHashMap<String, ArrayList<SubtitleData>> subtitleDatas=new LinkedHashMap<>();
     private FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference=firebaseDatabase.getReference().child( "LFREE" ).child( "VIDEO" );
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -238,9 +238,11 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
         /*
             // 자막을 받아오는 부분
             output=new outputDataController();
-            subtitleDatas = output.getSubtitleData( filedirectory, 3, idvideo, sectionSubtitles.get( String.valueOf( 3 ) ) );
+            ArrayLIst<SubtitleAndKey> temp=new ArrayList<>();
+            temp=sectionSubtitles.get( String.valueOf( 3 ));
+            subtitleDatas = output.getSubtitleData( filedirectory, 3, idvideo, temp );
             // 캐시가 비었을 경우를 대비하여
-            subtitleDatas = output.getSubtitleData( filedirectory, 3, idvideo, sectionSubtitles.get( String.valueOf( 3 ) ) );
+            subtitleDatas = output.getSubtitleData( filedirectory, 3, idvideo, temp );
         */
     }
 
@@ -334,5 +336,10 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
         } else {
             super.onBackPressed();
         }
+    }
+
+    public static void setPosi(int position) {
+        posi = position;
+        Log.e("번호",""+posi);
     }
 }

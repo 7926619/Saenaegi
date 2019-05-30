@@ -248,13 +248,11 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         startTime.setHint("00:00");
         startTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
         startTime.setGravity(Gravity.CENTER);
-        startTime.setInputType(TYPE_CLASS_DATETIME|TYPE_DATETIME_VARIATION_TIME);
         startTime.setFilters(new InputFilter[] { new InputFilter.LengthFilter(5) });
         EditText endTime = new EditText(this);
         endTime.setHint("00:00");
         endTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
         endTime.setGravity(Gravity.CENTER);
-        endTime.setInputType(TYPE_CLASS_DATETIME|TYPE_DATETIME_VARIATION_TIME);
         endTime.setFilters(new InputFilter[] { new InputFilter.LengthFilter(5) });
         EditText subTitle = new EditText(this);
         subTitle.setHint("해설을 입력해주세요.");
@@ -278,7 +276,7 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
                 return Integer.parseInt(buf.substring(0, 2));
             }
             boolean checkInput(String start, String end, String sub) {
-                int startTime, endTime, preEndTime;
+                int startTime, endTime, preEndTime, sectionST, sectionFT;
                 SubtitleData preSub;
 
                 if(start.length() == 0 || end.length() == 0 || sub.length() == 0) {
@@ -298,22 +296,29 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
                     return true;
                 }
 
-                if(subtitles.size() != 0) {
+                startTime = subTime(start.substring(0, 2)) * 60 + subTime(start.substring(3, 5));
+                Log.e("sT",""+startTime);
+                endTime = subTime(end.substring(0, 2)) * 60 + subTime(end.substring(3, 5));
+                Log.e("eT",""+endTime);
+                sectionST = subTime(subtitle.getSectionS().substring(0,2)) * 60 + subTime(subtitle.getSectionS().substring(3,5));
+                Log.e("ST",""+sectionST);
+                sectionFT = subTime(subtitle.getSectionF().substring(0,2)) * 60 + subTime(subtitle.getSectionF().substring(3,5));
+                Log.e("FT",""+sectionFT);
+
+                if (startTime > endTime) {
+                    Toast.makeText(getApplicationContext(), "종료 시간이 시작 시간보다 빠릅니다.", Toast.LENGTH_LONG).show();
+                    return true;
+                } else if (sectionST > startTime || startTime > sectionFT || endTime < sectionST || endTime > sectionFT) {
+                    Toast.makeText(getApplicationContext(), "해당 파트의 시간은"+subtitle.getSectionS()+" ~ "+subtitle.getSectionF()+"입니다.", Toast.LENGTH_LONG).show();
+                    return true;
+                } else if (subtitles.size() != 0) {
                     preSub = subtitles.get(subtitles.size() - 1);
-
-                    startTime = subTime(start.substring(0, 2)) * 60 + subTime(start.substring(3, 5));
-                    endTime = subTime(end.substring(0, 2)) * 60 + subTime(end.substring(3, 5));
                     preEndTime = subTime(preSub.getSectionE().substring(0, 2)) * 60 + subTime(preSub.getSectionE().substring(3, 5));
-
-                    if (startTime > endTime) {
-                        Toast.makeText(getApplicationContext(), "종료 시간이 시작 시간보다 빠릅니다.", Toast.LENGTH_LONG).show();
-                        return true;
-                    } else if (preEndTime > startTime) {
+                    if (preEndTime > startTime) {
                         Toast.makeText(getApplicationContext(), "시작 시간이 이전 종료 시간보다 빠릅니다.", Toast.LENGTH_LONG).show();
                         return true;
                     }
                 }
-
                 return false;
             }
             @Override

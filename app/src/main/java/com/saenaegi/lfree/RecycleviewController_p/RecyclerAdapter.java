@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.saenaegi.lfree.R;
+import com.saenaegi.lfree.WatchVideoActivity;
 
 import java.util.ArrayList;
 
@@ -86,6 +87,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemVi
             selectedItems.delete(prePosition);
             // 클릭한 Item의 position을 저장
             selectedItems.put(position, true);
+            WatchVideoActivity.setPosi(position+1);
             // 해당 포지션의 변화를 알림
             if (prePosition != -1) notifyItemChanged(prePosition);
             notifyItemChanged(position);
