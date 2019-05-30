@@ -48,7 +48,7 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
             @Override
             public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
                 player = youTubePlayer;
-                player.cueVideo("bw5Dy_0EmuE");
+                player.cueVideo(videoID);
 
                 player.setPlayerStateChangeListener(new YouTubePlayer.PlayerStateChangeListener() {
                     @Override
