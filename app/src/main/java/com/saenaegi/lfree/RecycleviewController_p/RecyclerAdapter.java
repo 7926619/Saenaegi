@@ -11,9 +11,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.saenaegi.lfree.R;
+<<<<<<< HEAD
 import com.saenaegi.lfree.WatchVideoActivity;
+=======
+import com.saenaegi.lfree.SubtitleController.SubtitleAndKey;
+>>>>>>> 502ca0b540285dddf790d755727228dc39e3b541
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemViewHolder> {
 
