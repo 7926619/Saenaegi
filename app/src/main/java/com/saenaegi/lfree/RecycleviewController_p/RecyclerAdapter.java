@@ -11,8 +11,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.saenaegi.lfree.R;
+import com.saenaegi.lfree.SubtitleController.SubtitleAndKey;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemViewHolder> {
 

@@ -119,8 +119,8 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
             }
         });
 
-        //progressBar = findViewById(R.id.progressBar);
-        //progressBar.setMax(100);
+        progressBar = findViewById(R.id.progressBar);
+        progressBar.setMax(100);
     }
 
     private void getData(){
@@ -140,6 +140,7 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
                     }
                 }
                 changeView();
+                progressBar.setVisibility(View.GONE);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -170,7 +171,6 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
                 }
                 adapter.notifyDataSetChanged();
                 setListViewHeightBasedOnChildren(listView);
-
                 break;
         }
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

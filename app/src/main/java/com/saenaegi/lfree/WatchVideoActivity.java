@@ -2,6 +2,7 @@ package com.saenaegi.lfree;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -14,14 +15,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
@@ -41,7 +47,9 @@ import com.saenaegi.lfree.SubtitleController.SubtitleData;
 import com.saenaegi.lfree.SubtitleController.outputDataController;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
@@ -63,6 +71,7 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
     private LinkedHashMap<String, ArrayList<SubtitleData>> subtitleDatas=new LinkedHashMap<>();
     private FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference=firebaseDatabase.getReference().child( "LFREE" ).child( "VIDEO" );
+    private CustomDialog customDialog;
 
 
     @Override
@@ -71,7 +80,7 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
         super.onCreate(savedInstanceState);
         this.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_watch_video);
-        filedirectory=this.getCacheDir();
+        filedirectory = this.getCacheDir();
 
         /* scroll on top */
         final ScrollView scroll_view = (ScrollView) findViewById(R.id.scroll_view);
@@ -130,9 +139,9 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
         adapter = new RecyclerAdapter();
         recyclerView.setAdapter(adapter);
 
-        final Intent activityData=getIntent();
+        final Intent activityData = getIntent();
         videoID = activityData.getExtras().getString("link");
-        sectionCount=activityData.getExtras().getInt( "count" );
+        sectionCount = activityData.getExtras().getInt("count");
 
         getSections();
 
@@ -177,8 +186,8 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
             public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
             }
         });
-    }
 
+    }
 
     public void getSections(){
 
@@ -245,7 +254,9 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
     }
 
     void type_choice() {
-        AlertDialog dialog;
+        //customDialog = new CustomDialog(this, sectionCount);
+        //customDialog.show();
+        final AlertDialog dialog;
         final CharSequence[] items = {"자막", "소리"};
 
         // Creating and Building the Dialog
@@ -261,34 +272,67 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
         });
 
         final Spinner dropdown = new Spinner(this);
+        try {
+            Field popup = Spinner.class.getDeclaredField("mPopup");
+            popup.setAccessible(true);
+            android.widget.ListPopupWindow popupWindow = (android.widget.ListPopupWindow) popup.get(dropdown);
+            popupWindow.setHeight(700);
+        }
+        catch (NoClassDefFoundError | ClassCastException | NoSuchFieldException | IllegalAccessException e) {
+        }
+        dropdown.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         String[] options = new String[sectionCount+1];
         options[0]="파트 선택" ;
         for(int i=0;i<sectionCount;i++)
             options[i+1]=String.valueOf( i+1 );
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, options);
         dropdown.setAdapter(adapter);
-        builder.setView(dropdown);
+
+        LinearLayout linearLayout = new LinearLayout(this);
+        linearLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+        linearLayout.setGravity(Gravity.CENTER);
+        linearLayout.setPadding(60, 0, 60, 0);
+        linearLayout.addView(dropdown);
+        builder.setView(linearLayout);
 
         builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Intent intent = new Intent(WatchVideoActivity.this, MakeVideoActivity.class);
-                intent.putExtra("link",videoID);
-                intent.putExtra("type",type[0]);
-                intent.putExtra("part",dropdown.getSelectedItem().toString());
-                startActivity(intent);
             }
         });
 
         builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
             }
         });
 
         dialog = builder.create();
         dialog.show();
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Boolean wantToCloseDialog = false;
+                if( (!TextUtils.equals(type[0],items[0]) && !TextUtils.equals(type[0],items[1])) || dropdown.getSelectedItem().toString().equals("파트 선택")) {
+                    Toast.makeText(getApplicationContext(), "선택하지 않은 항목이 있는지 확인해주세요.", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    wantToCloseDialog = true;
+                    Intent intent = new Intent(WatchVideoActivity.this, MakeVideoActivity.class);
+                    intent.putExtra("link", videoID);
+                    intent.putExtra("type", type[0]);
+                    intent.putExtra("part", dropdown.getSelectedItem().toString());
+                    startActivity(intent);
+                }
+                //Do stuff, possibly set wantToCloseDialog to true then...
+                if(wantToCloseDialog)
+                    dialog.dismiss();
+                //else dialog stays open. Make sure you have an obvious way to close the dialog especially if you set cancellable to false.
+            }
+        });
     }
 
     @Override

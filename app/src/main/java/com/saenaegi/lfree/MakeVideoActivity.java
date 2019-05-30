@@ -248,13 +248,11 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         startTime.setHint("00:00");
         startTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
         startTime.setGravity(Gravity.CENTER);
-        startTime.setInputType(TYPE_CLASS_DATETIME|TYPE_DATETIME_VARIATION_TIME);
         startTime.setFilters(new InputFilter[] { new InputFilter.LengthFilter(5) });
         EditText endTime = new EditText(this);
         endTime.setHint("00:00");
         endTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
         endTime.setGravity(Gravity.CENTER);
-        endTime.setInputType(TYPE_CLASS_DATETIME|TYPE_DATETIME_VARIATION_TIME);
         endTime.setFilters(new InputFilter[] { new InputFilter.LengthFilter(5) });
         EditText subTitle = new EditText(this);
         subTitle.setHint("해설을 입력해주세요.");
