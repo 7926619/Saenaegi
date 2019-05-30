@@ -2,6 +2,8 @@ package com.saenaegi.lfree;
 
 import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.AccessibilityServiceInfo;
+import android.app.ActivityManager;
+import android.content.Context;
 import android.os.Build;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
@@ -9,6 +11,7 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import android.speech.tts.TextToSpeech;
 import android.widget.Toast;
 //import android.speech.tts.Voice;
+import java.util.List;
 import java.util.Locale;
 
 public class aAccessibilityService extends AccessibilityService {
@@ -96,7 +99,14 @@ public class aAccessibilityService extends AccessibilityService {
             // 아래쪽에서 위쪽으로 스와이프를 진행하는 경우, 해당 레이아웃 UI에서 이전 레이아웃 UI로 이동
             case GESTURE_SWIPE_UP:
                 Toast.makeText(getApplication(), "SWIPE_UP", Toast.LENGTH_LONG).show();
-                performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
+                ActivityManager am = (ActivityManager)this.getSystemService(Context.ACTIVITY_SERVICE);
+                List<ActivityManager.RunningTaskInfo> rti = am.getRunningTasks(1);
+                if((rti.get(0).topActivity.getClassName()).contains("aLfreeMainActivity")) {
+                    performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
+                    disableSelf();
+                }
+                else
+                    performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
                 //source = findFocus(AccessibilityNodeInfo.FOCUS_ACCESSIBILITY);
                 return true;
 
@@ -104,6 +114,7 @@ public class aAccessibilityService extends AccessibilityService {
             case GESTURE_SWIPE_DOWN:
                 Toast.makeText(getApplication(), "SWIPE_DOWN", Toast.LENGTH_LONG).show();
                 performGlobalAction(AccessibilityService.GLOBAL_ACTION_HOME);
+                disableSelf();
                 //source = findFocus(AccessibilityNodeInfo.FOCUS_ACCESSIBILITY);
                 return true;
             default:
