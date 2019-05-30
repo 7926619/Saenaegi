@@ -5,6 +5,7 @@ import android.accessibilityservice.AccessibilityServiceInfo;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.os.Build;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
@@ -99,11 +100,13 @@ public class aAccessibilityService extends AccessibilityService {
             // 아래쪽에서 위쪽으로 스와이프를 진행하는 경우, 해당 레이아웃 UI에서 이전 레이아웃 UI로 이동
             case GESTURE_SWIPE_UP:
                 Toast.makeText(getApplication(), "SWIPE_UP", Toast.LENGTH_LONG).show();
-                ActivityManager am = (ActivityManager)this.getSystemService(Context.ACTIVITY_SERVICE);
-                List<ActivityManager.RunningTaskInfo> rti = am.getRunningTasks(1);
-                if((rti.get(0).topActivity.getClassName()).contains("aLfreeMainActivity")) {
-                    performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
+                ActivityManager am1 = (ActivityManager)this.getSystemService(Context.ACTIVITY_SERVICE);
+                List<ActivityManager.RunningTaskInfo> rti1 = am1.getRunningTasks(1);
+                if((rti1.get(0).topActivity.getClassName()).contains("aLfreeMainActivity")) {
+                    performGlobalAction(AccessibilityService.GLOBAL_ACTION_HOME);
                     disableSelf();
+                    System.runFinalizersOnExit(true);
+                    System.exit(0);
                 }
                 else
                     performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
@@ -113,8 +116,12 @@ public class aAccessibilityService extends AccessibilityService {
             // 위쪽에서 아래쪽으로 스와이프를 진행하는 경우, 해당 레이아웃 UI에서 홈으로 이동
             case GESTURE_SWIPE_DOWN:
                 Toast.makeText(getApplication(), "SWIPE_DOWN", Toast.LENGTH_LONG).show();
+                ActivityManager am2 = (ActivityManager)this.getSystemService(Context.ACTIVITY_SERVICE);
+                List<ActivityManager.RunningTaskInfo> rti2 = am2.getRunningTasks(1);
                 performGlobalAction(AccessibilityService.GLOBAL_ACTION_HOME);
                 disableSelf();
+                System.runFinalizersOnExit(true);
+                System.exit(0);
                 //source = findFocus(AccessibilityNodeInfo.FOCUS_ACCESSIBILITY);
                 return true;
             default:
