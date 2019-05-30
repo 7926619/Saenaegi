@@ -140,7 +140,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_horizontal"
-                            android:text="등록된 해설이 없습니다."
+                            android:text="파트를 선택해주세요."
                             android:paddingTop="10dp"
                             android:textColor="#606060"
                             android:textSize="12sp"
@@ -149,9 +149,9 @@
                         <android.support.v7.widget.RecyclerView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:importantForAccessibility="no"
                             android:paddingTop="10dp"
-                            android:visibility="invisible"
-                            android:importantForAccessibility="no"/>
+                            android:visibility="invisible" />
 
                     </LinearLayout>
 
