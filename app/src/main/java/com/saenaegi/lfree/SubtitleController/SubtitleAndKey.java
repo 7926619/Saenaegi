@@ -9,12 +9,14 @@ public class SubtitleAndKey implements Comparable<SubtitleAndKey> {
     private Subtitle subtitle;
     private String key;
     public int recommend;
+    public String name;
 
     public SubtitleAndKey(Subtitle subtitle, String key){
 
         this.subtitle=subtitle;
         this.key=key;
         recommend=subtitle.getRecommend();
+        name=subtitle.getName();
     }
 
     public Subtitle getSubtitle(){
