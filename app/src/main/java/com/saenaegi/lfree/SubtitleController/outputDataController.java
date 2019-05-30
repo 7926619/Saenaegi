@@ -23,27 +23,48 @@ public class outputDataController {
 
     private LinkedHashMap<String,ArrayList<SubtitleData>> allOfSubtitle=new LinkedHashMap<>();
     private FirebaseStorage firebaseStorage=FirebaseStorage.getInstance();
+    private StorageReference LookReference=firebaseStorage.getReference().child( "LookSubtitle");
     private StorageReference ListorageReference=firebaseStorage.getReference().child( "ListenSubtitle");
+    private File readFile;
 
-    public LinkedHashMap<String, ArrayList<SubtitleData>> getSubtitleData(File filedirectory, int sectionNum, String idvideo, ArrayList<SubtitleAndKey> temp) {
+    public LinkedHashMap<String, ArrayList<SubtitleData>> getListenSubtitleData(File filedirectory, int sectionNum, String idvideo, ArrayList<SubtitleAndKey> temp) {
         Collections.sort(temp);
-        File file=null;
+        File file=filedirectory.getAbsoluteFile();
         FileDownloadTask fileDownloadTask;
 
+        if(!file.exists())
+            filedirectory.mkdirs();
+
         for(SubtitleAndKey subtitleAndKey:temp){
-            file= new File( filedirectory.getAbsoluteFile(),subtitleAndKey.getKey()+".txt");
-            fileDownloadTask=ListorageReference.child( idvideo ).child( String.valueOf( sectionNum )).child( subtitleAndKey.getKey()+".txt" ).getFile(file);
-            parsingFile( subtitleAndKey.getKey(),file );
+            readFile= new File(file,subtitleAndKey.getKey()+".txt");
+            fileDownloadTask=ListorageReference.child( idvideo ).child( String.valueOf( sectionNum )).child( subtitleAndKey.getKey()+".txt" ).getFile(readFile);
+            parsingFile( subtitleAndKey.getKey() );
         }
         return allOfSubtitle;
     }
 
-    public void parsingFile(String key, File file){
+    public LinkedHashMap<String, ArrayList<SubtitleData>> getLookSubtitleData(File filedirectory, int sectionNum, String idvideo, ArrayList<SubtitleAndKey> temp) {
+        Collections.sort(temp);
+        File file=filedirectory.getAbsoluteFile();
+        FileDownloadTask fileDownloadTask;
+
+        if(!file.exists())
+            filedirectory.mkdirs();
+
+        for(SubtitleAndKey subtitleAndKey:temp){
+            readFile= new File(file,subtitleAndKey.getKey()+".txt");
+            fileDownloadTask=LookReference.child( idvideo ).child( String.valueOf( sectionNum )).child( subtitleAndKey.getKey()+".txt" ).getFile(readFile);
+            parsingFile( subtitleAndKey.getKey() );
+        }
+        return allOfSubtitle;
+    }
+
+    public void parsingFile(String key){
         ArrayList<SubtitleData> subtitleDatas=new ArrayList<>();
         String oneLine=null;
 
         try {
-            FileReader fileReader=new FileReader( file );
+            FileReader fileReader=new FileReader( readFile );
             BufferedReader bufferedReader=new BufferedReader(fileReader);
             while((oneLine=bufferedReader.readLine())!=null){
                 String[] arr=oneLine.split( "\t" );

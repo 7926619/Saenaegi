@@ -199,8 +199,10 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
                                 ArrayList<SubtitleAndKey> subtitles = new ArrayList<>();
                                 for (DataSnapshot temp : subtitleSnap.getChildren()) {
                                     Subtitle subtitle = temp.getValue( Subtitle.class );
-                                    SubtitleAndKey subtitleAndKey=new SubtitleAndKey(subtitle,temp.getKey());
-                                    subtitles.add( subtitleAndKey );
+                                    if(subtitle.isType()) {
+                                        SubtitleAndKey subtitleAndKey = new SubtitleAndKey( subtitle, temp.getKey() );
+                                        subtitles.add( subtitleAndKey );
+                                    }
                                 }
                                 String index = subtitleSnap.getKey();
                                 sectionSubtitles.put( index, subtitles );
@@ -234,13 +236,11 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
         // adapter의 값이 변경되었다는 것을 알려줍니다.
         adapter.notifyDataSetChanged();
 
-        /*
-            // 자막을 받아오는 부분
-            output=new outputDataController();
-            subtitleDatas = output.getSubtitleData( filedirectory, 3, idvideo, sectionSubtitles.get( String.valueOf( 3 ) ) );
-            // 캐시가 비었을 경우를 대비하여
-            subtitleDatas = output.getSubtitleData( filedirectory, 3, idvideo, sectionSubtitles.get( String.valueOf( 3 ) ) );
-        */
+
+        output=new outputDataController();
+        ArrayList<SubtitleAndKey> temp=sectionSubtitles.get( String.valueOf( 3 ) );
+        subtitleDatas = output.getListenSubtitleData( filedirectory, 3, idvideo, temp );
+        subtitleDatas = output.getListenSubtitleData( filedirectory, 3, idvideo, temp );
     }
 
     void type_choice() {
