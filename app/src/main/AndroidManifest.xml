@@ -27,42 +27,52 @@
                 android:resource="@xml/accessibility_service_config" />
         </service>
 
-        <activity android:name=".MakeVideoActivity"></activity>
-        <activity android:name=".WatchVideoActivity"></activity>
+        <activity android:name=".MakeVideoActivity">
+        </activity>
+        <activity android:name=".WatchVideoActivity">
+        </activity>
         <activity android:name=".NoticeActivity" />
         <activity android:name=".SettingsActivity" />
-        <activity android:name=".LikeVideoListActivity"></activity>
-        <activity android:name=".MyVideoListActivity"></activity>
+        <activity android:name=".LikeVideoListActivity" >
+        </activity>
+        <activity android:name=".MyVideoListActivity" >
+        </activity>
         <activity android:name=".VideoRequestListActivity" />
-
         <meta-data
             android:name="com.google.android.actions"
             android:resource="@xml/accessibility_service_config" />
-
         <activity android:name=".aOpenSourceActivity" />
         <activity android:name=".aIntroductionActivity" />
-        <activity android:name=".aSelectPartActivity"></activity>
+        <activity android:name=".aSelectPartActivity" >
+        </activity>
         <activity android:name=".aWatchVideoActivity" />
         <activity android:name=".aSetPushActivity" />
         <activity android:name=".aSettingsActivity" />
         <activity android:name=".aNoticeActivity" />
-        <activity android:name=".aLikeVideoActivity"></activity>
+        <activity android:name=".aLikeVideoActivity" >
+        </activity>
         <activity android:name=".aRequestVideoActivity" />
         <activity android:name=".aSearchActivity" />
-        <activity android:name=".aRecentVideoActivity"></activity>
-        <activity android:name=".aWatchVideoMenuActivitiy"></activity>
+        <activity android:name=".aRecentVideoActivity" >
+        </activity>
+        <activity android:name=".aWatchVideoMenuActivitiy" >
+        </activity>
         <activity android:name=".aHowToUseActivity" />
-        <activity android:name=".aLfreeMainActivity"></activity>
-        <activity android:name=".VideoCommentaryListActivity">
+        <activity android:name=".aLfreeMainActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ChoiceActivity"></activity>
-        <activity android:name=".LfreeMainActivity"></activity>
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".VideoCommentaryListActivity" >
+        </activity>
+        <activity android:name=".ChoiceActivity">
+        </activity>
+        <activity android:name=".LfreeMainActivity">
+        </activity>
+        <activity android:name=".MainActivity">
+        </activity>
     </application>
 
 </manifest>
