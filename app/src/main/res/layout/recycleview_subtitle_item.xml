@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linearItem"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingVertical="15dp"
+    android:gravity="center_vertical"
+    android:layout_marginBottom="1dp"
+    android:background="@android:color/white">
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:includeFontPadding="false"
+        android:text="펭도리도리"
+        android:textColor="#363636"
+        android:textSize="20sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <ImageButton
+            android:id="@+id/sub_subtitle"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:scaleType="centerInside"
+            android:background="@drawable/ripple"
+            android:layout_marginRight="23dp"
+            android:layout_gravity="right|center_vertical"
+            android:src="@drawable/subtitle_button" />
+
+        <ImageButton
+            android:id="@+id/sub_sound"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:scaleType="centerInside"
+            android:background="@drawable/ripple"
+            android:layout_marginRight="20dp"
+            android:layout_gravity="right|center_vertical"
+            android:src="@drawable/sound_button" />
+
+        <ImageButton
+            android:id="@+id/sub_more"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:scaleType="centerInside"
+            android:background="@drawable/ripple"
+            android:layout_gravity="right|center_vertical"
+            android:src="@drawable/more_menu" />
+    </LinearLayout>
+
+</LinearLayout>
+

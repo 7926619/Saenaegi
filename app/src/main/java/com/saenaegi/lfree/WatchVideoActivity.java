@@ -23,7 +23,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -42,7 +41,8 @@ import com.saenaegi.lfree.Data.Subtitle;
 import com.saenaegi.lfree.Data.Video;
 import com.saenaegi.lfree.RecycleviewController_p.Data;
 import com.saenaegi.lfree.RecycleviewController_p.RecyclerAdapter;
-
+import com.saenaegi.lfree.RecycleviewController_s.DataS;
+import com.saenaegi.lfree.RecycleviewController_s.RecyclerAdapterS;
 import com.saenaegi.lfree.SubtitleController.SubtitleAndKey;
 import com.saenaegi.lfree.SubtitleController.SubtitleData;
 import com.saenaegi.lfree.SubtitleController.outputDataController;
@@ -53,14 +53,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 
-public class WatchVideoActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class WatchVideoActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, RecyclerAdapter.OnListItemSelectedInterface {
 
     private static int posi;
+    private int prePosition = -1;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
-    private RecyclerAdapter adapter;
-    private RecyclerView recyclerView;
+    private RecyclerAdapter adapter1;
+    private RecyclerAdapterS adapter2;
+    private RecyclerView recyclerView1, recyclerView2;
     private YouTubePlayer player;
     private String videoID;
     private String idvideo;
@@ -129,21 +132,32 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
             }
         });
 
-        /* recycle view */
-        recyclerView = findViewById(R.id.part_list);
+        /* recycle view(part) */
+        recyclerView1 = findViewById(R.id.part_list);
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        recyclerView.setLayoutManager(linearLayoutManager);
+        LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(this);
+        linearLayoutManager1.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recyclerView1.setLayoutManager(linearLayoutManager1);
 
-        adapter = new RecyclerAdapter();
-        recyclerView.setAdapter(adapter);
+        adapter1 = new RecyclerAdapter(this, this);
+        recyclerView1.setAdapter(adapter1);
 
-        final Intent activityData = getIntent();
-        videoID = activityData.getExtras().getString("link");
-        sectionCount = activityData.getExtras().getInt("count");
+        final Intent activityData1 = getIntent();
+        videoID = activityData1.getExtras().getString("link");
+        sectionCount = activityData1.getExtras().getInt("count");
 
         getSections();
+
+        /* recycle view(subtitles) */
+        recyclerView2 = findViewById(R.id.sub_list);
+
+        LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(this);
+        recyclerView2.setLayoutManager(linearLayoutManager2);
+
+        adapter2 = new RecyclerAdapterS();
+        recyclerView2.setAdapter(adapter2);
+
+        getData();
 
         /* 동영상 로드 및 초기화 */
         YouTubePlayerSupportFragment frag = (YouTubePlayerSupportFragment) getSupportFragmentManager().findFragmentById(R.id.youtube_screen);
@@ -186,6 +200,24 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
             public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
             }
         });
+    }
+
+    private void getData() {
+        // 임의의 데이터입니다.
+        List<String> listName = Arrays.asList("펭도리도리", "이샹이샹", "파이파이");
+        for (int i = 0; i < listName.size(); i++) {
+            // 각 List의 값들을 data 객체에 set 해줍니다.
+            DataS dataS = new DataS();
+            dataS.setName(listName.get(i));
+            dataS.setOnSound(false);
+            dataS.setOnSound(false);
+
+            // 각 값이 들어간 data를 adapter에 추가합니다.
+            adapter2.addItem(dataS);
+        }
+
+        // adapter의 값이 변경되었다는 것을 알려줍니다.
+        adapter2.notifyDataSetChanged();
     }
 
     public void getSections(){
@@ -239,11 +271,11 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
             data.setState(listState.get(i));
 
             // 각 값이 들어간 data를 adapter에 추가합니다.
-            adapter.addItem(data);
+            adapter1.addItem(data);
         }
 
         // adapter의 값이 변경되었다는 것을 알려줍니다.
-        adapter.notifyDataSetChanged();
+        adapter1.notifyDataSetChanged();
 
 
         /*
@@ -334,6 +366,23 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
                 //else dialog stays open. Make sure you have an obvious way to close the dialog especially if you set cancellable to false.
             }
         });
+    }
+
+    /* 파트 선택된 거 어둡게 바꿈 */
+    @Override
+    public void onItemSelected(View v, int position) {
+        RecyclerAdapter.ItemViewHolder viewHolder;
+        if(prePosition == -1) {
+            viewHolder = (RecyclerAdapter.ItemViewHolder)recyclerView1.findViewHolderForAdapterPosition(0);
+            viewHolder.imageView.setColorFilter(Color.argb(0, 0, 0, 0));
+        }
+        else {
+            viewHolder = (RecyclerAdapter.ItemViewHolder)recyclerView1.findViewHolderForAdapterPosition(prePosition);
+            viewHolder.imageView.setColorFilter(Color.argb(0, 0, 0, 0));
+        }
+        viewHolder = (RecyclerAdapter.ItemViewHolder)recyclerView1.findViewHolderForAdapterPosition(position);
+        viewHolder.imageView.setColorFilter(Color.argb(128, 0, 0, 0));
+        prePosition = position;
     }
 
     @Override

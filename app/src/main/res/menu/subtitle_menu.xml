@@ -1,0 +1,14 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/opt1"
+        android:title="추천" />
+    <item
+        android:id="@+id/opt2"
+        android:title="신고"/>
+    <item
+        android:id="@+id/opt3"
+        android:title="수정"/>
+    <item
+        android:id="@+id/opt4"
+        android:title="삭제"/>
+</menu>

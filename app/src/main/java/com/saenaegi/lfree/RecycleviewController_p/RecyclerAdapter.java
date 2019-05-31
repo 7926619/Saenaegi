@@ -1,5 +1,6 @@
 package com.saenaegi.lfree.RecycleviewController_p;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -11,16 +12,23 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.saenaegi.lfree.R;
-<<<<<<< HEAD
 import com.saenaegi.lfree.WatchVideoActivity;
-=======
-import com.saenaegi.lfree.SubtitleController.SubtitleAndKey;
->>>>>>> 502ca0b540285dddf790d755727228dc39e3b541
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemViewHolder> {
+
+    public interface OnListItemSelectedInterface {
+        void onItemSelected(View v, int position);
+    }
+    private OnListItemSelectedInterface mListener;
+    Context context;
+
+    public RecyclerAdapter(Context context
+            , OnListItemSelectedInterface listener) {
+        this.context = context;
+        this.mListener = listener;
+    }
 
     private ArrayList<Data> listData = new ArrayList<>();
     // Item의 클릭 상태를 저장할 array 객체
@@ -56,11 +64,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemVi
 
     // RecyclerView의 핵심인 ViewHolder 입니다.
     // 여기서 subView를 setting 해줍니다.
-    class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ItemViewHolder extends RecyclerView.ViewHolder {
 
-        private ImageView imageView;
+        public Data data;
+        public ImageView imageView;
         private TextView textView;
-        private Data data;
         private int position;
 
         ItemViewHolder(View itemView) {
@@ -68,6 +76,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemVi
 
             imageView = itemView.findViewById(R.id.part_button);
             textView = itemView.findViewById(R.id.part_num);
+
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.onItemSelected(v, getAdapterPosition());
+                }
+            });
         }
 
         void onBind(Data data, int position) {
@@ -81,32 +96,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemVi
             else
                 imageView.setImageResource(R.drawable.off_button);
 
-            changeVisibility(selectedItems.get(position));
-
-            imageView.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View v) {
-            // 직전의 클릭됐던 Item의 클릭상태를 지움
-            selectedItems.delete(prePosition);
-            // 클릭한 Item의 position을 저장
-            selectedItems.put(position, true);
-            WatchVideoActivity.setPosi(position+1);
-            // 해당 포지션의 변화를 알림
-            if (prePosition != -1) notifyItemChanged(prePosition);
-            notifyItemChanged(position);
-            // 클릭된 position 저장
-            prePosition = position;
-        }
-
-        private void changeVisibility(final boolean isPressed) {
-            if(isPressed) {
+            if(position == 0)
                 imageView.setColorFilter(Color.argb(128, 0, 0, 0));
-            }
-            else {
-                imageView.setColorFilter(Color.argb(0, 0, 0, 0));
-            }
         }
     }
 }
