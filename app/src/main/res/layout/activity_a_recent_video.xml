@@ -53,8 +53,7 @@
                 android:id="@+id/listview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:divider="#fff"
-                android:importantForAccessibility="no" />
+                android:divider="#fff" />
 
         </LinearLayout>
     </LinearLayout>

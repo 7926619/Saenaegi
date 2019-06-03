@@ -38,8 +38,24 @@ public class aListviewAdapter extends BaseAdapter {
             convertView = inflater.inflate(layout, parent, false);
         }
         aListviewItem alistviewitem = data.get(position);
+        /*
+        aListviewItem alistviewitembefore;
+        aListviewItem alistviewitemafter;
+
+        if(position > 0) {
+            alistviewitembefore = data.get(position - 1);
+            if(position > 1) {
+                alistviewitemafter = data.get(position + 1);
+            }
+        }
+           */
         TextView name = (TextView)convertView.findViewById(R.id.title);
         name.setText(alistviewitem.getName());
+        name.setContentDescription(alistviewitem.getName());
+        name.setFocusable(true);
+        name.setFocusableInTouchMode(true);
+        //name.setAccessibilityTraversalBefore();
+        //name.setAccessibilityTraversalAfter();
         return convertView;
     }
 }

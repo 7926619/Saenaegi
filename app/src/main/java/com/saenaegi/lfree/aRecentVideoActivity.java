@@ -40,24 +40,9 @@ public class aRecentVideoActivity extends AppCompatActivity {
         this.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_a_recent_video);
 
-
         listView = (ListView) findViewById(R.id.listview);
         adapter = new aListviewAdapter(this, R.layout.a_list_item, data);
         listView.setAdapter(adapter);
-
-        tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if (status == TextToSpeech.SUCCESS) {
-                    int result = tts.setLanguage( Locale.KOREAN);
-                    if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                        Toast.makeText(getApplication(), "TTS : Korean Language Not Supported!", Toast.LENGTH_SHORT).show();
-                    }
-                }
-                else
-                    Toast.makeText(getApplication(), "TTS : TTS's Initialization is Failed!", Toast.LENGTH_SHORT).show();
-            }
-        });
 
         listView.setOnItemClickListener( new AdapterView.OnItemClickListener() {
             @Override
