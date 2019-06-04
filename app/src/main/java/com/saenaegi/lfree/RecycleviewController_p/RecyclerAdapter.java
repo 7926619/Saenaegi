@@ -76,13 +76,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemVi
 
             imageView = itemView.findViewById(R.id.part_button);
             textView = itemView.findViewById(R.id.part_num);
-
-            imageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mListener.onItemSelected(v, getAdapterPosition());
-                }
-            });
         }
 
         void onBind(Data data, int position) {
@@ -91,13 +84,17 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemVi
 
             textView.setText(Integer.toString(data.getNum()));
 
-            if(data.getState())
+            if(data.getState()) {
                 imageView.setImageResource(R.drawable.on_button);
+                imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mListener.onItemSelected(v, getAdapterPosition());
+                    }
+                });
+            }
             else
                 imageView.setImageResource(R.drawable.off_button);
-
-            if(position == 0)
-                imageView.setColorFilter(Color.argb(128, 0, 0, 0));
         }
     }
 }

@@ -157,8 +157,6 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
         adapter2 = new RecyclerAdapterS();
         recyclerView2.setAdapter(adapter2);
 
-        getData();
-
         /* 동영상 로드 및 초기화 */
         YouTubePlayerSupportFragment frag = (YouTubePlayerSupportFragment) getSupportFragmentManager().findFragmentById(R.id.youtube_screen);
         frag.initialize("AIzaSyAn_HFubCwx1rbM2q45hMGGhCPUx2AEOz4", new YouTubePlayer.OnInitializedListener() {
@@ -203,14 +201,29 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
     }
 
     private void getData() {
-        // 임의의 데이터입니다.
-        List<String> listName = Arrays.asList("펭도리도리", "이샹이샹", "파이파이");
+        // 데이터 초기화
+        adapter2.delItem();
+        // 임의의 데이터입니다. -> 해당 아이디 가져오기로 변경완료
+        List<String> listName = new ArrayList<>(sectionSubtitles.get(String.valueOf(posi)).size());
+        List<Boolean> type = new ArrayList<>(sectionSubtitles.get(String.valueOf(posi)).size());
+        for(int i = 0; i < sectionSubtitles.get(String.valueOf(posi)).size(); i++) {
+            listName.add(sectionSubtitles.get(String.valueOf(posi)).get(i).getSubtitle().getName());
+            type.add(sectionSubtitles.get(String.valueOf(posi)).get(i).getSubtitle().isType());
+        }
+
+        adapter2.delItem();
         for (int i = 0; i < listName.size(); i++) {
             // 각 List의 값들을 data 객체에 set 해줍니다.
             DataS dataS = new DataS();
             dataS.setName(listName.get(i));
-            dataS.setOnSound(false);
-            dataS.setOnSound(false);
+            if(type.get(i)) {
+                dataS.setOnSubtitle(true);
+                dataS.setOnSound(false);
+            }
+            else {
+                dataS.setOnSubtitle(false);
+                dataS.setOnSound(true);
+            }
 
             // 각 값이 들어간 data를 adapter에 추가합니다.
             adapter2.addItem(dataS);
@@ -240,10 +253,8 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
                                 ArrayList<SubtitleAndKey> subtitles = new ArrayList<>();
                                 for (DataSnapshot temp : subtitleSnap.getChildren()) {
                                     Subtitle subtitle = temp.getValue( Subtitle.class );
-                                    if(subtitle.isType()) {
-                                        SubtitleAndKey subtitleAndKey = new SubtitleAndKey( subtitle, temp.getKey() );
-                                        subtitles.add( subtitleAndKey );
-                                    }
+                                    SubtitleAndKey subtitleAndKey = new SubtitleAndKey( subtitle, temp.getKey() );
+                                    subtitles.add( subtitleAndKey );
                                 }
                                 String index = subtitleSnap.getKey();
                                 sectionSubtitles.put( index, subtitles );
@@ -276,16 +287,18 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
 
         // adapter의 값이 변경되었다는 것을 알려줍니다.
         adapter1.notifyDataSetChanged();
-
-
-        /*
-        output=new outputDataController();
-        ArrayList<SubtitleAndKey> temp=sectionSubtitles.get( String.valueOf( 3 ) );
-        subtitleDatas = output.getListenSubtitleData( filedirectory, 3, idvideo, temp );
-        subtitleDatas = output.getListenSubtitleData( filedirectory, 3, idvideo, temp );
-        */
     }
+    /*
+    public void getSubtitle() {
+        output=new outputDataController();
+        ArrayList<SubtitleAndKey> temp=sectionSubtitles.get( String.valueOf( posi ) );
+        //subtitleDatas = output.getListenSubtitleData( filedirectory, 3, idvideo, sectionSubtitles.get( String.valueOf( 3 ) ));
+        subtitleDatas = output.getListenSubtitleData( filedirectory, posi, idvideo, temp );
 
+        Log.e("wa",""+subtitleDatas.get("-LgXOM-14zsrfEamm7To").get(0).getSubString());
+        Log.e("wa2",""+subtitleDatas.get("-LgXOM-14zsrfEamm7To").get(0).getString());
+    }
+    */
     void type_choice() {
         //customDialog = new CustomDialog(this, sectionCount);
         //customDialog.show();
@@ -383,6 +396,11 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
         viewHolder = (RecyclerAdapter.ItemViewHolder)recyclerView1.findViewHolderForAdapterPosition(position);
         viewHolder.imageView.setColorFilter(Color.argb(128, 0, 0, 0));
         prePosition = position;
+
+        posi = position+1;
+
+        getData();
+        //getSubtitle();
     }
 
     @Override
@@ -428,10 +446,5 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
         } else {
             super.onBackPressed();
         }
-    }
-
-    public static void setPosi(int position) {
-        posi = position;
-        Log.e("번호",""+posi);
     }
 }

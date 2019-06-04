@@ -86,24 +86,6 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         setContentView(R.layout.activity_make_video);
         filedirectory=this.getCacheDir();
 
-        /* 액션바 상속 안하고 하기
-        AppCompatCallback callback = new AppCompatCallback() {
-            @Override
-            public void onSupportActionModeStarted(ActionMode actionMode) {
-            }
-
-            @Override
-            public void onSupportActionModeFinished(ActionMode actionMode) {
-            }
-
-            @Nullable
-            @Override
-            public ActionMode onWindowStartingSupportActionMode(ActionMode.Callback callback) {
-                return null;
-            }
-        };
-
-        AppCompatDelegate delegate = AppCompatDelegate.create(this, callback);*/
         /* scroll on top */
         final ScrollView scroll_view = (ScrollView) findViewById(R.id.scroll_view);
         scroll_view.post(new Runnable() {
@@ -309,7 +291,7 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
                     Toast.makeText(getApplicationContext(), "종료 시간이 시작 시간보다 빠릅니다.", Toast.LENGTH_LONG).show();
                     return true;
                 } else if (sectionST > startTime || startTime > sectionFT || endTime < sectionST || endTime > sectionFT) {
-                    Toast.makeText(getApplicationContext(), "해당 파트의 시간은"+subtitle.getSectionS()+" ~ "+subtitle.getSectionF()+"입니다.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "해당 파트의 시간은 "+subtitle.getSectionS()+" ~ "+subtitle.getSectionF()+" 입니다.", Toast.LENGTH_LONG).show();
                     return true;
                 } else if (subtitles.size() != 0) {
                     preSub = subtitles.get(subtitles.size() - 1);
