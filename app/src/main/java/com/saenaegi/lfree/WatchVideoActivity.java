@@ -72,7 +72,7 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
     private outputDataController output;
     private ArrayList<Boolean> listState=new ArrayList<>();
     private HashMap<String, ArrayList<SubtitleAndKey>> sectionSubtitles=new HashMap<>();
-    private LinkedHashMap<String, ArrayList<SubtitleData>> subtitleDatas=new LinkedHashMap<>();
+    private ArrayList<SubtitleData> subtitleDatas=new ArrayList<>();
     private FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference=firebaseDatabase.getReference().child( "LFREE" ).child( "VIDEO" );
     private CustomDialog customDialog;
@@ -288,17 +288,15 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
         // adapter의 값이 변경되었다는 것을 알려줍니다.
         adapter1.notifyDataSetChanged();
     }
-    /*
+
     public void getSubtitle() {
         output=new outputDataController();
-        ArrayList<SubtitleAndKey> temp=sectionSubtitles.get( String.valueOf( posi ) );
         //subtitleDatas = output.getListenSubtitleData( filedirectory, 3, idvideo, sectionSubtitles.get( String.valueOf( 3 ) ));
-        subtitleDatas = output.getListenSubtitleData( filedirectory, posi, idvideo, temp );
+        subtitleDatas = output.getListenSubtitleData( filedirectory, posi, idvideo, "-Lg2b9xAMH9IJzDquMVx" );
+        subtitleDatas = output.getListenSubtitleData( filedirectory, posi, idvideo,"-Lg2b9xAMH9IJzDquMVx" ); //  이 줄 삭제 하면 안됩니다. 큰일 나요. !!
 
-        Log.e("wa",""+subtitleDatas.get("-LgXOM-14zsrfEamm7To").get(0).getSubString());
-        Log.e("wa2",""+subtitleDatas.get("-LgXOM-14zsrfEamm7To").get(0).getString());
     }
-    */
+
     void type_choice() {
         //customDialog = new CustomDialog(this, sectionCount);
         //customDialog.show();
@@ -400,7 +398,7 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
         posi = position+1;
 
         getData();
-        //getSubtitle();
+        getSubtitle();
     }
 
     @Override

@@ -41,7 +41,7 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
     private int sectionCount;
     private int nowSection;
     private HashMap<String, ArrayList<SubtitleAndKey>> sectionSubtitles = new HashMap<>();
-    private LinkedHashMap<String, ArrayList<SubtitleData>> subtitleDatas = new LinkedHashMap<>();
+    private ArrayList<SubtitleData> subtitleDatas = new ArrayList<>();
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference = firebaseDatabase.getReference().child( "LFREE" ).child( "VIDEO" );
     private outputDataController output;
@@ -205,9 +205,9 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
 
         output=new outputDataController();
         ArrayList<SubtitleAndKey> temp=sectionSubtitles.get( String.valueOf( nowSection));
-        subtitleDatas = output.getLookSubtitleData( filedirectory, nowSection, idvideo, temp );
+        subtitleDatas = output.getLookSubtitleData( filedirectory, nowSection, idvideo, "-Lg6q60mYea5eRmHxSsd" );
         // cash error로 인하여
-        subtitleDatas = output.getLookSubtitleData( filedirectory, nowSection, idvideo, temp);
+        subtitleDatas = output.getLookSubtitleData( filedirectory, nowSection, idvideo, "-Lg6q60mYea5eRmHxSsd");
 
     }
 

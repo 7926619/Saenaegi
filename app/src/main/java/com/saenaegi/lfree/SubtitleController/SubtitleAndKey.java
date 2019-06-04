@@ -10,6 +10,7 @@ public class SubtitleAndKey implements Comparable<SubtitleAndKey> {
     private String key;
     public int recommend;
     public String name;
+    public boolean type;
 
     public SubtitleAndKey(Subtitle subtitle, String key){
 
@@ -17,6 +18,7 @@ public class SubtitleAndKey implements Comparable<SubtitleAndKey> {
         this.key=key;
         recommend=subtitle.getRecommend();
         name=subtitle.getName();
+        type=subtitle.isType();
     }
 
     public Subtitle compareToKey(String key){
