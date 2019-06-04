@@ -51,6 +51,7 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -73,6 +74,7 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
     private ArrayList<Boolean> listState=new ArrayList<>();
     private HashMap<String, ArrayList<SubtitleAndKey>> sectionSubtitles=new HashMap<>();
     private ArrayList<SubtitleData> subtitleDatas=new ArrayList<>();
+    private ArrayList<SubtitleAndKey> temp=new ArrayList<>();
     private FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference=firebaseDatabase.getReference().child( "LFREE" ).child( "VIDEO" );
     private CustomDialog customDialog;
@@ -204,11 +206,13 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
         // 데이터 초기화
         adapter2.delItem();
         // 임의의 데이터입니다. -> 해당 아이디 가져오기로 변경완료
-        List<String> listName = new ArrayList<>(sectionSubtitles.get(String.valueOf(posi)).size());
-        List<Boolean> type = new ArrayList<>(sectionSubtitles.get(String.valueOf(posi)).size());
-        for(int i = 0; i < sectionSubtitles.get(String.valueOf(posi)).size(); i++) {
-            listName.add(sectionSubtitles.get(String.valueOf(posi)).get(i).getSubtitle().getName());
-            type.add(sectionSubtitles.get(String.valueOf(posi)).get(i).getSubtitle().isType());
+        temp=sectionSubtitles.get(String.valueOf(posi));
+        List<String> listName = new ArrayList<>(temp.size());
+        List<Boolean> type = new ArrayList<>(temp.size());
+        Collections.sort( temp );
+        for(SubtitleAndKey tmp:temp){
+            listName.add(tmp.name);
+            type.add(tmp.type);
         }
 
         adapter2.delItem();
@@ -398,7 +402,7 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
         posi = position+1;
 
         getData();
-        getSubtitle();
+      //  getSubtitle();
     }
 
     @Override
