@@ -1,6 +1,7 @@
 package com.saenaegi.lfree.ListviewController;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,23 +36,43 @@ public class aListviewAdapter extends BaseAdapter {
     public long getItemId(int position) { return position; }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent){
+    public View getView(int position, View convertView, @NonNull ViewGroup parent){
+        /*
         if(convertView == null) {
             convertView = inflater.inflate(layout, parent, false);
         }
+        */
+
+        convertView = inflater.inflate(layout, parent, false);
+
         aListviewItem alistviewitem = data.get(position);
 
-        TextView name = (TextView)convertView.findViewById(R.id.title);
+        alistviewitem.setId((int)getItemId(position));
+        alistviewitem.setTag((int)getItemId(position));
 
+        TextView name = (TextView)convertView.findViewById(R.id.title);
+        /*
         if(getCount() >= 2) {
             TextView namebefore = (TextView)convertView.findViewWithTag(getItemId(position-1));
-            Log.e(TAG, "NameBefore : " + namebefore);
-            name.setAccessibilityTraversalBefore(namebefore.getId());
+            if(namebefore == null) {
+                Log.e(TAG, "=========================================================================");
+                Log.e(TAG, "NameBefore is null! ");
+                Log.e(TAG, "=========================================================================");
+            }
+            else {
+                Log.e(TAG, "=========================================================================");
+                Log.e(TAG, "NameBefore : " + namebefore);
+                Log.e(TAG, "=========================================================================");
+                name.setAccessibilityTraversalBefore(namebefore.getId());
+            }
         }
+        */
 
         name.setText(alistviewitem.getName());
-        name.setTag(getItemId(position));
+        //name.setTag(getItemId(position));
+        name.setTag(alistviewitem.getTag());
         //name.setId((int)getItemId(position));
+        //name.setId(alistviewitem.getId());
         name.setContentDescription(alistviewitem.getName());
         name.setFocusable(true);
         name.setFocusableInTouchMode(true);
