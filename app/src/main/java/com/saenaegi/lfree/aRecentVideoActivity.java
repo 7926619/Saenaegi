@@ -131,8 +131,18 @@ public class aRecentVideoActivity extends AppCompatActivity {
                         linearLayout1 = (LinearLayout)constraintLayout.findViewById(R.id.linear1);
                         TextView rowafter = (TextView)linearLayout1.findViewWithTag(i + 1 - firstpos);
 
-                        row.setAccessibilityTraversalBefore(rowbefore.getId());
-                        row.setAccessibilityTraversalAfter(rowafter.getId());
+                        //row.setAccessibilityTraversalBefore(rowbefore.getId());
+                        //row.setAccessibilityTraversalAfter(rowafter.getId());
+                        row.setAccessibilityTraversalBefore((int)adapter.getItemId(lastpos - firstpos));
+                        row.setAccessibilityTraversalAfter((int)adapter.getItemId(i + 1 - firstpos));
+
+                        Log.e(TAG, "=========================================================================");
+                        Log.e(TAG, "count : " + i);
+                        Log.e(TAG, "row nextfocus : " + row.getAccessibilityTraversalAfter());
+                        Log.e(TAG, "row previousfocus : " + row.getAccessibilityTraversalBefore());
+                        Log.e(TAG, "rowbefore : " + rowbefore);
+                        Log.e(TAG, "rowafter : " + rowafter);
+                        Log.e(TAG, "=========================================================================");
                     }
                     else if(childRowCount >= 2 && (i + 1 - firstpos) < childRowCount && i - firstpos >= 1) {
                         //row = (TextView) constraintLayout.getChildAt(i - firstpos);
@@ -152,8 +162,18 @@ public class aRecentVideoActivity extends AppCompatActivity {
                         linearLayout1 = (LinearLayout)constraintLayout.findViewById(R.id.linear1);
                         TextView rowafter = (TextView)linearLayout1.findViewWithTag(i + 1 - firstpos);
 
-                        row.setAccessibilityTraversalBefore(rowbefore.getId());
-                        row.setAccessibilityTraversalAfter(rowafter.getId());
+                        //row.setAccessibilityTraversalBefore(rowbefore.getId());
+                        //row.setAccessibilityTraversalAfter(rowafter.getId());
+                        row.setAccessibilityTraversalBefore((int)adapter.getItemId(i - 1 - firstpos));
+                        row.setAccessibilityTraversalAfter((int)adapter.getItemId(i + 1 - firstpos));
+
+                        Log.e(TAG, "=========================================================================");
+                        Log.e(TAG, "count : " + i);
+                        Log.e(TAG, "row nextfocus : " + row.getAccessibilityTraversalAfter());
+                        Log.e(TAG, "row previousfocus : " + row.getAccessibilityTraversalBefore());
+                        Log.e(TAG, "rowbefore : " + rowbefore);
+                        Log.e(TAG, "rowafter : " + rowafter);
+                        Log.e(TAG, "=========================================================================");
                     }
                     else if(childRowCount-1 == i - firstpos) {
                         //row = (TextView)constraintLayout.getChildAt(i - firstpos);
@@ -173,8 +193,18 @@ public class aRecentVideoActivity extends AppCompatActivity {
                         linearLayout1 = (LinearLayout)constraintLayout.findViewById(R.id.linear1);
                         TextView rowafter = (TextView)linearLayout1.findViewWithTag(firstpos);
 
-                        row.setAccessibilityTraversalBefore(rowbefore.getId());
-                        row.setAccessibilityTraversalAfter(rowafter.getId());
+                        //row.setAccessibilityTraversalBefore(rowbefore.getId());
+                        //row.setAccessibilityTraversalAfter(rowafter.getId());
+                        row.setAccessibilityTraversalBefore((int)adapter.getItemId(i - 1 - firstpos));
+                        row.setAccessibilityTraversalAfter((int)adapter.getItemId(firstpos));
+
+                        Log.e(TAG, "=========================================================================");
+                        Log.e(TAG, "count : " + i);
+                        Log.e(TAG, "row nextfocus : " + row.getAccessibilityTraversalAfter());
+                        Log.e(TAG, "row previousfocus : " + row.getAccessibilityTraversalBefore());
+                        Log.e(TAG, "rowbefore : " + rowbefore);
+                        Log.e(TAG, "rowafter : " + rowafter);
+                        Log.e(TAG, "=========================================================================");
                     }
                 }
 
