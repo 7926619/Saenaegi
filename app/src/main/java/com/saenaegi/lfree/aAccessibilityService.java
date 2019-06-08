@@ -345,8 +345,11 @@ public class aAccessibilityService extends AccessibilityService {
             // 이벤트의 대상이 된 컴포넌트의 ContentDescription 내용을 String에 저장 및 출력
             if(eventText != null) {
                 eventText = eventText + event.getContentDescription();
-                if(eventText.length() < 70 && eventType != AccessibilityEvent.TYPE_VIEW_SELECTED && eventType != AccessibilityEvent.TYPE_VIEW_FOCUSED && eventType != AccessibilityEvent.TYPE_VIEW_SCROLLED && eventType != AccessibilityEvent.TYPE_VIEW_CLICKED && !source.getViewIdResourceName().equalsIgnoreCase("com.saenaegi.lfree:id/textView9") && !source.getViewIdResourceName().equalsIgnoreCase("com.saenaegi.lfree:id/lfree"))
+                if(eventText.length() < 30 && eventType != AccessibilityEvent.TYPE_VIEW_SELECTED && eventType != AccessibilityEvent.TYPE_VIEW_FOCUSED && eventType != AccessibilityEvent.TYPE_VIEW_SCROLLED && eventType != AccessibilityEvent.TYPE_VIEW_CLICKED && !source.getViewIdResourceName().equalsIgnoreCase("com.saenaegi.lfree:id/textView9") && !source.getViewIdResourceName().equalsIgnoreCase("com.saenaegi.lfree:id/lfree"))
                     eventText = eventText + introText;
+                else if(source.getViewIdResourceName().equalsIgnoreCase("com.saenaegi.lfree:id/title")) {
+                    eventText = eventText + introText;
+                }
                 Toast.makeText(getApplication(), eventText, Toast.LENGTH_SHORT).show();
 
                 // TTS 기능으로 말하기
