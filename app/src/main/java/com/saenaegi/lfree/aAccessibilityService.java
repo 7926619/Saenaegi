@@ -5,13 +5,16 @@ import android.accessibilityservice.AccessibilityServiceInfo;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.os.Build;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewStub;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.speech.tts.TextToSpeech;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
-//import android.speech.tts.Voice;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -23,17 +26,10 @@ public class aAccessibilityService extends AccessibilityService {
     AccessibilityNodeInfo temp;
     //int tempGestureId;
 
+    ArrayList<View> arr = new ArrayList<>();
+
     @Override
     public void onCreate() {
-        // getServiceInfo().flags = AccessibilityServiceInfo.FLAG_REQUEST_TOUCH_EXPLORATION_MODE;
-        /*
-        tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                tts.setLanguage(Locale.KOREAN);
-            }
-        });
-        */
         tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
@@ -49,10 +45,106 @@ public class aAccessibilityService extends AccessibilityService {
         });
     }
 
+    public void listViewGestureLeft() {
+        ActivityManager am3 = (ActivityManager)this.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningTaskInfo> rti3 = am3.getRunningTasks(1);
+        if((rti3.get(0).topActivity.getClassName()).contains("aRecentVideoActivity")) {
+            ArrayList<TextView> rowtemp = ((aRecentVideoActivity)aRecentVideoActivity.context).rowList;
+            ArrayList<TextView> rowaftertemp = ((aRecentVideoActivity)aRecentVideoActivity.context).rowafterList;
+            ListView listviewtemp = ((aRecentVideoActivity)aRecentVideoActivity.context).listView;
+            TextView temp;
+            TextView tempafter;
+
+            if(rowtemp == null || rowaftertemp == null)
+                return;
+
+            for(int i = 0 ; i < rowtemp.size() ; i++) {
+                temp = rowtemp.get(i);
+                temp.setFocusable(true);
+                temp.setFocusableInTouchMode(true);
+                if ((source.getContentDescription()).equals(temp.getContentDescription())) {
+                    if (temp.getId() == rowtemp.size() - 1) {
+                        tempafter = rowtemp.get(0);
+                        for(int j = 0 ; j < rowaftertemp.size() ; j++) {
+                            if((tempafter.getContentDescription()).equals((rowaftertemp.get(j)).getContentDescription())) {
+                                listviewtemp.findViewsWithText(arr, tempafter.getContentDescription(), ViewStub.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
+                                arr.get(0).setFocusable(true);
+                                arr.get(0).setFocusableInTouchMode(true);
+                                arr.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
+                                arr.remove(0);
+                            }
+                        }
+                    }
+
+                    else {
+                        if(i + 1 == rowtemp.size())
+                            break;
+                        tempafter = rowtemp.get(i+1);
+                        for(int j = 0 ; j < rowaftertemp.size() ; j++) {
+                            if((tempafter.getContentDescription()).equals((rowaftertemp.get(j)).getContentDescription())) {
+                                listviewtemp.findViewsWithText(arr, tempafter.getContentDescription(), ViewStub.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
+                                arr.get(0).setFocusable(true);
+                                arr.get(0).setFocusableInTouchMode(true);
+                                arr.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
+                                arr.remove(0);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public void listViewGestureRight() {
+        ActivityManager am3 = (ActivityManager)this.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningTaskInfo> rti3 = am3.getRunningTasks(1);
+        if((rti3.get(0).topActivity.getClassName()).contains("aRecentVideoActivity")) {
+            ArrayList<TextView> rowtemp = ((aRecentVideoActivity)aRecentVideoActivity.context).rowList;
+            ArrayList<TextView> rowbeforetemp = ((aRecentVideoActivity)aRecentVideoActivity.context).rowbeforeList;
+            ListView listviewtemp = ((aRecentVideoActivity)aRecentVideoActivity.context).listView;
+            TextView temp;
+            TextView tempbefore;
+
+            if(rowtemp == null || rowbeforetemp == null)
+                return;
+
+            for(int i = 0 ; i < rowtemp.size() ; i++) {
+                temp = rowtemp.get(i);
+                if ((source.getContentDescription()).equals(temp.getContentDescription())) {
+                    if(temp.getId() == 0) {
+                        tempbefore = rowtemp.get(rowtemp.size() - 1);
+                        for(int j = 0 ; j < rowbeforetemp.size() ; j++) {
+                            if((tempbefore.getContentDescription()).equals(rowbeforetemp.get(j).getContentDescription())) {
+                                listviewtemp.findViewsWithText(arr, tempbefore.getContentDescription(), ViewStub.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
+                                arr.get(0).setFocusable(true);
+                                arr.get(0).setFocusableInTouchMode(true);
+                                arr.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
+                                arr.remove(0);
+                            }
+                        }
+                    }
+
+                    else {
+                        if(i -1 < 0)
+                            break;
+                        tempbefore = rowtemp.get(i - 1);
+                        for(int j = 0 ; j < rowbeforetemp.size() ; j++) {
+                            if((tempbefore.getContentDescription()).equals(rowbeforetemp.get(j).getContentDescription())) {
+                                listviewtemp.findViewsWithText(arr, tempbefore.getContentDescription(), ViewStub.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
+                                arr.get(0).setFocusable(true);
+                                arr.get(0).setFocusableInTouchMode(true);
+                                arr.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
+                                arr.remove(0);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     @Override
     public boolean onGesture(int gestureId) {
-        //tempGestureId = gestureId;
-
         if(source == null)
             return false;
 
@@ -65,8 +157,11 @@ public class aAccessibilityService extends AccessibilityService {
             // 오른쪽에서 왼쪽으로 스와이프를 진행하는 경우, 해당 레이아웃 내에서 선택되어 있던 UI 컴포넌트의 다음 컴포넌트를 포커싱 및 선택
             case GESTURE_SWIPE_LEFT:
                 Toast.makeText(getApplication(), "SWIPE_LEFT", Toast.LENGTH_LONG).show();
-                //source.findAccessibilityNodeInfosByViewId()
                 if(source.getViewIdResourceName() != null) {
+                    if(source.getViewIdResourceName().contains("title")) {
+                        listViewGestureLeft();
+                        return true;
+                    }
                     //if((source.getViewIdResourceName()).contains("com.saenaegi.lfree:id/textView18"))
                     temp = source.getTraversalAfter();
                     if(temp == null)
@@ -84,6 +179,10 @@ public class aAccessibilityService extends AccessibilityService {
             case GESTURE_SWIPE_RIGHT:
                 Toast.makeText(getApplication(), "SWIPE_RIGHT", Toast.LENGTH_LONG).show();
                 if(source.getViewIdResourceName() != null) {
+                    if(source.getViewIdResourceName().contains("title")) {
+                        listViewGestureRight();
+                        return true;
+                    }
                     //if((source.getViewIdResourceName()).contains("com.saenaegi.lfree:id/textView18"))
                     temp = source.getTraversalBefore();
                     if(temp == null)
@@ -141,7 +240,8 @@ public class aAccessibilityService extends AccessibilityService {
         Log.e(TAG, "Catch Event getSource : " + event.getSource());
         // 발생한 이벤트로부터 Source를 get
         source = event.getSource();
-        Log.e(TAG, "Catch View ID : " + source.getViewIdResourceName());
+        Log.e(TAG, "Catch View ID : " + source.getViewIdResourceName() + " " + source.getWindowId());
+        Log.e(TAG, "Catch before or after item by focusing : " + source.getTraversalBefore() + " " +  source.getTraversalAfter());
         Log.e(TAG, "=========================================================================");
         // 실현 시간 상수로서 접근성 서비스에 대한 이벤트 타입 변수 선언 및 생성
         final int eventType =  event.getEventType();
@@ -157,39 +257,20 @@ public class aAccessibilityService extends AccessibilityService {
         }
 
         if(source.getViewIdResourceName() == null || source.getContentDescription() == null) {
-            Toast.makeText(getApplicationContext(), "VIEW ID or Content is NULL!", Toast.LENGTH_LONG).show();
-            /*
-            AccessibilityNodeInfo root = getRootInActiveWindow();
-            if(root == null)
-                return;
-            source = root.findAccessibilityNodeInfosByViewId("com.saenaegi.lfree:id/textView9").get(0);
-            */
+            //Toast.makeText(getApplicationContext(), "VIEW ID or Content is NULL!", Toast.LENGTH_LONG).show();
             return;
         }
 
         if(eventType == AccessibilityEvent.TYPE_VIEW_CLICKED || eventType == AccessibilityEvent.TYPE_VIEW_HOVER_ENTER) {
             // 이벤트를 발생시킨 해당 소스에 대한 Action 실행. 이 때의 Action은 접근성 서비스를 위한 FOCUS
-            eventText = "클릭됨 : ";
+            //eventText = "클릭됨 : ";
             eventText = eventText + event.getContentDescription();
             source.performAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS);
             Toast.makeText(getApplication(), eventText, Toast.LENGTH_SHORT).show();
             // 다시 사용할 수 있도록 해당 인스턴스를 반환
             source.recycle();
         }
-        /*
-        else if(eventType == AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED) {
 
-
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                tts.speak(eventText, TextToSpeech.QUEUE_FLUSH, null, "TextToSpeech_ID");
-            } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                tts.speak(eventText, TextToSpeech.QUEUE_FLUSH, null);
-            }
-
-            return;
-        }
-        */
         else{
             switch (eventType) {
                 // 특정 컴포넌트에 대해 접근성 관련 포커싱이 발생하면
@@ -210,7 +291,7 @@ public class aAccessibilityService extends AccessibilityService {
             // 이벤트의 대상이 된 컴포넌트의 ContentDescription 내용을 String에 저장 및 출력
             if(eventText != null) {
                 eventText = eventText + event.getContentDescription();
-                if(eventText.length() < 30 && eventType != AccessibilityEvent.TYPE_VIEW_SELECTED && eventType != AccessibilityEvent.TYPE_VIEW_FOCUSED && eventType != AccessibilityEvent.TYPE_VIEW_SCROLLED && eventType != AccessibilityEvent.TYPE_VIEW_CLICKED && !source.getViewIdResourceName().equalsIgnoreCase("com.saenaegi.lfree:id/textView9") && !source.getViewIdResourceName().equalsIgnoreCase("com.saenaegi.lfree:id/lfree"))
+                if(eventText.length() < 40 && eventType != AccessibilityEvent.TYPE_VIEW_SELECTED && eventType != AccessibilityEvent.TYPE_VIEW_FOCUSED && eventType != AccessibilityEvent.TYPE_VIEW_SCROLLED && eventType != AccessibilityEvent.TYPE_VIEW_CLICKED && !source.getViewIdResourceName().equalsIgnoreCase("com.saenaegi.lfree:id/textView9") && !source.getViewIdResourceName().equalsIgnoreCase("com.saenaegi.lfree:id/lfree"))
                     eventText = eventText + introText;
                 Toast.makeText(getApplication(), eventText, Toast.LENGTH_SHORT).show();
 
@@ -269,16 +350,11 @@ public class aAccessibilityService extends AccessibilityService {
 
     @Override
     public void onInterrupt() {
-        //Log.e("TEST", "OnInterrupt");
         // 특정 컴포넌트에 대한 tts 기능 사용 후에는 반드시 shutdown을 시켜 리소스 낭비를 피하도록 한다.
         // 이 때 TTS 기능이 shutdown이 되더라도 다시 enable하면 되므로 상관없다.
         if (tts != null) {
             tts.stop();
             tts.shutdown();
         }
-    }
-
-    public void onUnbind() {
-
     }
 }

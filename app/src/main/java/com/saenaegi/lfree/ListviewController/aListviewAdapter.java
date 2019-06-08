@@ -2,7 +2,6 @@ package com.saenaegi.lfree.ListviewController;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +11,6 @@ import android.widget.TextView;
 import com.saenaegi.lfree.R;
 
 import java.util.ArrayList;
-
-import static android.content.ContentValues.TAG;
 
 public class aListviewAdapter extends BaseAdapter {
     private LayoutInflater inflater;
@@ -37,13 +34,11 @@ public class aListviewAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, @NonNull ViewGroup parent){
-        /*
         if(convertView == null) {
             convertView = inflater.inflate(layout, parent, false);
         }
-        */
 
-        convertView = inflater.inflate(layout, parent, false);
+        //convertView = inflater.inflate(layout, parent, false);
 
         aListviewItem alistviewitem = data.get(position);
 
@@ -51,40 +46,12 @@ public class aListviewAdapter extends BaseAdapter {
         alistviewitem.setTag((int)getItemId(position));
 
         TextView name = (TextView)convertView.findViewById(R.id.title);
-        /*
-        if(getCount() >= 2) {
-            TextView namebefore = (TextView)convertView.findViewWithTag(getItemId(position-1));
-            if(namebefore == null) {
-                Log.e(TAG, "=========================================================================");
-                Log.e(TAG, "NameBefore is null! ");
-                Log.e(TAG, "=========================================================================");
-            }
-            else {
-                Log.e(TAG, "=========================================================================");
-                Log.e(TAG, "NameBefore : " + namebefore);
-                Log.e(TAG, "=========================================================================");
-                name.setAccessibilityTraversalBefore(namebefore.getId());
-            }
-        }
-        */
 
         name.setText(alistviewitem.getName());
-        //name.setTag(getItemId(position));
         name.setTag(alistviewitem.getTag());
-        //name.setId((int)getItemId(position));
-        //name.setId(alistviewitem.getId());
         name.setContentDescription(alistviewitem.getName());
         name.setFocusable(true);
         name.setFocusableInTouchMode(true);
-        //name.setAccessibilityTraversalBefore();
-        //name.setAccessibilityTraversalAfter();
-        Log.e(TAG, "=========================================================================");
-        Log.e(TAG, "ListView Text : " + name.getText());
-        Log.e(TAG, "ListView Tag : " + name.getTag());
-        Log.e(TAG, "ListView id : " + name.getId());
-        Log.e(TAG, "ListView ItemId : " + getItemId(position));
-        Log.e(TAG, "ListView ContentDescription : " + name.getContentDescription());
-        Log.e(TAG, "=========================================================================");
 
         return convertView;
     }

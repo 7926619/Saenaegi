@@ -28,9 +28,10 @@
                 android:maxLines="2"
                 android:textColor="#363636"
                 android:textSize="16sp"
+                android:visibility="visible"
+                android:importantForAccessibility="yes"
                 android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:importantForAccessibility="yes"/>
+                android:focusableInTouchMode="true"/>
 
         </LinearLayout>
 

@@ -6,8 +6,8 @@ public class aListviewItem {
     private int id;
     private int tag;
 
-    public aListviewItem(String name) { 
-    	this.name = name; 
+    public aListviewItem(String name) {
+        this.name = name;
     }
     public String getName() { return name; }
     public int getId() { return id; }
