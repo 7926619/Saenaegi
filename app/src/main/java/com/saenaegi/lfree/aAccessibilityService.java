@@ -45,6 +45,48 @@ public class aAccessibilityService extends AccessibilityService {
         });
     }
 
+    public void listViewAutoFocusDown() {
+        ArrayList<TextView> rowtemp = ((aRecentVideoActivity)aRecentVideoActivity.context).rowList;
+        ArrayList<TextView> rowaftertemp = ((aRecentVideoActivity)aRecentVideoActivity.context).rowafterList;
+        ListView listviewtemp = ((aRecentVideoActivity)aRecentVideoActivity.context).listView;
+        TextView temp;
+
+        if(source.getContentDescription().equals("영상 목록")) {
+            temp = rowtemp.get(0);
+            for(int j = 0 ; j < rowaftertemp.size() ; j++) {
+                if(temp.getContentDescription().equals(rowaftertemp.get(j).getContentDescription())) {
+                    listviewtemp.findViewsWithText(arr, temp.getContentDescription(), ViewStub.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
+                    arr.get(0).setFocusable(true);
+                    arr.get(0).setFocusableInTouchMode(true);
+                    arr.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
+                    arr.remove(0);
+                    return;
+                }
+            }
+        }
+    }
+
+    public void listViewAutoFocusUp() {
+        ArrayList<TextView> rowtemp = ((aRecentVideoActivity)aRecentVideoActivity.context).rowList;
+        ArrayList<TextView> rowbeforetemp = ((aRecentVideoActivity)aRecentVideoActivity.context).rowbeforeList;
+        ListView listviewtemp = ((aRecentVideoActivity)aRecentVideoActivity.context).listView;
+        TextView temp;
+
+        if(source.getContentDescription().equals("영상 목록")) {
+            temp = rowtemp.get(rowtemp.size()-1);
+            for(int j = 0 ; j < rowbeforetemp.size() ; j++) {
+                if(temp.getContentDescription().equals(rowbeforetemp.get(j).getContentDescription())) {
+                    listviewtemp.findViewsWithText(arr, temp.getContentDescription(), ViewStub.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
+                    arr.get(0).setFocusable(true);
+                    arr.get(0).setFocusableInTouchMode(true);
+                    arr.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
+                    arr.remove(0);
+                    return;
+                }
+            }
+        }
+    }
+
     public void listViewGestureLeft() {
         ActivityManager am3 = (ActivityManager)this.getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningTaskInfo> rti3 = am3.getRunningTasks(1);
@@ -72,6 +114,7 @@ public class aAccessibilityService extends AccessibilityService {
                                 arr.get(0).setFocusableInTouchMode(true);
                                 arr.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
                                 arr.remove(0);
+                                return;
                             }
                         }
                     }
@@ -87,6 +130,7 @@ public class aAccessibilityService extends AccessibilityService {
                                 arr.get(0).setFocusableInTouchMode(true);
                                 arr.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
                                 arr.remove(0);
+                                return;
                             }
                         }
                     }
@@ -120,6 +164,7 @@ public class aAccessibilityService extends AccessibilityService {
                                 arr.get(0).setFocusableInTouchMode(true);
                                 arr.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
                                 arr.remove(0);
+                                return;
                             }
                         }
                     }
@@ -135,6 +180,7 @@ public class aAccessibilityService extends AccessibilityService {
                                 arr.get(0).setFocusableInTouchMode(true);
                                 arr.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
                                 arr.remove(0);
+                                return;
                             }
                         }
                     }
@@ -158,6 +204,10 @@ public class aAccessibilityService extends AccessibilityService {
             case GESTURE_SWIPE_LEFT:
                 Toast.makeText(getApplication(), "SWIPE_LEFT", Toast.LENGTH_LONG).show();
                 if(source.getViewIdResourceName() != null) {
+                    if(source.getContentDescription().equals("영상 목록") && source.getViewIdResourceName().contains("textView9")) {
+                        listViewAutoFocusDown();
+                        return true;
+                    }
                     if(source.getViewIdResourceName().contains("title")) {
                         listViewGestureLeft();
                         return true;
@@ -179,6 +229,10 @@ public class aAccessibilityService extends AccessibilityService {
             case GESTURE_SWIPE_RIGHT:
                 Toast.makeText(getApplication(), "SWIPE_RIGHT", Toast.LENGTH_LONG).show();
                 if(source.getViewIdResourceName() != null) {
+                    if(source.getContentDescription().equals("영상 목록") && source.getViewIdResourceName().contains("textView9")) {
+                        listViewAutoFocusUp();
+                        return true;
+                    }
                     if(source.getViewIdResourceName().contains("title")) {
                         listViewGestureRight();
                         return true;
@@ -263,7 +317,7 @@ public class aAccessibilityService extends AccessibilityService {
 
         if(eventType == AccessibilityEvent.TYPE_VIEW_CLICKED || eventType == AccessibilityEvent.TYPE_VIEW_HOVER_ENTER) {
             // 이벤트를 발생시킨 해당 소스에 대한 Action 실행. 이 때의 Action은 접근성 서비스를 위한 FOCUS
-            //eventText = "클릭됨 : ";
+            eventText = "클릭됨 : ";
             eventText = eventText + event.getContentDescription();
             source.performAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS);
             Toast.makeText(getApplication(), eventText, Toast.LENGTH_SHORT).show();
@@ -291,7 +345,7 @@ public class aAccessibilityService extends AccessibilityService {
             // 이벤트의 대상이 된 컴포넌트의 ContentDescription 내용을 String에 저장 및 출력
             if(eventText != null) {
                 eventText = eventText + event.getContentDescription();
-                if(eventText.length() < 40 && eventType != AccessibilityEvent.TYPE_VIEW_SELECTED && eventType != AccessibilityEvent.TYPE_VIEW_FOCUSED && eventType != AccessibilityEvent.TYPE_VIEW_SCROLLED && eventType != AccessibilityEvent.TYPE_VIEW_CLICKED && !source.getViewIdResourceName().equalsIgnoreCase("com.saenaegi.lfree:id/textView9") && !source.getViewIdResourceName().equalsIgnoreCase("com.saenaegi.lfree:id/lfree"))
+                if(eventText.length() < 70 && eventType != AccessibilityEvent.TYPE_VIEW_SELECTED && eventType != AccessibilityEvent.TYPE_VIEW_FOCUSED && eventType != AccessibilityEvent.TYPE_VIEW_SCROLLED && eventType != AccessibilityEvent.TYPE_VIEW_CLICKED && !source.getViewIdResourceName().equalsIgnoreCase("com.saenaegi.lfree:id/textView9") && !source.getViewIdResourceName().equalsIgnoreCase("com.saenaegi.lfree:id/lfree"))
                     eventText = eventText + introText;
                 Toast.makeText(getApplication(), eventText, Toast.LENGTH_SHORT).show();
 
