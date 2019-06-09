@@ -174,15 +174,19 @@
 
                 </LinearLayout>
 
-                <include layout="@layout/layout_footer" />
+                <LinearLayout
+                    android:id="@+id/footer"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"/>
 
             </LinearLayout>
         </ScrollView>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/check_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/fab_margin"
             android:backgroundTint="#94c310"

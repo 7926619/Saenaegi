@@ -7,6 +7,8 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -49,6 +52,7 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
     private FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference=firebaseDatabase.getReference().child( "LFREE" ).child( "VIDEO" );
 
+    private ScrollView scroll_view;
     private ListviewAdapter adapter;
     private ListView listView;
     private ArrayList<Video> pvideos =new ArrayList<>();
@@ -67,7 +71,7 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
         setContentView(R.layout.activity_video_commentary_list);
 
         /* scroll on top */
-        final ScrollView scroll_view = (ScrollView) findViewById(R.id.scroll_view);
+        scroll_view = (ScrollView) findViewById(R.id.scroll_view);
         scroll_view.post(new Runnable() {
             public void run() {
                 scroll_view.scrollTo(0, 0);
@@ -97,6 +101,7 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
         listView = (ListView) findViewById(R.id.listview);
         adapter = new ListviewAdapter(this, R.layout.listview_item, data);
         listView.setAdapter(adapter);
+        listView.setFocusable(false);
 
         /* Tab */
         getData();
@@ -121,8 +126,15 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
             }
         });
 
+        /* progress bar */
         progressBar = findViewById(R.id.progressBar);
         progressBar.setMax(100);
+
+        /* footer */
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.footer, new FooterFragment());
+        fragmentTransaction.commit();
     }
 
     private void getData(){
@@ -137,7 +149,7 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
                         pvideos.add( video );
                     }
                     else{
-                        ListviewItem temp = new ListviewItem(StringToBitMap(video.getBitt()), video.getTitle(), "제작중");
+                        ListviewItem temp = new ListviewItem(StringToBitMap(video.getBitt()), video.getTitle(), "조회수 : "+video.getView());
                         mvideos.add( video );
                     }
                 }
@@ -224,6 +236,20 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
         v.setImageResource(R.drawable.search);
         v.setPadding(0,0,0,0);
 
+        mSearch.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem menuItem) {
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+                changeView();
+                scroll_view.scrollTo(0,0);
+                return true;
+            }
+        });
+
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -231,7 +257,7 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
                 videos.clear();
                 if(index==0){
                     for(Video video:pvideos){
-                        if(video.getTitle().contains( query )){
+                        if(video.getTitle().toLowerCase().contains(query.toLowerCase())){
                             ListviewItem temp = new ListviewItem( StringToBitMap(video.getBitt()), video.getTitle(), "조회수 : "+video.getView() );
                             videos.add(video);
                             data.add( 0,temp );
@@ -240,8 +266,8 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
                 }
                 else{
                     for(Video video:mvideos){
-                        if(video.getTitle().contains(query)){
-                            ListviewItem temp = new ListviewItem(StringToBitMap(video.getBitt()), video.getTitle(),  "조회수 : "+video.getView());
+                        if(video.getTitle().toLowerCase().contains(query.toLowerCase())){
+                            ListviewItem temp = new ListviewItem(StringToBitMap(video.getBitt()), video.getTitle(), "조회수 : "+video.getView());
                             videos.add(video);
                             data.add( 0,temp );
                         }
@@ -257,7 +283,7 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
                 return false;
             }
         });
-        return super.onCreateOptionsMenu(menu);
+        return true;
     }
 
     @Override

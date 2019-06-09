@@ -6,6 +6,8 @@ import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +24,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
@@ -50,7 +53,8 @@ public class MyVideoListActivity extends AppCompatActivity implements Navigation
     private FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference=firebaseDatabase.getReference().child( "LFREE" ).child( "VIDEO" );
 
-
+    private ProgressBar progressBar;
+    private ScrollView scroll_view;
     private ListView listView;
     private ListviewAdapter adapter;
     boolean makevideo=false;
@@ -64,7 +68,7 @@ public class MyVideoListActivity extends AppCompatActivity implements Navigation
         setContentView(R.layout.activity_my_video_list);
 
         /* scroll on top */
-        final ScrollView scroll_view = (ScrollView) findViewById(R.id.scroll_view);
+        scroll_view = (ScrollView) findViewById(R.id.scroll_view);
         scroll_view.post(new Runnable() {
             public void run() {
                 scroll_view.scrollTo(0, 0);
@@ -96,7 +100,32 @@ public class MyVideoListActivity extends AppCompatActivity implements Navigation
 
         adapter = new ListviewAdapter(this, R.layout.listview_item, data);
         listView.setAdapter(adapter);
+        listView.setFocusable(false);
 
+        changeView();
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(MyVideoListActivity.this, WatchVideoActivity.class);
+                intent.putExtra("link",videos.get(position).getLink());
+                intent.putExtra("count",videos.get(position).getSectionCount());
+                startActivity(intent);
+            }
+        });
+
+        /* progress bar */
+        progressBar = findViewById(R.id.progressBar);
+        progressBar.setMax(100);
+
+        /* footer */
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.footer, new FooterFragment());
+        fragmentTransaction.commit();
+    }
+
+    private void changeView() {
         databaseReference.addListenerForSingleValueEvent(  new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -110,7 +139,7 @@ public class MyVideoListActivity extends AppCompatActivity implements Navigation
                             Subtitle subtitle = tmp.getValue( Subtitle.class );
                             if (subtitle.getIdgoogle().equals( "userid" )) {
                                 videos.add( video );
-                                ListviewItem item = new ListviewItem( StringToBitMap( video.getBitt() ), video.getTitle(), String.valueOf( video.getView() ) );
+                                ListviewItem item = new ListviewItem( StringToBitMap( video.getBitt() ), video.getTitle(), "조회수 : "+video.getView() );
                                 data.add( item );
                                 makevideo=true;
                                 break;
@@ -123,21 +152,13 @@ public class MyVideoListActivity extends AppCompatActivity implements Navigation
 
                 adapter.notifyDataSetChanged();
                 setListViewHeightBasedOnChildren( listView );
+                progressBar.setVisibility(View.GONE);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         } );
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(MyVideoListActivity.this, WatchVideoActivity.class);
-                intent.putExtra("link",videos.get(position).getLink());
-                intent.putExtra("count",videos.get(position).getSectionCount());
-                startActivity(intent);
-            }
-        });
     }
 
     public void setListViewHeightBasedOnChildren(ListView listView) {
@@ -177,13 +198,27 @@ public class MyVideoListActivity extends AppCompatActivity implements Navigation
         v.setImageResource(R.drawable.search);
         v.setPadding(0,0,0,0);
 
+        mSearch.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem menuItem) {
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+                changeView();
+                scroll_view.scrollTo(0,0);
+                return true;
+            }
+        });
+
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 data.clear();
                 for(Video video:videos){
-                    if(video.getTitle().contains( query )){
-                        ListviewItem tmp = new ListviewItem( StringToBitMap(video.getBitt()), video.getTitle(), String.valueOf( video.getView() ) );
+                    if(video.getTitle().toLowerCase().contains( query.toLowerCase() )){
+                        ListviewItem tmp = new ListviewItem( StringToBitMap(video.getBitt()), video.getTitle(), "조회수 : "+video.getView() );
                         data.add( tmp );
                     }
                 }

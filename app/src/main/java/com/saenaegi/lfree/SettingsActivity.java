@@ -3,6 +3,8 @@ package com.saenaegi.lfree;
 import android.content.Intent;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -79,6 +81,12 @@ public class SettingsActivity extends AppCompatActivity implements NavigationVie
         listView.setAdapter(adapter);
         setListViewHeightBasedOnChildren(listView);
         listView.setOnItemClickListener(ItemClickListener);
+
+        /* footer */
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.footer, new FooterFragment());
+        fragmentTransaction.commit();
     }
 
     private AdapterView.OnItemClickListener ItemClickListener = new AdapterView.OnItemClickListener()

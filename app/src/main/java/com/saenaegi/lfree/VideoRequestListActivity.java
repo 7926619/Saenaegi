@@ -9,6 +9,8 @@ import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
@@ -28,6 +30,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
@@ -62,8 +65,10 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
     private FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference =firebaseDatabase.getReference().child("LFREE").child("VIDEO");
 
+    private ScrollView scroll_view;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
+    private ProgressBar progressBar;
 
     private ArrayList<ListviewItem> data = new ArrayList<>();
     private ArrayList<Video> rvideos = new ArrayList<>();
@@ -83,7 +88,7 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
         setContentView(R.layout.activity_video_request_list);
 
         /* scroll on top */
-        final ScrollView scroll_view = (ScrollView) findViewById(R.id.scroll_view);
+        scroll_view = (ScrollView) findViewById(R.id.scroll_view);
         scroll_view.post(new Runnable() {
             public void run() {
                 scroll_view.scrollTo(0, 0);
@@ -123,29 +128,20 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
         listView = (ListView) findViewById(R.id.listview);
         adapter = new ListviewAdapter(this, R.layout.listview_item, data);
         listView.setAdapter(adapter);
+        listView.setFocusable(false);
         setListViewHeightBasedOnChildren(listView);
 
-        databaseReference.addValueEventListener( new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                data.clear();
-                rvideos.clear();
-                for(DataSnapshot snapshot:dataSnapshot.getChildren()){
-                    Video video=snapshot.getValue(Video.class);
-                    if (!(video.isLookstate() && video.isListenstate())) {
-                        ListviewItem temp = new ListviewItem( StringToBitMap(video.getBitt()), video.getTitle(), null );
-                        rvideos.add(video);
-                        data.add(0,temp);
-                    }
-                }
-                adapter.notifyDataSetChanged();
-                setListViewHeightBasedOnChildren(listView);
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+        changeView();
 
-            }
-        } );
+        /* progress bar */
+        progressBar = findViewById(R.id.progressBar);
+        progressBar.setMax(100);
+
+        /* footer */
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.footer, new FooterFragment());
+        fragmentTransaction.commit();
     }
 
     @SuppressLint("RestrictedApi")
@@ -214,7 +210,9 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
                                         }
 
                                         int tmp = (hour * 60) + min;
-                                        if((tmp % 10) < 4)
+                                        if(tmp < 10)
+                                            section = 1;
+                                        else if((tmp % 10) < 4)
                                             section = (tmp / 10);
                                         else
                                             section = (tmp / 10) + 1;
@@ -239,6 +237,30 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
         builder.show();
     }
 
+    private void changeView() {
+        databaseReference.addValueEventListener( new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                data.clear();
+                rvideos.clear();
+                for(DataSnapshot snapshot:dataSnapshot.getChildren()){
+                    Video video=snapshot.getValue(Video.class);
+                    if (!(video.isLookstate() && video.isListenstate())) {
+                        ListviewItem temp = new ListviewItem( StringToBitMap(video.getBitt()), video.getTitle(), null );
+                        rvideos.add(video);
+                        data.add(0,temp);
+                    }
+                }
+                adapter.notifyDataSetChanged();
+                setListViewHeightBasedOnChildren(listView);
+                progressBar.setVisibility(View.GONE);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        } );
+    }
 
     public boolean setVideoQuery(String link, String title, boolean lookstate, boolean listenstate, int sectionCount,int view,String thumbnail) {
         Video video=new Video(link,title,lookstate,listenstate,sectionCount,view,thumbnail);
@@ -283,13 +305,27 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
         v.setImageResource(R.drawable.search);
         v.setPadding(0,0,0,0);
 
+        mSearch.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem menuItem) {
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+                changeView();
+                scroll_view.scrollTo(0,0);
+                return true;
+            }
+        });
+
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 data.clear();
                 rvideos.clear();
                 for(Video video:rvideos){
-                    if(video.getTitle().contains( query )){
+                    if(video.getTitle().toLowerCase().contains( query.toLowerCase() )){
                         ListviewItem tmp = new ListviewItem( StringToBitMap(video.getBitt()), video.getTitle(), null );
                         data.add( tmp );
                     }

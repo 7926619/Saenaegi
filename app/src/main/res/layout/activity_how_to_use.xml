@@ -48,6 +48,7 @@
                         android:layout_marginStart="15dp"
                         android:adjustViewBounds="true"
                         android:background="@android:color/transparent"
+                        android:visibility="invisible"
                         android:scaleType="centerInside"
                         android:src="@drawable/nav_1"
                         android:importantForAccessibility="no"/>
@@ -58,12 +59,11 @@
                         android:layout_height="match_parent"
                         android:adjustViewBounds="true"
                         android:layout_gravity="center"
-                        android:text="좋아요 표시한 동영상"
+                        android:text="이용방법"
                         android:textColor="#363636"
                         android:textSize="25sp"
                         android:textStyle="bold"
                         android:importantForAccessibility="no"/>
-
 
                 </android.support.v7.widget.Toolbar>
 
@@ -76,33 +76,19 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="30dp"
                     android:orientation="vertical"
                     android:paddingHorizontal="30dp"
-                    android:paddingTop="30dp"
+                    android:paddingTop="20dp"
+                    android:layout_marginBottom="40dp"
                     android:importantForAccessibility="no">
 
-                    <ProgressBar
-                        android:id="@+id/progressBar"
-                        style="?android:attr/progressBarStyle"
+                    <TextView
+                        android:id="@+id/text"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
-
-                    <ListView
-                        android:id="@+id/listview"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:divider="#fff"
-                        android:dividerHeight="20dp"
-                        android:importantForAccessibility="no"/>
+                        android:layout_height="wrap_content"
+                        android:text="test" />
 
                 </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/footer"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"/>
 
             </LinearLayout>
         </ScrollView>
@@ -115,9 +101,8 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="#fff"
-        app:headerLayout="@layout/layout_nav_header"
-        app:menu="@menu/main_navigation_menu"
         android:importantForAccessibility="no"
-        />
+        app:headerLayout="@layout/layout_nav_header"
+        app:menu="@menu/main_navigation_menu" />
 
 </android.support.v4.widget.DrawerLayout>
