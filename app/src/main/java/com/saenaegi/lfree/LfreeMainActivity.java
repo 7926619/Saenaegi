@@ -7,6 +7,8 @@ import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -149,6 +151,12 @@ public class LfreeMainActivity extends AppCompatActivity implements NavigationVi
         progressBar1.setMax(100);
         progressBar2 = findViewById(R.id.progressBar2);
         progressBar2.setMax(100);
+
+        /* footer */
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.footer, new FooterFragment());
+        fragmentTransaction.commit();
     }
 
     @Override

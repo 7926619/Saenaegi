@@ -8,6 +8,8 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
@@ -208,6 +210,12 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
             public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
             }
         });
+
+        /* footer */
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.footer, new FooterFragment());
+        fragmentTransaction.commit();
     }
 
     private void getData() {
@@ -435,6 +443,8 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
     public void onItemSelected(View v, int position) {
         RecyclerAdapter.ItemViewHolder viewHolder;
         if(prePosition == -1) {
+            TextView partText = (TextView) findViewById(R.id.partText);
+            partText.setVisibility(View.GONE);
             viewHolder = (RecyclerAdapter.ItemViewHolder)recyclerView1.findViewHolderForAdapterPosition(0);
             viewHolder.imageView.setColorFilter(Color.argb(0, 0, 0, 0));
         }

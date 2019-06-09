@@ -7,6 +7,8 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -124,8 +126,15 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
             }
         });
 
+        /* progress bar */
         progressBar = findViewById(R.id.progressBar);
         progressBar.setMax(100);
+
+        /* footer */
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.footer, new FooterFragment());
+        fragmentTransaction.commit();
     }
 
     private void getData(){
@@ -235,6 +244,7 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+                changeView();
                 scroll_view.scrollTo(0,0);
                 return true;
             }

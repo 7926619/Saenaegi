@@ -7,6 +7,8 @@ import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
@@ -25,6 +27,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
@@ -43,6 +46,8 @@ import java.util.HashMap;
 
 public class LikeVideoListActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    private ProgressBar progressBar;
+    private ScrollView scroll_view;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
@@ -60,7 +65,7 @@ public class LikeVideoListActivity extends AppCompatActivity implements Navigati
         setContentView(R.layout.activity_like_video_list);
 
         /* scroll on top */
-        final ScrollView scroll_view = (ScrollView) findViewById(R.id.scroll_view);
+        scroll_view = (ScrollView) findViewById(R.id.scroll_view);
         scroll_view.post(new Runnable() {
             public void run() {
                 scroll_view.scrollTo(0, 0);
@@ -92,6 +97,20 @@ public class LikeVideoListActivity extends AppCompatActivity implements Navigati
         adapter = new ListviewAdapter(this, R.layout.listview_item, data);
         listView.setAdapter(adapter);
 
+        changeView();
+
+        /* progress bar */
+        progressBar = findViewById(R.id.progressBar);
+        progressBar.setMax(100);
+
+        /* footer */
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.footer, new FooterFragment());
+        fragmentTransaction.commit();
+    }
+
+    private void changeView() {
         databaseReference.addListenerForSingleValueEvent( new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -117,13 +136,14 @@ public class LikeVideoListActivity extends AppCompatActivity implements Navigati
                     }
                 }
                 adapter.notifyDataSetChanged();
+                setListViewHeightBasedOnChildren( listView );
+                progressBar.setVisibility(View.GONE);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         } );
-
     }
 
     public void setListViewHeightBasedOnChildren(ListView listView) {
@@ -163,13 +183,27 @@ public class LikeVideoListActivity extends AppCompatActivity implements Navigati
         v.setImageResource(R.drawable.search);
         v.setPadding(0,0,0,0);
 
+        mSearch.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem menuItem) {
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+                changeView();
+                scroll_view.scrollTo(0,0);
+                return true;
+            }
+        });
+
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 data.clear();
                 for(Video video:videos){
                     if(video.getTitle().contains( query )){
-                        ListviewItem listviewItem = new ListviewItem(StringToBitMap(video.getBitt()),video.getTitle(), String.valueOf(video.getView()));
+                        ListviewItem listviewItem = new ListviewItem(StringToBitMap(video.getBitt()),video.getTitle(), "조회수 : "+video.getView());
                         data.add(listviewItem);
                     }
                 }
