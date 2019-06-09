@@ -472,6 +472,17 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:{ //toolbar의 back키 눌렀을 때 동작
+                finish();
+                return true;
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         Intent intent;
         switch(item.getItemId()) {

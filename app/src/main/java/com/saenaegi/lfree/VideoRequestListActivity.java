@@ -28,6 +28,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
@@ -71,6 +72,7 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
+    private ProgressBar progressBar;
 
     private ArrayList<ListviewItem> data = new ArrayList<>();
     private ArrayList<Video> videos = new ArrayList<>();
@@ -150,12 +152,17 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
                 }
                 adapter.notifyDataSetChanged();
                 setListViewHeightBasedOnChildren(listView);
+                progressBar.setVisibility(View.GONE);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         } );
+
+        /* progress bar */
+        progressBar = findViewById(R.id.progressBar);
+        progressBar.setMax(100);
     }
 
     @SuppressLint("RestrictedApi")

@@ -49,6 +49,8 @@ import com.saenaegi.lfree.SubtitleController.SubtitleAndKey;
 import com.saenaegi.lfree.SubtitleController.SubtitleData;
 import com.saenaegi.lfree.SubtitleController.outputDataController;
 
+import org.w3c.dom.Text;
+
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.ArrayList;

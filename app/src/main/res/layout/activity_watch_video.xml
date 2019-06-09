@@ -134,9 +134,8 @@
                             android:textStyle="bold"
                             android:importantForAccessibility="no"/>
 
-                        <!--
                         <TextView
-                            android:id="@+id/textView3"
+                            android:id="@+id/partText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_horizontal"
@@ -145,7 +144,6 @@
                             android:textColor="#606060"
                             android:textSize="12sp"
                             android:importantForAccessibility="no"/>
-                            -->
 
                         <RelativeLayout
                             android:layout_width="match_parent"
