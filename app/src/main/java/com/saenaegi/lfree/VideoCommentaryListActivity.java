@@ -56,7 +56,7 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
     private int index=0;
     private Bitmap thumb;
     private String url;
-    ProgressBar progressBar;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

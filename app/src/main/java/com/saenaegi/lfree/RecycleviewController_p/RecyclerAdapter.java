@@ -22,7 +22,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemVi
         void onItemSelected(View v, int position);
     }
     private OnListItemSelectedInterface mListener;
-    Context context;
+    private Context context;
 
     public RecyclerAdapter(Context context
             , OnListItemSelectedInterface listener) {

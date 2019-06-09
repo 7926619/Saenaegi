@@ -57,7 +57,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-public class WatchVideoActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, RecyclerAdapter.OnListItemSelectedInterface {
+public class WatchVideoActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, RecyclerAdapter.OnListItemSelectedInterface, RecyclerAdapterS.OnListItemSelectedInterface {
 
     private static int posi;
     private int prePosition = -1;
@@ -102,6 +102,8 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
         toolbar.setNavigationIcon(null);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         /* navigation */
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
@@ -158,7 +160,7 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
         LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(this);
         recyclerView2.setLayoutManager(linearLayoutManager2);
 
-        adapter2 = new RecyclerAdapterS();
+        adapter2 = new RecyclerAdapterS(this, this);
         recyclerView2.setAdapter(adapter2);
 
         subtitlebox = (TextView) findViewById(R.id.subtitle);
@@ -417,6 +419,17 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
         });
     }
 
+    @Override
+    public void onItemSelectedS(View v, int position) {
+        RecyclerAdapterS.ItemViewHolder viewHolder;
+        viewHolder = (RecyclerAdapterS.ItemViewHolder)recyclerView2.findViewHolderForAdapterPosition(position);
+        if(v.equals(viewHolder.subtitleButton)) {
+            Toast.makeText(getApplicationContext(), "말풍선", Toast.LENGTH_SHORT).show();
+        } else if(v.equals(viewHolder.soundButton)) {
+            Toast.makeText(getApplicationContext(), "귀때기", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     /* 파트 선택된 거 어둡게 바꿈 */
     @Override
     public void onItemSelected(View v, int position) {
@@ -438,6 +451,17 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
         getData();
 
         getSubtitle();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:{ //toolbar의 back키 눌렀을 때 동작
+                finish();
+                return true;
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

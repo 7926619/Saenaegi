@@ -15,13 +15,25 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.saenaegi.lfree.R;
+
 import java.util.ArrayList;
 
 public class RecyclerAdapterS extends RecyclerView.Adapter<RecyclerAdapterS.ItemViewHolder> {
 
+    public interface OnListItemSelectedInterface {
+        void onItemSelectedS(View v, int position);
+    }
+    private RecyclerAdapterS.OnListItemSelectedInterface mListener;
+    private Context context;
+
+    public RecyclerAdapterS(Context context
+            , OnListItemSelectedInterface listener) {
+        this.context = context;
+        this.mListener = listener;
+    }
+
     // adapter에 들어갈 list 입니다.
     private ArrayList<DataS> listData = new ArrayList<>();
-    private Context context;
     // Item의 클릭 상태를 저장할 array 객체
     private SparseBooleanArray selectedItems = new SparseBooleanArray();
     // 직전에 클릭됐던 Item의 position
@@ -59,11 +71,11 @@ public class RecyclerAdapterS extends RecyclerView.Adapter<RecyclerAdapterS.Item
     }
     // RecyclerView의 핵심인 ViewHolder 입니다.
     // 여기서 subView를 setting 해줍니다.
-    class ItemViewHolder extends RecyclerView.ViewHolder {
+    public class ItemViewHolder extends RecyclerView.ViewHolder {
 
         private TextView nameView;
-        private ImageButton subtitleButton;
-        private ImageButton soundButton;
+        public ImageButton subtitleButton;
+        public ImageButton soundButton;
         private ImageButton moreButton;
         private DataS dataS;
         private int position;
@@ -85,8 +97,25 @@ public class RecyclerAdapterS extends RecyclerView.Adapter<RecyclerAdapterS.Item
 
             if(!dataS.getOnSubtitle())
                 subtitleButton.setAlpha((float) 0.3);
+            else {
+                subtitleButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mListener.onItemSelectedS(v, getAdapterPosition());
+                    }
+                });
+            }
+
             if(!dataS.getOnSound())
                 soundButton.setAlpha((float) 0.3);
+            else {
+                soundButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mListener.onItemSelectedS(v, getAdapterPosition());
+                    }
+                });
+            }
 
             moreButton.setOnClickListener(new View.OnClickListener() {
                 @Override

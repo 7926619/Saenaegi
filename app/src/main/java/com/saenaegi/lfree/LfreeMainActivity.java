@@ -3,6 +3,7 @@ package com.saenaegi.lfree;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,7 +17,9 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,7 +40,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class LfreeMainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class LfreeMainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, RecyclerAdapter.OnListItemSelectedInterface {
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
@@ -54,6 +57,8 @@ public class LfreeMainActivity extends AppCompatActivity implements NavigationVi
     TextView LoginUserProfile;
     private Bitmap thumb;
     private String url;
+
+    private ProgressBar progressBar1, progressBar2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,12 +136,35 @@ public class LfreeMainActivity extends AppCompatActivity implements NavigationVi
         linearLayoutManager2.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView2.setLayoutManager(linearLayoutManager2);
 
-        adapter1=new RecyclerAdapter();
-        adapter2=new RecyclerAdapter();
+        adapter1 = new RecyclerAdapter(this, this);
+        adapter2 = new RecyclerAdapter(this, this);
         recyclerView1.setAdapter( adapter1 );
         recyclerView2.setAdapter( adapter2 );
 
         getData();
+
+        /* progress bar */
+        progressBar1 = findViewById(R.id.progressBar1);
+        progressBar1.setMax(100);
+        progressBar2 = findViewById(R.id.progressBar2);
+        progressBar2.setMax(100);
+    }
+
+    @Override
+    public void onItemSelected(View v, int position) {
+        View view = (View) v.getParent();
+        View parentView = (View) view.getParent();
+        if(parentView.equals(recyclerView1)) {
+            Intent intent = new Intent(LfreeMainActivity.this, WatchVideoActivity.class);
+            intent.putExtra("link", pvideos.get(position).getLink());
+            intent.putExtra("count", pvideos.get(position).getSectionCount());
+            startActivity(intent);
+        } else if(parentView.equals(recyclerView2)) {
+            Intent intent = new Intent(LfreeMainActivity.this, WatchVideoActivity.class);
+            intent.putExtra("link", mvideos.get(position).getLink());
+            intent.putExtra("count", mvideos.get(position).getSectionCount());
+            startActivity(intent);
+        }
     }
 
     private void getData() {
@@ -144,6 +172,8 @@ public class LfreeMainActivity extends AppCompatActivity implements NavigationVi
         databaseReference.addValueEventListener( new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                adapter1.delItem();
+                adapter2.delItem();
                 for(DataSnapshot snapshot:dataSnapshot.getChildren()){
                     Video video=snapshot.getValue(Video.class);
 
@@ -164,6 +194,8 @@ public class LfreeMainActivity extends AppCompatActivity implements NavigationVi
                 }
                 adapter1.notifyDataSetChanged();
                 adapter2.notifyDataSetChanged();
+                progressBar1.setVisibility(View.GONE);
+                progressBar2.setVisibility(View.GONE);
             }
 
             @Override

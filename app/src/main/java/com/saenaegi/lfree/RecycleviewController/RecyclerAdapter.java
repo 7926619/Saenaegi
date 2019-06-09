@@ -1,5 +1,6 @@
 package com.saenaegi.lfree.RecycleviewController;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,6 +14,18 @@ import com.saenaegi.lfree.R;
 import java.util.ArrayList;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemViewHolder> {
+
+    public interface OnListItemSelectedInterface {
+        void onItemSelected(View v, int position);
+    }
+    private RecyclerAdapter.OnListItemSelectedInterface mListener;
+    private Context context;
+
+    public RecyclerAdapter(Context context
+            , OnListItemSelectedInterface listener) {
+        this.context = context;
+        this.mListener = listener;
+    }
 
     private ArrayList<Data> listData = new ArrayList<>();
 
@@ -42,11 +55,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemVi
         listData.add(data);
     }
 
+    public void delItem() {
+        listData.clear();
+    }
+
     // RecyclerView의 핵심인 ViewHolder 입니다.
     // 여기서 subView를 setting 해줍니다.
-    class ItemViewHolder extends RecyclerView.ViewHolder {
+    public class ItemViewHolder extends RecyclerView.ViewHolder {
 
-        private ImageView imageView;
+        public ImageView imageView;
         private TextView textView1;
 
         ItemViewHolder(View itemView) {
@@ -59,6 +76,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemVi
         void onBind(Data data) {
             imageView.setImageBitmap(data.getBit());
             textView1.setText(data.getTitle());
+
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.onItemSelected(v, getAdapterPosition());
+                }
+            });
         }
     }
 }
