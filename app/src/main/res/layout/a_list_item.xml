@@ -15,7 +15,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:contentDescription=""
-        android:importantForAccessibility="yes">
+        android:importantForAccessibility="no">
 
         <LinearLayout
             android:id="@+id/linear2"
@@ -24,7 +24,7 @@
             android:layout_marginBottom="7sp"
             android:orientation="horizontal"
             android:contentDescription=""
-            android:importantForAccessibility="yes">
+            android:importantForAccessibility="no">
 
             <TextView
                 android:id="@+id/title"
@@ -36,7 +36,7 @@
                 android:textColor="#363636"
                 android:textSize="16sp"
                 android:visibility="visible"
-                android:importantForAccessibility="yes"
+                android:importantForAccessibility="no"
                 android:focusable="true"
                 android:focusableInTouchMode="true"/>
 
