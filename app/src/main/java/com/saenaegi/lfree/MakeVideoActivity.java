@@ -99,6 +99,7 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         toolbar.setNavigationIcon(null);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         /* navigation */
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
@@ -477,26 +478,32 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
             case R.id.it_home:
                 intent = new Intent(MakeVideoActivity.this, LfreeMainActivity.class);
                 startActivity(intent);
+                finish();
                 break;
             case R.id.it_commentation:
                 intent = new Intent(MakeVideoActivity.this, VideoCommentaryListActivity.class);
                 startActivity(intent);
+                finish();
                 break;
             case R.id.it_request_video:
                 intent = new Intent(MakeVideoActivity.this, VideoRequestListActivity.class);
                 startActivity(intent);
+                finish();
                 break;
             case R.id.it_my_video:
                 intent = new Intent(MakeVideoActivity.this, MyVideoListActivity.class);
                 startActivity(intent);
+                finish();
                 break;
             case R.id.it_like_video:
                 intent = new Intent(MakeVideoActivity.this, LikeVideoListActivity.class);
                 startActivity(intent);
+                finish();
                 break;
             case R.id.it_notice:
                 intent = new Intent(MakeVideoActivity.this, NoticeActivity.class);
                 startActivity(intent);
+                finish();
                 break;
             case R.id.it_setting:
                 break;

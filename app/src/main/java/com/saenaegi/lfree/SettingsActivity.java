@@ -2,6 +2,7 @@ package com.saenaegi.lfree;
 
 import android.content.Intent;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -127,26 +128,32 @@ public class SettingsActivity extends AppCompatActivity implements NavigationVie
             case R.id.it_home:
                 intent = new Intent(SettingsActivity.this, LfreeMainActivity.class);
                 startActivity(intent);
+                finish();
                 break;
             case R.id.it_commentation:
                 intent = new Intent(SettingsActivity.this, VideoCommentaryListActivity.class);
                 startActivity(intent);
+                finish();
                 break;
             case R.id.it_request_video:
                 intent = new Intent(SettingsActivity.this, VideoRequestListActivity.class);
                 startActivity(intent);
+                finish();
                 break;
             case R.id.it_my_video:
                 intent = new Intent(SettingsActivity.this, MyVideoListActivity.class);
                 startActivity(intent);
+                finish();
                 break;
             case R.id.it_like_video:
                 intent = new Intent(SettingsActivity.this, LikeVideoListActivity.class);
                 startActivity(intent);
+                finish();
                 break;
             case R.id.it_notice:
                 intent = new Intent(SettingsActivity.this, NoticeActivity.class);
                 startActivity(intent);
+                finish();
                 break;
             case R.id.it_setting:
                 break;
@@ -156,12 +163,18 @@ public class SettingsActivity extends AppCompatActivity implements NavigationVie
         return false;
     }
 
+    private long time= 0;
     @Override
     public void onBackPressed() {
         if(drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            if(System.currentTimeMillis() - time >= 2000) {
+                time = System.currentTimeMillis();
+                Toast.makeText(getApplicationContext(),"\'뒤로\' 버튼을 한번 더 누르면 종료합니다.",Toast.LENGTH_SHORT).show();
+            } else if (System.currentTimeMillis() - time < 2000) {
+                ActivityCompat.finishAffinity(this);
+            }
         }
     }
 }
