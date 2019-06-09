@@ -175,6 +175,8 @@ public class LfreeMainActivity extends AppCompatActivity implements NavigationVi
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 adapter1.delItem();
                 adapter2.delItem();
+                pvideos.clear();
+                mvideos.clear();
                 for(DataSnapshot snapshot:dataSnapshot.getChildren()){
                     Video video=snapshot.getValue(Video.class);
 
