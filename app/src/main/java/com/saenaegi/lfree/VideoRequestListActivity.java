@@ -231,7 +231,9 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
                                         }
 
                                         int tmp = (hour * 60) + min;
-                                        if((tmp % 10) < 4)
+                                        if(tmp < 10)
+                                            section = 1;
+                                        else if((tmp % 10) < 4)
                                             section = (tmp / 10);
                                         else
                                             section = (tmp / 10) + 1;
