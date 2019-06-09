@@ -299,14 +299,12 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
         adapter1.notifyDataSetChanged();
     }
 
-    public void getSubtitle() {
+    public void getListienSubtitle(int position) {
         output=new outputDataController();
-        //Log.e("name",""+sectionSubtitles.get(String.valueOf(posi)).get(3).);
-        //subtitleDatas = output.getListenSubtitleData( filedirectory, 3, idvideo, sectionSubtitles.get( String.valueOf( 3 ) ));
-        subtitleDatas = output.getListenSubtitleData( filedirectory, posi, idvideo, "-LgvWuYkPaTgUFz1v8V7" );
-        subtitleDatas = output.getListenSubtitleData( filedirectory, posi, idvideo, "-LgvWuYkPaTgUFz1v8V7" ); //  이 줄 삭제 하면 안됩니다. 큰일 나요. !!
+        subtitleDatas = output.getListenSubtitleData( filedirectory, posi, idvideo, sectionSubtitles.get(String.valueOf(posi)).get(position).getKey() );
+        subtitleDatas = output.getListenSubtitleData( filedirectory, posi, idvideo, sectionSubtitles.get(String.valueOf(posi)).get(position).getKey() ); //  이 줄 삭제 하면 안됩니다. 큰일 나요. !!
 
-        /*Thread th = new Thread(new Runnable() {
+        Thread th = new Thread(new Runnable() {
             @Override
             public void run() {
                 int[] compare_s = new int[subtitleDatas.size()];
@@ -334,7 +332,7 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
             }
         });
 
-        th.start();*/
+        th.start();
     }
 
     void type_choice() {
@@ -424,9 +422,9 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
         RecyclerAdapterS.ItemViewHolder viewHolder;
         viewHolder = (RecyclerAdapterS.ItemViewHolder)recyclerView2.findViewHolderForAdapterPosition(position);
         if(v.equals(viewHolder.subtitleButton)) {
-            Toast.makeText(getApplicationContext(), "말풍선", Toast.LENGTH_SHORT).show();
+            getListienSubtitle(position);
         } else if(v.equals(viewHolder.soundButton)) {
-            Toast.makeText(getApplicationContext(), "귀때기", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "귀때기"+position, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -449,8 +447,6 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
         posi = position+1;
 
         getData();
-
-        getSubtitle();
     }
 
     @Override
