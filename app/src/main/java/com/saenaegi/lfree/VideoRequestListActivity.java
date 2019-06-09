@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
@@ -324,28 +325,34 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
             case R.id.it_home:
                 intent = new Intent(VideoRequestListActivity.this, LfreeMainActivity.class);
                 startActivity(intent);
+                finish();
                 break;
             case R.id.it_commentation:
                 intent = new Intent(VideoRequestListActivity.this, VideoCommentaryListActivity.class);
                 startActivity(intent);
+                finish();
                 break;
             case R.id.it_request_video:
                 break;
             case R.id.it_my_video:
                 intent = new Intent(VideoRequestListActivity.this, MyVideoListActivity.class);
                 startActivity(intent);
+                finish();
                 break;
             case R.id.it_like_video:
                 intent = new Intent(VideoRequestListActivity.this, LikeVideoListActivity.class);
                 startActivity(intent);
+                finish();
                 break;
             case R.id.it_notice:
                 intent = new Intent(VideoRequestListActivity.this, NoticeActivity.class);
                 startActivity(intent);
+                finish();
                 break;
             case R.id.it_setting:
                 intent = new Intent(VideoRequestListActivity.this, SettingsActivity.class);
                 startActivity(intent);
+                finish();
                 break;
         }
 
@@ -353,12 +360,18 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
         return false;
     }
 
+    private long timeBack= 0;
     @Override
     public void onBackPressed() {
         if(drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            if(System.currentTimeMillis() - timeBack >= 2000) {
+                timeBack = System.currentTimeMillis();
+                Toast.makeText(getApplicationContext(),"\'뒤로\' 버튼을 한번 더 누르면 종료합니다.",Toast.LENGTH_SHORT).show();
+            } else if (System.currentTimeMillis() - timeBack < 2000) {
+                ActivityCompat.finishAffinity(this);
+            }
         }
     }
 
