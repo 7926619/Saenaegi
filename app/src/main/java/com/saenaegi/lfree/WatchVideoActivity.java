@@ -27,6 +27,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.youtube.player.YouTubeInitializationResult;
@@ -78,6 +79,7 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
     private FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference=firebaseDatabase.getReference().child( "LFREE" ).child( "VIDEO" );
     private CustomDialog customDialog;
+    private TextView subtitlebox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,6 +160,8 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
 
         adapter2 = new RecyclerAdapterS();
         recyclerView2.setAdapter(adapter2);
+
+        subtitlebox = (TextView) findViewById(R.id.subtitle);
 
         /* 동영상 로드 및 초기화 */
         YouTubePlayerSupportFragment frag = (YouTubePlayerSupportFragment) getSupportFragmentManager().findFragmentById(R.id.youtube_screen);
@@ -295,10 +299,40 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
 
     public void getSubtitle() {
         output=new outputDataController();
+        //Log.e("name",""+sectionSubtitles.get(String.valueOf(posi)).get(3).);
         //subtitleDatas = output.getListenSubtitleData( filedirectory, 3, idvideo, sectionSubtitles.get( String.valueOf( 3 ) ));
-        subtitleDatas = output.getListenSubtitleData( filedirectory, posi, idvideo, "-Lg2b9xAMH9IJzDquMVx" );
-        subtitleDatas = output.getListenSubtitleData( filedirectory, posi, idvideo,"-Lg2b9xAMH9IJzDquMVx" ); //  이 줄 삭제 하면 안됩니다. 큰일 나요. !!
+        subtitleDatas = output.getListenSubtitleData( filedirectory, posi, idvideo, "-LgvWuYkPaTgUFz1v8V7" );
+        subtitleDatas = output.getListenSubtitleData( filedirectory, posi, idvideo, "-LgvWuYkPaTgUFz1v8V7" ); //  이 줄 삭제 하면 안됩니다. 큰일 나요. !!
 
+        /*Thread th = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                int[] compare_s = new int[subtitleDatas.size()];
+                int[] compare_f = new int[subtitleDatas.size()];
+                for(int i = 0 ; i < subtitleDatas.size(); i++){
+                    String min = subtitleDatas.get(i).getSectionS().split(":")[0];
+                    String sec = subtitleDatas.get(i).getSectionS().split(":")[1];
+                    compare_s[i] = (Integer.parseInt(min)*60) + Integer.parseInt(sec);
+                    String min1 = subtitleDatas.get(i).getSectionE().split(":")[0];
+                    String sec1 = subtitleDatas.get(i).getSectionE().split(":")[1];
+                    compare_f[i] = (Integer.parseInt(min1)*60) + Integer.parseInt(sec1);
+                }
+                while(true) {
+                    for(int i=0; i < subtitleDatas.size(); i++) {
+                        if((player.getCurrentTimeMillis()/1000) >= compare_s[i] && player.getCurrentTimeMillis()/1000 < compare_f[i]) {
+                            subtitlebox.setText(subtitleDatas.get(i).getSubString());
+                        }
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        });
+
+        th.start();*/
     }
 
     void type_choice() {
@@ -402,7 +436,8 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
         posi = position+1;
 
         getData();
-      //  getSubtitle();
+
+        getSubtitle();
     }
 
     @Override
