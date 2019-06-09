@@ -1,25 +1,20 @@
 package com.saenaegi.lfree;
 
-import android.service.autofill.Dataset;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ListView;
 
-import com.google.android.gms.common.api.internal.ListenerHolder;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.saenaegi.lfree.Data.LIkevideo;
 import com.saenaegi.lfree.Data.Video;
-import com.saenaegi.lfree.ListviewController.ListviewItem;
 import com.saenaegi.lfree.ListviewController.aListviewAdapter;
 import com.saenaegi.lfree.ListviewController.aListviewItem;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class aLikeVideoActivity extends AppCompatActivity {
     private ListView listView;
@@ -29,7 +24,7 @@ public class aLikeVideoActivity extends AppCompatActivity {
     private FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference=firebaseDatabase.getReference().child( "LFREE" );
     private ArrayList<Video> videos=new ArrayList<>();
-    private ArrayList<LIkevideo> lvideos=new ArrayList<>();
+    private ArrayList<String> lvideos=new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,14 +47,13 @@ public class aLikeVideoActivity extends AppCompatActivity {
                 for(DataSnapshot snapshot:dataSnapshot.child( "LIKEVIDEO" ).getChildren()){
                     if(snapshot.getKey().equals( "userid" )){
                         for(DataSnapshot snapshot1:snapshot.getChildren()){
-                            LIkevideo lIkevideo=snapshot1.getValue(LIkevideo.class);
-                            lvideos.add(lIkevideo );
+                            lvideos.add(snapshot1.getKey());
                         }
                     }
                 }
                 for(DataSnapshot snapshot:dataSnapshot.child( "VIDEO" ).getChildren()){
-                    for(LIkevideo lIkevideo:lvideos){
-                        if(snapshot.getKey().equals( lIkevideo.getIdvideo() )){
+                    for(String idvideo:lvideos){
+                        if(snapshot.getKey().equals( idvideo )){
                             Video video=snapshot.getValue(Video.class);
                             videos.add( video );
                             aListviewItem aListviewItem=new aListviewItem( video.getTitle());

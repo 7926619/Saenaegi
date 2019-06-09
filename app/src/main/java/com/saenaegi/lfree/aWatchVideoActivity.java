@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.content.Intent;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
@@ -40,10 +41,12 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
     private String idvideo;
     private int sectionCount;
     private int nowSection;
+    private String userid="userid";
     private HashMap<String, ArrayList<SubtitleAndKey>> sectionSubtitles = new HashMap<>();
     private ArrayList<SubtitleData> subtitleDatas = new ArrayList<>();
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference = firebaseDatabase.getReference().child( "LFREE" ).child( "VIDEO" );
+    private DatabaseReference databaseReference2=firebaseDatabase.getReference().child( "LFREE" );
     private outputDataController output;
 
 
@@ -160,6 +163,38 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
                 intent.putExtra( "link", videoID );
                 intent.putExtra( "count", sectionCount );
                 startActivity( intent );
+            }
+        } );
+
+        TextView tv2 = (TextView) findViewById( R.id.textView15 );
+        tv1.setOnClickListener( new View.OnClickListener() {
+            public void onClick(View v) {
+                SubtitleAndKey subtitleAndKey=sectionSubtitles.get( nowSection ).get(0);
+                Subtitle temp=subtitleAndKey.getSubtitle();
+                final String key=subtitleAndKey.getKey();
+                final int recommend=subtitleAndKey.getRecommend();
+                final String makeUserid=temp.getIdgoogle();
+                final boolean type=temp.isType();
+                DatabaseReference dataRef2=databaseReference2.child( "LIKEVIDEO" ).child( userid );
+                dataRef2.child( idvideo ).child( key ).setValue( "idsubtitle" ).addOnSuccessListener( new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        DatabaseReference dataRef1=databaseReference2.child( "VIDEO" ).child( idvideo ).child( "SUBTITLE" ).child(String.valueOf( nowSection));
+                        dataRef1.child( key).child("recommend").setValue( recommend+1 );
+                    }
+                }
+                );
+            }
+        } );
+
+        TextView tv3 = (TextView) findViewById( R.id.textView5 );
+        tv1.setOnClickListener( new View.OnClickListener() {
+            public void onClick(View v) {
+                SubtitleAndKey subtitleAndKey=sectionSubtitles.get( nowSection ).get(0);
+                Subtitle temp=subtitleAndKey.getSubtitle();
+                final String key=subtitleAndKey.getKey();
+                DatabaseReference dataRef=databaseReference2.child( "DECLARATION" ).child( key );
+                dataRef.child( userid ).setValue( "신고자 id" );
             }
         } );
         getData();

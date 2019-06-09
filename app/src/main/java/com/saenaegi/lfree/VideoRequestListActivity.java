@@ -57,13 +57,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-//Video 요청 화면 - DB 연결 완료
-//1. 링크에 따른 썸네일 보여주기
-//2. Data를 생성순으로 내림 차순으로 정렬<후에>
-//3. 사용자 세션을 이용하여 idgoogle과 see정보 알아오기 -> 마지막
-//4. FIREBASE 사용자 인증으로 데이터 접근하게 하기 -> 가장 마지막
-//5. 링크를 잘못 입력하거나 없는 링크일 경우 사용자에게 에러 메시지 보내기. -> 가장 마지막
-
 public class VideoRequestListActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
@@ -73,8 +66,7 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
     private NavigationView navigationView;
 
     private ArrayList<ListviewItem> data = new ArrayList<>();
-    private ArrayList<Video> videos = new ArrayList<>();
-    private ArrayList<Video> rvideos=new ArrayList<>();
+    private ArrayList<Video> rvideos = new ArrayList<>();
     private ListView listView;
     private ListviewAdapter adapter;
     private Bitmap thumb;
@@ -138,13 +130,11 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 data.clear();
                 rvideos.clear();
-                videos.clear();
                 for(DataSnapshot snapshot:dataSnapshot.getChildren()){
                     Video video=snapshot.getValue(Video.class);
-                    rvideos.add(video);
                     if (!(video.isLookstate() && video.isListenstate())) {
                         ListviewItem temp = new ListviewItem( StringToBitMap(video.getBitt()), video.getTitle(), null );
-                        //videos.add( video );
+                        rvideos.add(video);
                         data.add(0,temp);
                     }
                 }
@@ -297,7 +287,8 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
             @Override
             public boolean onQueryTextSubmit(String query) {
                 data.clear();
-                for(Video video:videos){
+                rvideos.clear();
+                for(Video video:rvideos){
                     if(video.getTitle().contains( query )){
                         ListviewItem tmp = new ListviewItem( StringToBitMap(video.getBitt()), video.getTitle(), null );
                         data.add( tmp );

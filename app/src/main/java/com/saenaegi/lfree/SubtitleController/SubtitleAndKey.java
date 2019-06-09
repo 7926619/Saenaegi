@@ -28,11 +28,18 @@ public class SubtitleAndKey implements Comparable<SubtitleAndKey> {
         return null;
     }
 
+    public int getRecommend() {
+        return recommend;
+    }
+
     public Subtitle getSubtitle(){
         return subtitle;
     }
     public String getKey(){
         return key;
+    }
+    public String getmakeUserid(){
+        return subtitle.getIdgoogle();
     }
 
     @Override

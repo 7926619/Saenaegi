@@ -4,16 +4,14 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseBooleanArray;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.saenaegi.lfree.R;
 
 import java.util.ArrayList;
@@ -66,6 +64,9 @@ public class RecyclerAdapterS extends RecyclerView.Adapter<RecyclerAdapterS.Item
         listData.add(dataS);
     }
 
+    public void removeItem(int Position){
+        listData.remove( Position );
+    }
     public void delItem() {
         listData.clear();
     }
@@ -73,10 +74,12 @@ public class RecyclerAdapterS extends RecyclerView.Adapter<RecyclerAdapterS.Item
     // 여기서 subView를 setting 해줍니다.
     public class ItemViewHolder extends RecyclerView.ViewHolder {
 
+        private FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
+        private DatabaseReference databaseReference=firebaseDatabase.getReference().child( "LFREE" );
         private TextView nameView;
         public ImageButton subtitleButton;
         public ImageButton soundButton;
-        private ImageButton moreButton;
+        public ImageButton moreButton;
         private DataS dataS;
         private int position;
 
@@ -89,7 +92,7 @@ public class RecyclerAdapterS extends RecyclerView.Adapter<RecyclerAdapterS.Item
             moreButton = itemView.findViewById(R.id.sub_more);
         }
 
-        void onBind(DataS dataS, int position) {
+        void onBind(final DataS dataS, final int position) {
             this.dataS = dataS;
             this.position = position;
 
@@ -117,38 +120,18 @@ public class RecyclerAdapterS extends RecyclerView.Adapter<RecyclerAdapterS.Item
                 });
             }
 
-            moreButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    View view1 = view;
-                    PopupMenu p = new PopupMenu(moreButton.getContext(), view);
-                    p.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem item) {
-                            switch (item.getItemId()) {
-                                case R.id.opt1:
-                                    Toast.makeText(moreButton.getContext(), "1", Toast.LENGTH_SHORT).show();
-                                    break;
-                                case R.id.opt2:
-                                    Toast.makeText(moreButton.getContext(), "2", Toast.LENGTH_SHORT).show();
-                                    break;
-                                case R.id.opt3:
-                                    Toast.makeText(moreButton.getContext(), "3", Toast.LENGTH_SHORT).show();
-                                    break;
-                                case R.id.opt4:
-                                    Toast.makeText(moreButton.getContext(), "4", Toast.LENGTH_SHORT).show();
-                                    break;
-                            }
+            if(!dataS.getOnMore())
+                moreButton.setAlpha( (float)0.3 );
 
-                            return false;
-                        }
-                    });
-                    // here you can inflate your menu
-                    p.inflate(R.menu.subtitle_menu);
-                    p.setGravity(Gravity.RIGHT);
-                    p.show();
-                }
-            });
+            else {
+                moreButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mListener.onItemSelectedS( v, getAdapterPosition() );
+                    }
+                });
+            }
         }
+
     }
 }

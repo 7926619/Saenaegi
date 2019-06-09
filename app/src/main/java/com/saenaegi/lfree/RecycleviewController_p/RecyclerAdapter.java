@@ -18,6 +18,14 @@ import java.util.ArrayList;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemViewHolder> {
 
+    public void delItem(int position) {
+        Data data=new Data();
+        data.setNum( position );
+        data.setState( false );
+       listData.set( position-1,data);
+       notifyDataSetChanged();
+    }
+
     public interface OnListItemSelectedInterface {
         void onItemSelected(View v, int position);
     }

@@ -232,7 +232,7 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
                 if(index==0){
                     for(Video video:pvideos){
                         if(video.getTitle().contains( query )){
-                            ListviewItem temp = new ListviewItem( StringToBitMap(video.getBitt()), video.getTitle(), String.valueOf( video.getView() ) );
+                            ListviewItem temp = new ListviewItem( StringToBitMap(video.getBitt()), video.getTitle(), "조회수 : "+video.getView() );
                             videos.add(video);
                             data.add( 0,temp );
                         }
@@ -241,7 +241,7 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
                 else{
                     for(Video video:mvideos){
                         if(video.getTitle().contains(query)){
-                            ListviewItem temp = new ListviewItem(StringToBitMap(video.getBitt()), video.getTitle(), "제작중");
+                            ListviewItem temp = new ListviewItem(StringToBitMap(video.getBitt()), video.getTitle(),  "조회수 : "+video.getView());
                             videos.add(video);
                             data.add( 0,temp );
                         }

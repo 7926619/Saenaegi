@@ -1,6 +1,5 @@
 package com.saenaegi.lfree;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,7 +8,6 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
@@ -19,8 +17,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
@@ -33,13 +29,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.saenaegi.lfree.Data.LIkevideo;
 import com.saenaegi.lfree.Data.Video;
 import com.saenaegi.lfree.ListviewController.ListviewAdapter;
 import com.saenaegi.lfree.ListviewController.ListviewItem;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class LikeVideoListActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -48,7 +42,7 @@ public class LikeVideoListActivity extends AppCompatActivity implements Navigati
     private FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference=firebaseDatabase.getReference().child( "LFREE" );
     private ArrayList<Video> videos=new ArrayList<>();
-    private ArrayList<LIkevideo> lvideos=new ArrayList<>();
+    private ArrayList<String> lvideos=new ArrayList<>();
     private ListView listView;
     private ListviewAdapter adapter;
     private ArrayList<ListviewItem> data=new ArrayList<>(  );
@@ -101,14 +95,13 @@ public class LikeVideoListActivity extends AppCompatActivity implements Navigati
                 for(DataSnapshot snapshot:dataSnapshot.child( "LIKEVIDEO" ).getChildren()){
                     if(snapshot.getKey().equals( "userid" )){
                         for(DataSnapshot snapshot1:snapshot.getChildren()){
-                            LIkevideo lIkevideo=snapshot1.getValue(LIkevideo.class);
-                            lvideos.add(lIkevideo);
+                            lvideos.add( snapshot1.getKey() );
                         }
                     }
                 }
                 for(DataSnapshot snapshot:dataSnapshot.child( "VIDEO" ).getChildren()){
-                    for(LIkevideo lIkevideo:lvideos){
-                        if(snapshot.getKey().equals( lIkevideo.getIdvideo() )){
+                    for(String idvideo:lvideos){
+                        if(snapshot.getKey().equals( idvideo )){
                             Video video=snapshot.getValue(Video.class);
                             videos.add( video );
                             ListviewItem temp = new ListviewItem( StringToBitMap(video.getBitt()), video.getTitle(), "조회수 : "+video.getView() );
@@ -117,6 +110,7 @@ public class LikeVideoListActivity extends AppCompatActivity implements Navigati
                     }
                 }
                 adapter.notifyDataSetChanged();
+                setListViewHeightBasedOnChildren( listView );
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {

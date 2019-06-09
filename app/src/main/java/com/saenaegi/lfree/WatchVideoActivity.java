@@ -19,18 +19,19 @@ import android.support.v7.widget.Toolbar;
 import android.view.Display;
 import android.view.Gravity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
@@ -45,6 +46,7 @@ import com.saenaegi.lfree.RecycleviewController_p.Data;
 import com.saenaegi.lfree.RecycleviewController_p.RecyclerAdapter;
 import com.saenaegi.lfree.RecycleviewController_s.DataS;
 import com.saenaegi.lfree.RecycleviewController_s.RecyclerAdapterS;
+import com.saenaegi.lfree.SubtitleController.DeleteDataController;
 import com.saenaegi.lfree.SubtitleController.SubtitleAndKey;
 import com.saenaegi.lfree.SubtitleController.SubtitleData;
 import com.saenaegi.lfree.SubtitleController.outputDataController;
@@ -52,10 +54,8 @@ import com.saenaegi.lfree.SubtitleController.outputDataController;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 public class WatchVideoActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, RecyclerAdapter.OnListItemSelectedInterface, RecyclerAdapterS.OnListItemSelectedInterface {
@@ -70,6 +70,7 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
     private YouTubePlayer player;
     private String videoID;
     private String idvideo;
+    private String userid="userid";
     private int sectionCount;
     private File filedirectory;
     private outputDataController output;
@@ -79,6 +80,7 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
     private ArrayList<SubtitleAndKey> temp=new ArrayList<>();
     private FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference=firebaseDatabase.getReference().child( "LFREE" ).child( "VIDEO" );
+    private DatabaseReference databaseReference2=firebaseDatabase.getReference().child( "LFREE" );
     private CustomDialog customDialog;
     private TextView subtitlebox;
 
@@ -234,7 +236,7 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
                 dataS.setOnSubtitle(false);
                 dataS.setOnSound(true);
             }
-
+            dataS.setOnMore(true);
             // 각 값이 들어간 data를 adapter에 추가합니다.
             adapter2.addItem(dataS);
         }
@@ -299,10 +301,10 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
         adapter1.notifyDataSetChanged();
     }
 
-    public void getListienSubtitle(int position) {
+    public void getListenSubtitle(int position) {
         output=new outputDataController();
         subtitleDatas = output.getListenSubtitleData( filedirectory, posi, idvideo, sectionSubtitles.get(String.valueOf(posi)).get(position).getKey() );
-        subtitleDatas = output.getListenSubtitleData( filedirectory, posi, idvideo, sectionSubtitles.get(String.valueOf(posi)).get(position).getKey() ); //  이 줄 삭제 하면 안됩니다. 큰일 나요. !!
+        subtitleDatas = output.getListenSubtitleData( filedirectory, posi, idvideo, sectionSubtitles.get(String.valueOf(posi)).get(position).getKey() ); //  이 줄 삭제 하면 안됩니다. 큰일 나요. !! --> 가끔 파일이 생성 안되어 안 받아 올때를 대비
 
         Thread th = new Thread(new Runnable() {
             @Override
@@ -418,15 +420,79 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
     }
 
     @Override
-    public void onItemSelectedS(View v, int position) {
+    public void onItemSelectedS(View v, final int position) {
         RecyclerAdapterS.ItemViewHolder viewHolder;
         viewHolder = (RecyclerAdapterS.ItemViewHolder)recyclerView2.findViewHolderForAdapterPosition(position);
+
         if(v.equals(viewHolder.subtitleButton)) {
-            getListienSubtitle(position);
+            getListenSubtitle(position);
         } else if(v.equals(viewHolder.soundButton)) {
             Toast.makeText(getApplicationContext(), "귀때기"+position, Toast.LENGTH_SHORT).show();
+        } else if(v.equals( viewHolder.moreButton )){
+            final SubtitleAndKey subtitleAndKey=temp.get( position );
+            final Subtitle temp=subtitleAndKey.getSubtitle();
+            View view1 = v;
+            PopupMenu p = new PopupMenu(viewHolder.moreButton.getContext(), v);
+            p.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    final String key=subtitleAndKey.getKey();
+                    final int recommend=subtitleAndKey.getRecommend();
+                    final String makeUserid=temp.getIdgoogle();
+                    final boolean type=temp.isType();
+                    switch (item.getItemId()) {
+                        case R.id.opt1:
+                            DatabaseReference dataRef2=databaseReference2.child( "LIKEVIDEO" ).child( userid );
+                            dataRef2.child( idvideo ).child( key ).setValue( "idsubtitle" ).addOnSuccessListener( new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            DatabaseReference dataRef1=databaseReference2.child( "VIDEO" ).child( idvideo ).child( "SUBTITLE" ).child(String.valueOf( posi));
+                                            dataRef1.child( key).child("recommend").setValue( recommend+1 );
+                                        }
+                                    }
+                            );
+                            break;
+                        case R.id.opt2:
+                            DatabaseReference dataRef=databaseReference2.child( "DECLARATION" ).child( key );
+                            dataRef.child( userid ).setValue( "신고자 id" );
+                            break;
+                        case R.id.opt3:
+                            if(userid.equals( makeUserid )){
+
+                            }
+                            else{
+                                Toast.makeText(getApplicationContext(), "제작자가 아니면, 수정할 수 없습니다.", Toast.LENGTH_SHORT).show();
+                            }
+                            break;
+                        case R.id.opt4:
+                            if(userid.equals( makeUserid )){
+                                DeleteDataController dataController=new DeleteDataController(idvideo,key,posi,type);
+                                dataController.deleteData();
+                                sectionSubtitles.get( String.valueOf( posi ) ).remove( position );
+                                adapter2.removeItem( position );
+                                adapter2.notifyDataSetChanged();
+
+                                if(sectionSubtitles.get( String.valueOf( posi )).isEmpty()){
+                                    adapter1.delItem(posi);
+                                    adapter1.notifyDataSetChanged();
+                                }
+                            }
+                            else {
+                                Toast.makeText(getApplicationContext(), "제작자가 아니면 삭제할 수 없습니다.", Toast.LENGTH_SHORT).show();
+                            }
+                            break;
+                    }
+                    return false;
+                }
+            });
+            // here you can inflate your menu
+            p.inflate(R.menu.subtitle_menu);
+            p.setGravity(Gravity.RIGHT);
+            p.show();
         }
-    }
+
+}
+
 
     /* 파트 선택된 거 어둡게 바꿈 */
     @Override
