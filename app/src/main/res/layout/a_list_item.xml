@@ -3,21 +3,28 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraint1"
+    android:contentDescription=""
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:importantForAccessibility="yes">
 
     <LinearLayout
         android:id="@+id/linear1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:contentDescription=""
+        android:importantForAccessibility="yes">
 
         <LinearLayout
             android:id="@+id/linear2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="7sp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:contentDescription=""
+            android:importantForAccessibility="yes">
 
             <TextView
                 android:id="@+id/title"

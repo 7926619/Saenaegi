@@ -2,10 +2,13 @@ package com.saenaegi.lfree.ListviewController;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.saenaegi.lfree.R;
@@ -34,6 +37,8 @@ public class aListviewAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, @NonNull ViewGroup parent){
+        String TAG = "listviewadapter";
+
         if(convertView == null) {
             convertView = inflater.inflate(layout, parent, false);
         }
@@ -46,6 +51,13 @@ public class aListviewAdapter extends BaseAdapter {
         alistviewitem.setTag((int)getItemId(position));
 
         TextView name = (TextView)convertView.findViewById(R.id.title);
+
+        LinearLayout linearLayout = (LinearLayout)name.getParent();
+        linearLayout.setContentDescription("linear2_" + alistviewitem.getName());
+        LinearLayout linearLayout1 = (LinearLayout)((name.getParent()).getParent());
+        linearLayout1.setContentDescription("linear1" + alistviewitem.getName());
+        ConstraintLayout constraintLayout = ((ConstraintLayout)((name.getParent()).getParent()).getParent());
+        constraintLayout.setContentDescription("constraint_"+alistviewitem.getName());
 
         name.setText(alistviewitem.getName());
         name.setTag(alistviewitem.getTag());

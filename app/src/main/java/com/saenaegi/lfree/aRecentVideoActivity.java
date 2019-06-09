@@ -24,11 +24,8 @@ import com.saenaegi.lfree.ListviewController.aListviewItem;
 
 import java.util.ArrayList;
 
-import static android.content.ContentValues.TAG;
-
 public class aRecentVideoActivity extends AppCompatActivity {
-    //private ListView listView;
-    private aListviewAdapter adapter;
+    //private aListviewAdapter adapter;
     private ArrayList<aListviewItem> data = new ArrayList<>();
     private ArrayList<Video> videos=new ArrayList<>();
 
@@ -36,9 +33,14 @@ public class aRecentVideoActivity extends AppCompatActivity {
     public ArrayList<TextView> rowbeforeList = new ArrayList<>();
     public ArrayList<TextView> rowafterList = new ArrayList<>();
     public ListView listView;
+    public aListviewAdapter adapter;
+    public int focusposition = 0;
+    public ConstraintLayout constraintLayout;
     public static Context context;
 
     private int count = 0;
+
+    private static final String TAG = "aRecentVideo";
 
     private FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference=firebaseDatabase.getReference().child( "LFREE" ).child( "VIDEO" );
@@ -66,6 +68,19 @@ public class aRecentVideoActivity extends AppCompatActivity {
             }
         } );
 
+        /*
+        listView.setOnItemClickListener( new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(aRecentVideoActivity.this, aWatchVideoActivity.class);
+                intent.putExtra("link",videos.get(position).getLink());
+                intent.putExtra("count",videos.get(position).getSectionCount());
+                intent.putExtra( "nowSection" ,1 );
+                startActivity(intent);
+            }
+        } );
+        */
+
         getData();
         context = this;
     }
@@ -88,7 +103,7 @@ public class aRecentVideoActivity extends AppCompatActivity {
 
                 int childRowCount = listView.getCount();
 
-                ConstraintLayout constraintLayout = (ConstraintLayout) listView.getAdapter().getView(0, null, listView);
+                constraintLayout = (ConstraintLayout) listView.getAdapter().getView(0, null, listView);
                 LinearLayout linearLayout1 = (LinearLayout)constraintLayout.findViewById(R.id.linear1);
                 TextView row = (TextView) linearLayout1.findViewWithTag(count);
                 int firstpos = (int)listView.getAdapter().getItemId(0);
@@ -103,6 +118,15 @@ public class aRecentVideoActivity extends AppCompatActivity {
                         break;
                     else if(childRowCount >= 2 && i - firstpos == 0) {
                         row = (TextView) linearLayout1.findViewWithTag(i - firstpos);
+                        /*
+                        Log.e(TAG, "row content : " + row.getContentDescription());
+                        //constraintLayout.setContentDescription(row.getContentDescription());
+                        //Log.e(TAG, "constraint ID : " + constraintLayout.getId());
+                        //Log.e(TAG, "constraint content : " + constraintLayout.getContentDescription());
+                        ((ConstraintLayout) listView.getAdapter().getView(i - firstpos, null, listView)).setContentDescription(row.getContentDescription());
+                        Log.e(TAG, "constraint ID : " + ((ConstraintLayout) listView.getAdapter().getView(i - firstpos, null, listView)).getId());
+                        Log.e(TAG, "constraint content : " + ((ConstraintLayout) listView.getAdapter().getView(i - firstpos, null, listView)).getContentDescription());
+                        */
                         row.setId(i - firstpos);
 
                         constraintLayout = (ConstraintLayout) listView.getAdapter().getView(lastpos  - firstpos, null, listView);
@@ -124,6 +148,15 @@ public class aRecentVideoActivity extends AppCompatActivity {
                     }
                     else if(childRowCount >= 2 && (i + 1 - firstpos) < childRowCount && i - firstpos >= 1) {
                         row = (TextView) linearLayout1.findViewWithTag(i - firstpos);
+                        /*
+                        Log.e(TAG, "row content : " + row.getContentDescription());
+                        //constraintLayout.setContentDescription(row.getContentDescription());
+                        //Log.e(TAG, "constraint ID : " + constraintLayout.getId());
+                        //Log.e(TAG, "constraint content : " + constraintLayout.getContentDescription());
+                        ((ConstraintLayout) listView.getAdapter().getView(i - firstpos, null, listView)).setContentDescription(row.getContentDescription());
+                        Log.e(TAG, "constraint ID : " + ((ConstraintLayout) listView.getAdapter().getView(i - firstpos, null, listView)).getId());
+                        Log.e(TAG, "constraint content : " + ((ConstraintLayout) listView.getAdapter().getView(i - firstpos, null, listView)).getContentDescription());
+                        */
                         row.setId(i - firstpos);
 
                         constraintLayout = (ConstraintLayout) listView.getAdapter().getView(i - 1 - firstpos, null, listView);
@@ -145,6 +178,15 @@ public class aRecentVideoActivity extends AppCompatActivity {
                     }
                     else if(childRowCount-1 == i - firstpos) {
                         row = (TextView) linearLayout1.findViewWithTag(i - firstpos);
+                        /*
+                        Log.e(TAG, "row content : " + row.getContentDescription());
+                        //constraintLayout.setContentDescription(row.getContentDescription());
+                        //Log.e(TAG, "constraint ID : " + constraintLayout.getId());
+                        //Log.e(TAG, "constraint content : " + constraintLayout.getContentDescription());
+                        ((ConstraintLayout) listView.getAdapter().getView(i - firstpos, null, listView)).setContentDescription(row.getContentDescription());
+                        Log.e(TAG, "constraint ID : " + ((ConstraintLayout) listView.getAdapter().getView(i - firstpos, null, listView)).getId());
+                        Log.e(TAG, "constraint content : " + ((ConstraintLayout) listView.getAdapter().getView(i - firstpos, null, listView)).getContentDescription());
+                        */
                         row.setId(i - firstpos);
 
                         constraintLayout = (ConstraintLayout) listView.getAdapter().getView(i - 1 - firstpos, null, listView);
@@ -167,6 +209,11 @@ public class aRecentVideoActivity extends AppCompatActivity {
                 }
 
                 adapter.notifyDataSetChanged();
+
+                /*
+                for(int i = 0 ; i < childRowCount ; i++)
+                    Log.e(TAG, "listviewitem print " + listView.getAdapter().getView(i, null, listView));
+                */
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
