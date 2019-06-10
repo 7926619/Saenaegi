@@ -336,7 +336,7 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
         } );
     }
     private void setData() {
-        int partNum = listState.size(); // 파트 5개 있다고 가정
+        int partNum = listState.size();
         for (int i = 0; i < partNum; i++) {
             // 각 List의 값들을 data 객체에 set 해줍니다.
             Data data = new Data();

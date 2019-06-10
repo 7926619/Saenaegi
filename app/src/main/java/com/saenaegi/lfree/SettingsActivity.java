@@ -69,13 +69,13 @@ public class SettingsActivity extends AppCompatActivity implements NavigationVie
         /* list view */
         ListView listView = (ListView) findViewById(R.id.listview);
         ArrayList<ListviewItem> data = new ArrayList<>();
-        ListviewItem set1 = new ListviewItem(R.drawable.push_off,"Push 알림 설정", "test입니다.");
+        ListviewItem set1 = new ListviewItem(R.drawable.push_off,"Push 알림 설정", "요청한 영상에 대한 알림");
         data.add(set1);
-        ListviewItem set2 = new ListviewItem("앱 소개", "test입니다.");
+        ListviewItem set2 = new ListviewItem("앱 소개", "경기대학교 새내기 팀의 캡스톤설계 작품");
         data.add(set2);
-        ListviewItem set3 = new ListviewItem("버전 정보", "test입니다.");
+        ListviewItem set3 = new ListviewItem("버전 정보", "v1.0.0");
         data.add(set3);
-        ListviewItem set4 = new ListviewItem("오픈소스 라이선스", "test입니다.");
+        ListviewItem set4 = new ListviewItem("오픈소스 라이선스", "오픈소스 소프트웨어에 대한 라이선스 세부정보");
         data.add(set4);
         ListviewAdapter adapter = new ListviewAdapter(this, R.layout.listview_settings_item, data);
         listView.setAdapter(adapter);
