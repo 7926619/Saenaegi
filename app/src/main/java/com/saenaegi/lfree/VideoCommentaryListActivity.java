@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -168,7 +169,7 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
         data.clear();
         switch (index) {
             case 0 :
-                for(Video video:pvideos){
+                for(Video video:pvideos) {
                     ListviewItem temp = new ListviewItem( StringToBitMap(video.getBitt()), video.getTitle(), "조회수 : "+video.getView() );
                     videos.add(video);
                     data.add( 0,temp );
