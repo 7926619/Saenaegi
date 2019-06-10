@@ -78,6 +78,7 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
     private File filedirectory;
     private YouTubePlayer player;
     private String videoID;
+    private int sectionCount;
     private int sectionNum;
     private String idvideo;
     private FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
@@ -138,15 +139,18 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
             @Override
             public void onClick(View view) {
                 inputDataController = new InputDataController();
-                if(modify==false) {
+                if(modify == false) {
                     inputDataController.storeData( subtitle, subtitles, idvideo, filedirectory, sectionNum );
                 }
                 else{
                     inputDataController.modifyData( idsubtitle, subtitles, idvideo, filedirectory, sectionNum );
                 }
-                    Intent intent = new Intent(MakeVideoActivity.this, VideoCommentaryListActivity.class);  // 이동할 액티비티 수정해야됨
-                    startActivity(intent);
-
+                Intent intent = new Intent(MakeVideoActivity.this, WatchVideoActivity.class);
+                intent.putExtra("link", videoID);
+                intent.putExtra("count", sectionCount);
+                setResult(3, intent);
+                startActivity(intent);
+                finish();
             }
         });
 
@@ -165,7 +169,8 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         /* 동영상 로드 및 초기화 */
         final Intent data = getIntent();
         videoID = data.getExtras().getString("link");
-        modify=data.getExtras().getBoolean( "modify" );
+        sectionCount = data.getExtras().getInt("count");
+        modify = data.getExtras().getBoolean( "modify" );
         YouTubePlayerSupportFragment frag = (YouTubePlayerSupportFragment) getSupportFragmentManager().findFragmentById(R.id.youtube_screen);
         frag.initialize("AIzaSyAn_HFubCwx1rbM2q45hMGGhCPUx2AEOz4", new YouTubePlayer.OnInitializedListener() {
             @Override
@@ -212,9 +217,9 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         getIdvideo();
 
         // true는 수정 값이 있다는 것이다.
-        if(modify==true) {
-            subtitles=data.getParcelableArrayListExtra( "subtitles" );
-            idsubtitle=data.getExtras().getString( "idsubtitle" );
+        if(modify == true) {
+            subtitles = data.getParcelableArrayListExtra( "subtitles" );
+            idsubtitle = data.getExtras().getString( "idsubtitle" );
             modifyDataView();
         }
         /* footer */
@@ -224,20 +229,10 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         fragmentTransaction.commit();
     }
 
-    public void modifyDataView(){
-
-    }
-    public void createTableRow(View v) {
-    public void createTableRow(final SubtitleData subData) {
-        final int subIndex = subtitles.indexOf(subData);
-        TableLayout tl = (TableLayout) findViewById(R.id.tableLayout);
-        TableRow tr = new TableRow(this);
-        TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
-        tr.setLayoutParams(lp);
-
+    public void modifyDataView() {
         Intent data = getIntent();
         // section의 처음과 끝 시간-> 유투브 시간을 불러와서 넣어 주어야 한다. 미리 넣어 줘야 하는 것들
-        sectionNum = Integer.parseInt(data.getExtras().getString("part"));
+        sectionNum = data.getExtras().getInt("part");
         if((sectionNum > (min / 10)) && ((min % 10) > 3)){
             subtitle.setSectionS((sectionNum-1)+"0:00");
             if(sec < 10)
@@ -260,13 +255,205 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         subtitle.setName( "username" );
         subtitle.setRecommend(0);
         subtitle.setType( true );
-        if(data.getExtras().getString("type").equals("자막"))
+        if(data.getExtras().getBoolean("type"))
             subtitle.setType( true );
         else
             subtitle.setType( false );
 
+        /* new TableRow with TextView */
+        for(SubtitleData s : subtitles) {
+            creatTextViewRow(s, false);
+        }
+    }
+
+    void creatTextViewRow(SubtitleData s, Boolean check) {  // check는 수정 중 취소를 눌렀을 때 true
+        TableLayout tl = (TableLayout) findViewById(R.id.tableLayout);
+        TableRow tr = new TableRow(this);
+        TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
+        tr.setLayoutParams(lp);
+        tr.setPadding(0, 20, 0, 5);
+
+        final String start = s.getSectionS();
+        final String end = s.getSectionE();
+        final String sub = s.getSubString();
+
+        TextView t1 = new TextView(this);
+        t1.setText(start);
+        t1.setGravity(Gravity.CENTER);
+        t1.setPadding(15, 0, 15, 0);
+
+        TextView t2 = new TextView(this);
+        t2.setText(end);
+        t2.setGravity(Gravity.CENTER);
+        t2.setPadding(15, 0, 15, 0);
+
+        LinearLayout sub_col = new LinearLayout(this);
+        sub_col.setOrientation(LinearLayout.HORIZONTAL);
+        TextView t3 = new TextView(this);
+        t3.setText(sub);
+
+        /* subtitle needs 2 buttons */
+        LinearLayout ll = new LinearLayout(this);
+        LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT);
+        ll.setLayoutParams(lparams);
+        ll.setOrientation(LinearLayout.HORIZONTAL);
+
+        ImageView iv1 = new ImageView(this);
+        iv1.setImageResource(R.drawable.play);
+        iv1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!player.isPlaying())
+                    player.play();
+                subtitlebox.setText(sub);
+                int spoint = ((Integer.parseInt(start.split(":")[0]) * 60) + Integer.parseInt(start.split(":")[1])) * 1000;
+                player.seekToMillis(spoint);
+                final int epoint = ((Integer.parseInt(end.split(":")[0]) * 60) + Integer.parseInt(end.split(":")[1]));
+                Thread th = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        while (true) {
+                            if ((player.getCurrentTimeMillis() / 1000) == epoint) {
+                                subtitlebox.setText("");
+                                player.pause();
+                                break;
+                            }
+                        }
+                    }
+                });
+
+            }
+        });
+
+        ImageView iv2 = new ImageView(this);
+        iv2.setImageResource(R.drawable.more_menu);
+        iv2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                view1 = view;
+                PopupMenu p = new PopupMenu(getApplicationContext(), view);
+                getMenuInflater().inflate(R.menu.option_menu, p.getMenu());
+                p.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        ViewGroup parentView, parentView1, parentView2, parentView3, parentView4;
+                        int index;
+                        switch (item.getItemId()) {
+                            case R.id.m1:
+                                parentView = (ViewGroup) view1.getParent();
+                                parentView1 = (ViewGroup) parentView.getParent();
+                                parentView2 = (ViewGroup) parentView1.getParent();
+                                parentView3 = (ViewGroup) parentView2.getParent();
+                                index = parentView3.indexOfChild(parentView2);  // (TableRow) tr's
+                                parentView3.removeView(parentView3.getChildAt(index));
+                                parentView3.removeView(parentView3.getChildAt(index));  // line remove
+                                parentView4 = (ViewGroup) parentView3.getParent();
+                                ((ImageButton) parentView4.findViewById(R.id.add_subtitle)).setVisibility(View.INVISIBLE);
+                                createTableRow(subtitles.get((index - 1) / 2));
+                                break;
+                            case R.id.m2:
+                                parentView = (ViewGroup) view1.getParent();
+                                parentView1 = (ViewGroup) parentView.getParent();
+                                parentView2 = (ViewGroup) parentView1.getParent();
+                                parentView3 = (ViewGroup) parentView2.getParent();
+                                index = parentView3.indexOfChild(parentView2);  // (TableRow) tr's number
+                                subtitles.remove((index - 1) / 2);
+                                parentView3.removeView(parentView3.getChildAt(index));
+                                parentView3.removeView(parentView3.getChildAt(index));  // line remove
+                                break;
+                        }
+
+                        return false;
+                    }
+                });
+                p.show();
+            }
+        });
+
+        View blank = new View(this);
+        blank.setBackgroundColor(Color.WHITE);
+
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(50, 50);
+        iv1.setLayoutParams(params);
+        iv2.setLayoutParams(params);
+        blank.setLayoutParams(params);
+        ll.addView(iv1);
+        ll.addView(blank);
+        ll.addView(iv2);
+        ll.setGravity(Gravity.END);
+
+        sub_col.setPadding(15, 0, 15, 0);
+        sub_col.addView(t3);
+        sub_col.addView(ll);
+
+        tr.addView(t1);
+        tr.addView(t2);
+        tr.addView(sub_col);
+
+        /* line */
+        View line = new View(MakeVideoActivity.this);
+        line.setBackgroundColor(Color.parseColor("#d5d5d5"));
+
+        /* add to TableLayout */
+        if(check) {
+            tl.addView(tr, subtitles.indexOf(s)*2+1, new TableLayout.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+            tl.addView(line, subtitles.indexOf(s)*2+2, new TableLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, 1));
+        } else {
+            tl.addView(tr, new TableLayout.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+            tl.addView(line, new TableLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, 1));
+        }
+    }
+
+    public void createTableRow(final SubtitleData subData) {
+        final int subIndex = subtitles.indexOf(subData);
+        TableLayout tl = (TableLayout) findViewById(R.id.tableLayout);
+        TableRow tr = new TableRow(this);
+        TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
+        tr.setLayoutParams(lp);
+
+        Intent data = getIntent();
+        // section의 처음과 끝 시간-> 유투브 시간을 불러와서 넣어 주어야 한다. 미리 넣어 줘야 하는 것들
+        if(modify == true) {
+            sectionNum = data.getExtras().getInt("part");
+        } else {
+            sectionNum = Integer.parseInt(data.getExtras().getString("part"));
+        }
+        if((sectionNum > (min / 10)) && ((min % 10) > 3)){
+            subtitle.setSectionS((sectionNum-1)+"0:00");
+            if(sec < 10)
+                subtitle.setSectionF(min+":0"+sec);
+            else
+                subtitle.setSectionF(min+":0"+sec);
+        }
+        else if(sectionNum == (min / 10) && ((min % 10) < 4)) {
+            subtitle.setSectionS((sectionNum-1)+"0:00");
+            if(sec < 10)
+                subtitle.setSectionF(min+":0"+sec);
+            else
+                subtitle.setSectionF(min+":0"+sec);
+        }
+        else {
+            subtitle.setSectionS((sectionNum-1)+"0:00");
+            subtitle.setSectionF(sectionNum+"0:00");
+        }
+        subtitle.setIdgoogle("userid");
+        subtitle.setName( "username" );
+        subtitle.setRecommend(0);
+        subtitle.setType( true );
+        if(modify == true) {
+            if(data.getExtras().getBoolean("type"))
+                subtitle.setType( true );
+            else
+                subtitle.setType( false );
+        } else {
+            if (data.getExtras().getString("type").equals("자막"))
+                subtitle.setType(true);
+            else
+                subtitle.setType(false);
+        }
+
         /* EditText */
-        final EditText startTime = new EditText(this);
+        EditText startTime = new EditText(this);
         startTime.setHint("00:00");
         startTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
         startTime.setGravity(Gravity.CENTER);
@@ -366,8 +553,8 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
                 ViewGroup row = (ViewGroup) parentView2.getChildAt(index-1);
 
                 /* change to String */
-                String start = ((EditText) row.getChildAt(0)).getText().toString();
-                String end = ((EditText) row.getChildAt(1)).getText().toString();
+                final String start = ((EditText) row.getChildAt(0)).getText().toString();
+                final String end = ((EditText) row.getChildAt(1)).getText().toString();
                 final String sub = ((EditText) row.getChildAt(2)).getText().toString();
                 if(checkInput(start, end, sub)) {
                     return;
@@ -410,12 +597,10 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
                     public void onClick(View view) {
                         if(!player.isPlaying())
                             player.play();
-                        String stime = startTime.getText().toString();
                         subtitlebox.setText(subTitle.getText().toString());
-                        int spoint = ((Integer.parseInt(stime.split(":")[0])*60) + Integer.parseInt(stime.split(":")[1])) * 1000;
+                        int spoint = ((Integer.parseInt(start.split(":")[0])*60) + Integer.parseInt(start.split(":")[1])) * 1000;
                         player.seekToMillis(spoint);
-                        String etime = endTime.getText().toString();
-                        final int epoint = ((Integer.parseInt(etime.split(":")[0])*60) + Integer.parseInt(etime.split(":")[1]));
+                        final int epoint = ((Integer.parseInt(end.split(":")[0])*60) + Integer.parseInt(end.split(":")[1]));
                         Thread th = new Thread(new Runnable() {
                             @Override
                             public void run() {
@@ -442,7 +627,7 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
                         p.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                             @Override
                             public boolean onMenuItemClick(MenuItem item) {
-                                ViewGroup parentView, parentView1, parentView2, parentView3;
+                                ViewGroup parentView, parentView1, parentView2, parentView3, parentView4;
                                 int index;
                                 switch (item.getItemId()) {
                                     case R.id.m1:
@@ -453,6 +638,8 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
                                         index = parentView3.indexOfChild(parentView2);  // (TableRow) tr's
                                         parentView3.removeView(parentView3.getChildAt(index));
                                         parentView3.removeView(parentView3.getChildAt(index));  // line remove
+                                        parentView4 = (ViewGroup) parentView3.getParent();
+                                        ((ImageButton) parentView4.findViewById(R.id.add_subtitle)).setVisibility(View.INVISIBLE);
                                         createTableRow(subtitles.get((index - 1) / 2));
                                         break;
                                     case R.id.m2:
@@ -508,8 +695,8 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
 
                 /* add to TableLayout */
                 if(subData != null) {
-                    tl.addView(tr, subIndex+1, new TableLayout.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-                    tl.addView(line, subIndex+2, new TableLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, 1));
+                    tl.addView(tr, subIndex*2+1, new TableLayout.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+                    tl.addView(line, subIndex*2+2, new TableLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, 1));
                 } else {
                     tl.addView(tr, new TableLayout.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
                     tl.addView(line, new TableLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, 1));
@@ -530,7 +717,10 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
                 ViewGroup parentView2 = (ViewGroup) parentView1.getParent();    // (TableLayout) tl
                 int index = parentView2.indexOfChild(parentView1);  // (TableRow) tr's number
                 parentView2.removeView(parentView2.getChildAt(index));
-                parentView2.removeView(parentView2.getChildAt(index-1));
+                parentView2.removeView(parentView2.getChildAt(index - 1));
+                if(subData != null) {
+                    creatTextViewRow(subData, true);
+                }
 
                 /* show plus button */
                 ViewGroup parentView3 = (ViewGroup)parentView2.getParent();
@@ -543,8 +733,8 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
 
         /* add to TableLayout */
         if(subData != null) {
-            tl.addView(tr, subIndex+1, new TableLayout.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-            tl.addView(ll, subIndex+2, new TableLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+            tl.addView(tr, subIndex*2+1, new TableLayout.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+            tl.addView(ll, subIndex*2+2, new TableLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
         }
         else {
             tl.addView(tr, new TableLayout.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));

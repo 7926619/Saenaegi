@@ -65,6 +65,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 public class WatchVideoActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, RecyclerAdapter.OnListItemSelectedInterface, RecyclerAdapterS.OnListItemSelectedInterface {
 
@@ -233,12 +234,12 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
             }
         });
 
-            /* footer */
+        /* footer */
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.footer, new FooterFragment());
         fragmentTransaction.commit();
-        }
+    }
 
     public void getLikeVideo(){
         databaseReference2.addListenerForSingleValueEvent( new ValueEventListener() {
@@ -466,9 +467,10 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
                     wantToCloseDialog = true;
                     Intent intent = new Intent(WatchVideoActivity.this, MakeVideoActivity.class);
                     intent.putExtra("link", videoID);
+                    intent.putExtra("count", sectionCount);
                     intent.putExtra("type", type[0]);
                     intent.putExtra("part", dropdown.getSelectedItem().toString());
-                    startActivity(intent);
+                    startActivityForResult(intent, 2);
                 }
                 //Do stuff, possibly set wantToCloseDialog to true then...
                 if(wantToCloseDialog)
@@ -552,12 +554,13 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
                                 setSubtitleDatas( position,temp.type);
                                 Intent intent = new Intent(WatchVideoActivity.this, MakeVideoActivity.class);
                                 intent.putExtra("link", videoID);
+                                intent.putExtra("count", sectionCount);
                                 intent.putExtra("type", temp.type);
                                 intent.putExtra("part", posi);
                                 intent.putExtra( "modify",true );
                                 intent.putExtra( "idsubtitle",temp.getKey() );
                                 intent.putParcelableArrayListExtra( "subtitles",subtitleDatas);
-                                startActivity(intent);
+                                startActivityForResult(intent, 2);
                             }
                             else{
                                 Toast.makeText(getApplicationContext(), "제작자가 아니면, 수정할 수 없습니다.", Toast.LENGTH_SHORT).show();
@@ -570,6 +573,14 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
                                 sectionSubtitles.get( String.valueOf( posi ) ).remove( position );
                                 adapter2.removeItem( position );
                                 adapter2.notifyDataSetChanged();
+                                TextView partText = findViewById(R.id.partText);
+
+                                RecyclerAdapter.ItemViewHolder viewHolder;
+                                viewHolder = (RecyclerAdapter.ItemViewHolder)recyclerView1.findViewHolderForAdapterPosition(prePosition);
+                                viewHolder.imageView.setColorFilter(Color.argb(0, 0, 0, 0));
+                                prePosition = -1;
+                                partText.setVisibility(View.VISIBLE);
+                                recyclerView2.setVisibility(View.GONE);
 
                                 if(sectionSubtitles.get( String.valueOf( posi )).isEmpty()){
                                     adapter1.delItem(posi);
@@ -590,13 +601,14 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
             p.show();
         }
 
-}
+    }
 
 
     /* 파트 선택된 거 어둡게 바꿈 */
     @Override
     public void onItemSelected(View v, int position) {
         RecyclerAdapter.ItemViewHolder viewHolder;
+        recyclerView2.setVisibility(View.VISIBLE);
         if(prePosition == -1) {
             TextView partText = findViewById(R.id.partText);
             partText.setVisibility(View.GONE);
@@ -628,6 +640,17 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        // check if the request code is same as what is passed
+        if(requestCode == 2 && resultCode == 3)
+        {
+            finish();
+        }
     }
 
     @Override
