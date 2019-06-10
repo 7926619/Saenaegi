@@ -74,6 +74,7 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
     private View view1;
     private ArrayList<SubtitleData> subtitles =new ArrayList<>();
     private Subtitle subtitle=new Subtitle();
+    private ArrayList<String> madeSection=new ArrayList<>();
     private boolean modify=false;
     private String idsubtitle;
     private InputDataController inputDataController;
@@ -81,6 +82,7 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
     private YouTubePlayer player;
     private String videoID;
     private int sectionNum;
+    private int allSectionCount;
     private String idvideo;
     private FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference=firebaseDatabase.getReference().child( "LFREE" ).child( "VIDEO" );
@@ -144,13 +146,28 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
                 inputDataController = new InputDataController();
                 if(modify==false) {
                     inputDataController.storeData( subtitle, subtitles, idvideo, filedirectory, sectionNum );
+                    String tmp= String.valueOf(sectionNum);
+                    boolean check=true;
+                    for(String string:madeSection){
+                        if(string.equals(tmp)){
+                            check=false;
+                        }
+                    }
+                    if(check) {
+                        madeSection.add( tmp );
+                        if(madeSection.size()==allSectionCount){
+                            if(ty)
+                             databaseReference.child( idvideo ).child("listenstate").setValue( true );
+                            else
+                             databaseReference.child( idvideo ).child("lookstate").setValue( true );
+                        }
+                    }
                 }
                 else{
-                    inputDataController.modifyData( idsubtitle, subtitles, idvideo, filedirectory, sectionNum );
+                    inputDataController.modifyData( idsubtitle, subtitles, idvideo, filedirectory, sectionNum ,ty);
                 }
-                    Intent intent = new Intent(MakeVideoActivity.this, VideoCommentaryListActivity.class);  // 이동할 액티비티 수정해야됨
-                    startActivity(intent);
-
+                Intent intent = new Intent(MakeVideoActivity.this, VideoCommentaryListActivity.class);  // 이동할 액티비티 수정해야됨
+                startActivity(intent);
             }
         });
 
@@ -182,6 +199,7 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         final Intent data = getIntent();
         videoID = data.getExtras().getString("link");
         modify=data.getExtras().getBoolean( "modify" );
+        ty = data.getExtras().getBoolean("type");
         YouTubePlayerSupportFragment frag = (YouTubePlayerSupportFragment) getSupportFragmentManager().findFragmentById(R.id.youtube_screen);
         frag.initialize("AIzaSyAn_HFubCwx1rbM2q45hMGGhCPUx2AEOz4", new YouTubePlayer.OnInitializedListener() {
             @Override
@@ -243,7 +261,6 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
     public void modifyDataView(){
 
     }
-    public void createTableRow(View v) {
     public void createTableRow(final SubtitleData subData) {
         final int subIndex = subtitles.indexOf(subData);
         TableLayout tl = (TableLayout) findViewById(R.id.tableLayout);
@@ -276,7 +293,6 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         subtitle.setName( "username" );
         subtitle.setRecommend(0);
         subtitle.setType( true );
-        ty = data.getExtras().getString("type").equals("자막");
         if(ty)
             subtitle.setType( true );
         else
@@ -599,10 +615,23 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         databaseReference.addListenerForSingleValueEvent( new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                madeSection.clear();
                 for(DataSnapshot snapshot:dataSnapshot.getChildren()){
                     Video video=snapshot.getValue( Video.class );
-                    if(video.getLink().equals( videoID ))
-                        idvideo=snapshot.getKey();
+                    if(video.getLink().equals( videoID )) {
+                        idvideo = snapshot.getKey();
+                        allSectionCount=video.getSectionCount();
+                        for(DataSnapshot snapshot1:snapshot.child( "SUBTITLE" ).getChildren()) {
+                            for (DataSnapshot snapshot2 : snapshot1.getChildren()) {
+                                Subtitle temp = snapshot2.getValue( Subtitle.class );
+                                if (temp.isType() == ty) {
+                                    madeSection.add( snapshot1.getKey() );
+                                    break;
+                                }
+                            }
+                        }
+                        break;
+                    }
                 }
             }
             @Override

@@ -65,6 +65,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 public class WatchVideoActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, RecyclerAdapter.OnListItemSelectedInterface, RecyclerAdapterS.OnListItemSelectedInterface {
 
@@ -184,7 +185,7 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
             @Override
             public void onInit(int status) {
                 if (status == TextToSpeech.SUCCESS) {
-                    int result = tts.setLanguage(Locale.KOREAN);
+                    int result = tts.setLanguage( Locale.KOREAN);
                 }
                 else
                     Toast.makeText(getApplication(), "TTS : TTS's Initialization is Failed!", Toast.LENGTH_SHORT).show();
@@ -466,7 +467,10 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
                     wantToCloseDialog = true;
                     Intent intent = new Intent(WatchVideoActivity.this, MakeVideoActivity.class);
                     intent.putExtra("link", videoID);
-                    intent.putExtra("type", type[0]);
+                    if(type[0].equals( "자막" ))
+                        intent.putExtra("type", true);
+                    else
+                        intent.putExtra( "type",false );
                     intent.putExtra("part", dropdown.getSelectedItem().toString());
                     startActivity(intent);
                 }
@@ -568,8 +572,8 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
                         case R.id.opt4:
                             if(userid.equals( makeUserid )){
                                 DeleteDataController dataController=new DeleteDataController(idvideo,key,posi,type);
-                                dataController.deleteData();
                                 sectionSubtitles.get( String.valueOf( posi ) ).remove( position );
+                                dataController.deleteData(sectionCount,sectionSubtitles);
                                 adapter2.removeItem( position );
                                 adapter2.notifyDataSetChanged();
 
@@ -577,6 +581,8 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
                                     adapter1.delItem(posi);
                                     adapter1.notifyDataSetChanged();
                                 }
+
+
                             }
                             else {
                                 Toast.makeText(getApplicationContext(), "제작자가 아니면 삭제할 수 없습니다.", Toast.LENGTH_SHORT).show();
