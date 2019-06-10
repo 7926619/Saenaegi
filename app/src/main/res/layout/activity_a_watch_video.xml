@@ -63,8 +63,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:paddingHorizontal="30dp"
-            android:paddingTop="20dp"
-            android:importantForAccessibility="no">
+            android:paddingTop="20dp">
 
             <TextView
                 android:id="@+id/textView18"
@@ -73,6 +72,7 @@
                 android:layout_marginBottom="10dp"
                 android:gravity="center"
                 android:text="[ 영상 제목 ]"
+                android:contentDescription="영상 제목"
                 android:textSize="20sp"
                 android:textColor="#363636"
                 android:focusable="true"
