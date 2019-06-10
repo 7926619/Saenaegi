@@ -70,6 +70,8 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
     private View view1;
     private ArrayList<SubtitleData> subtitles =new ArrayList<>();
     private Subtitle subtitle=new Subtitle();
+    private boolean modify=false;
+    private String idsubtitle;
     private InputDataController inputDataController;
     private File filedirectory;
     private YouTubePlayer player;
@@ -132,10 +134,16 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                inputDataController=new InputDataController();
-                inputDataController.storeData(subtitle,subtitles,idvideo, filedirectory, sectionNum);
-                Intent intent = new Intent(MakeVideoActivity.this, VideoCommentaryListActivity.class);  // 이동할 액티비티 수정해야됨
-                startActivity(intent);
+                inputDataController = new InputDataController();
+                if(modify==false) {
+                    inputDataController.storeData( subtitle, subtitles, idvideo, filedirectory, sectionNum );
+                }
+                else{
+                    inputDataController.modifyData( idsubtitle, subtitles, idvideo, filedirectory, sectionNum );
+                }
+                    Intent intent = new Intent(MakeVideoActivity.this, VideoCommentaryListActivity.class);  // 이동할 액티비티 수정해야됨
+                    startActivity(intent);
+
             }
         });
 
@@ -152,6 +160,7 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         /* 동영상 로드 및 초기화 */
         final Intent data = getIntent();
         videoID = data.getExtras().getString("link");
+        modify=data.getExtras().getBoolean( "modify" );
         YouTubePlayerSupportFragment frag = (YouTubePlayerSupportFragment) getSupportFragmentManager().findFragmentById(R.id.youtube_screen);
         frag.initialize("AIzaSyAn_HFubCwx1rbM2q45hMGGhCPUx2AEOz4", new YouTubePlayer.OnInitializedListener() {
             @Override
@@ -197,6 +206,12 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
 
         getIdvideo();
 
+        // true는 수정 값이 있다는 것이다.
+        if(modify==true) {
+            subtitles=data.getParcelableArrayListExtra( "subtitles" );
+            idsubtitle=data.getExtras().getString( "idsubtitle" );
+            modifyDataView();
+        }
         /* footer */
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -204,6 +219,9 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         fragmentTransaction.commit();
     }
 
+    public void modifyDataView(){
+
+    }
     public void createTableRow(View v) {
         TableLayout tl = (TableLayout) findViewById(R.id.tableLayout);
         TableRow tr = new TableRow(this);

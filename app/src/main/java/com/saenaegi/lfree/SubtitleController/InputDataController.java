@@ -28,6 +28,9 @@ public class InputDataController {
     private StorageReference ListorageReference=firebaseStorage.getReference().child( "ListenSubtitle");
     private StorageReference LostorageReference=firebaseStorage.getReference().child( "LookSubtitle");
 
+    public void modifyData(String key,ArrayList<SubtitleData> subtitlesData, String idvideo,File filedirectory, int sectionNum) {
+
+    }
     public void storeData(Subtitle subtitle,ArrayList<SubtitleData> subtitlesData, String idvideo,File filedirectory, int sectionNum){
 
         DatabaseReference dataRef=databaseReference.child( idvideo ).child( "SUBTITLE" );
