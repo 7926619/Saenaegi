@@ -65,7 +65,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 public class WatchVideoActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, RecyclerAdapter.OnListItemSelectedInterface, RecyclerAdapterS.OnListItemSelectedInterface {
 
@@ -350,6 +349,17 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
         // adapter의 값이 변경되었다는 것을 알려줍니다.
         adapter1.notifyDataSetChanged();
     }
+    public void setSubtitleDatas(int position, boolean type){
+        output=new outputDataController();
+        if(type) {
+            subtitleDatas = output.getListenSubtitleData( filedirectory, posi, idvideo, sectionSubtitles.get( String.valueOf( posi ) ).get( position ).getKey() );
+            subtitleDatas = output.getListenSubtitleData( filedirectory, posi, idvideo, sectionSubtitles.get( String.valueOf( posi ) ).get( position ).getKey() ); //  이 줄 삭제 하면 안됩니다. 큰일 나요. !! --> 가끔 파일이 생성 안되어 안 받아 올때를 대비
+        }
+        else{
+            subtitleDatas = output.getLookSubtitleData( filedirectory, posi, idvideo, sectionSubtitles.get( String.valueOf( posi ) ).get( position ).getKey() );
+            subtitleDatas = output.getLookSubtitleData( filedirectory, posi, idvideo, sectionSubtitles.get( String.valueOf( posi ) ).get( position ).getKey() ); //  이 줄 삭제 하면 안됩니다. 큰일 나요. !! --> 가끔 파일이 생성 안되어 안 받아 올때를 대비
+        }
+    }
 
     public void getListenSubtitle(int position) {
         output=new outputDataController();
@@ -534,12 +544,22 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
                              }
                             break;
                         case R.id.opt2:
-                            DatabaseReference dataRef=databaseReference2.child( "DECLARATION" ).child( key );
+                            DatabaseReference dataRef=firebaseDatabase.getReference().child( "LFREE" ).child( "DECLARATION" ).child( key );
                             dataRef.child( userid ).setValue( "신고자 id" );
+                            Toast.makeText(getApplicationContext(), "신고되었습니다.", Toast.LENGTH_SHORT).show();
                             break;
                         case R.id.opt3:
                             if(userid.equals( makeUserid )){
-
+                                SubtitleAndKey temp=sectionSubtitles.get(String.valueOf( posi )).get(position);
+                                setSubtitleDatas( position,temp.type);
+                                Intent intent = new Intent(WatchVideoActivity.this, MakeVideoActivity.class);
+                                intent.putExtra("link", videoID);
+                                intent.putExtra("type", temp.type);
+                                intent.putExtra("part", posi);
+                                intent.putExtra( "modify",true );
+                                intent.putExtra( "idsubtitle",temp.getKey() );
+                                intent.putParcelableArrayListExtra( "subtitles",subtitleDatas);
+                                startActivity(intent);
                             }
                             else{
                                 Toast.makeText(getApplicationContext(), "제작자가 아니면, 수정할 수 없습니다.", Toast.LENGTH_SHORT).show();

@@ -90,7 +90,7 @@
                         android:id="@+id/subtitle"
                         android:layout_width="match_parent"
                         android:layout_height="35dp"
-                        android:text="자 막"
+                        android:text=""
                         android:background="#333"
                         android:gravity="center"
                         android:textColor="#fff"
@@ -185,8 +185,8 @@
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/check_button"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/fab_margin"
             android:backgroundTint="#94c310"
