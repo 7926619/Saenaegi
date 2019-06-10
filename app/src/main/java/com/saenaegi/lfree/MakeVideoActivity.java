@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -51,6 +52,7 @@ import com.saenaegi.lfree.SubtitleController.InputDataController;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
@@ -82,6 +84,8 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
     private int min;
     private int sec;
     private TextView subtitlebox;
+    private boolean ty;
+    private TextToSpeech tts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,6 +156,18 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         });
 
         subtitlebox = (TextView) findViewById(R.id.subtitle);
+
+        /* 전자친구 */
+        tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS) {
+                    int result = tts.setLanguage(Locale.KOREAN);
+                }
+                else
+                    Toast.makeText(getApplication(), "TTS : TTS's Initialization is Failed!", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         /* 동영상 로드 및 초기화 */
         final Intent data = getIntent();
@@ -239,7 +255,8 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         subtitle.setName( "username" );
         subtitle.setRecommend(0);
         subtitle.setType( true );
-        if(data.getExtras().getString("type").equals("자막"))
+        ty = data.getExtras().getString("type").equals("자막");
+        if(ty)
             subtitle.setType( true );
         else
             subtitle.setType( false );
@@ -370,27 +387,53 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
                 iv1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if(!player.isPlaying())
-                            player.play();
-                        String stime = startTime.getText().toString();
-                        subtitlebox.setText(subTitle.getText().toString());
-                        int spoint = ((Integer.parseInt(stime.split(":")[0])*60) + Integer.parseInt(stime.split(":")[1])) * 1000;
-                        player.seekToMillis(spoint);
-                        String etime = endTime.getText().toString();
-                        final int epoint = ((Integer.parseInt(etime.split(":")[0])*60) + Integer.parseInt(etime.split(":")[1]));
-                        Thread th = new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                while(true) {
-                                    if((player.getCurrentTimeMillis()/1000) == epoint){
-                                        subtitlebox.setText("");
-                                        player.pause();
-                                        break;
+                        if(ty){
+                            if(!player.isPlaying())
+                                player.play();
+                            String stime = startTime.getText().toString();
+                            subtitlebox.setText(subTitle.getText().toString());
+                            int spoint = ((Integer.parseInt(stime.split(":")[0])*60) + Integer.parseInt(stime.split(":")[1])) * 1000;
+                            player.seekToMillis(spoint);
+                            String etime = endTime.getText().toString();
+                            final int epoint = ((Integer.parseInt(etime.split(":")[0])*60) + Integer.parseInt(etime.split(":")[1]));
+                            Thread th = new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    while(true) {
+                                        if((player.getCurrentTimeMillis()/1000) >= epoint){
+                                            subtitlebox.setText("");
+                                            player.pause();
+                                            break;
+                                        }
                                     }
                                 }
-                            }
-                        });
-                        th.start();
+                            });
+                            th.start();
+                        }
+                        else {
+                            if(!player.isPlaying())
+                                player.play();
+                            String stime = startTime.getText().toString();
+                            int spoint = ((Integer.parseInt(stime.split(":")[0])*60) + Integer.parseInt(stime.split(":")[1])) * 1000;
+                            player.seekToMillis(spoint);
+                            tts.setSpeechRate((float)0.87);
+                            tts.speak(subTitle.getText().toString(), TextToSpeech.QUEUE_FLUSH, null);
+                            String etime = endTime.getText().toString();
+                            final int epoint = ((Integer.parseInt(etime.split(":")[0])*60) + Integer.parseInt(etime.split(":")[1]));
+                            Thread th = new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    while(true) {
+                                        if((player.getCurrentTimeMillis()/1000) >= epoint){
+                                            tts.stop();
+                                            player.pause();
+                                            break;
+                                        }
+                                    }
+                                }
+                            });
+                            th.start();
+                        }
                     }
                 });
                 ImageView iv2 = new ImageView(MakeVideoActivity.this);
