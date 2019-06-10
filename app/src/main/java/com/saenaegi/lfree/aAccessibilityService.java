@@ -326,12 +326,15 @@ public class aAccessibilityService extends AccessibilityService {
                 List<ActivityManager.RunningTaskInfo> rti1 = am1.getRunningTasks(1);
                 if((rti1.get(0).topActivity.getClassName()).contains("aLfreeMainActivity")) {
                     performGlobalAction(AccessibilityService.GLOBAL_ACTION_HOME);
+                    tts.speak("애플리케이션 종료하기", TextToSpeech.QUEUE_FLUSH, null, "TextToSpeech_ID");
                     disableSelf();
                     System.runFinalizersOnExit(true);
                     System.exit(0);
                 }
-                else
+                else {
                     performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
+                    tts.speak("뒤로 가기", TextToSpeech.QUEUE_FLUSH, null, "TextToSpeech_ID");
+                }
                 //source = findFocus(AccessibilityNodeInfo.FOCUS_ACCESSIBILITY);
                 return true;
 
@@ -339,6 +342,7 @@ public class aAccessibilityService extends AccessibilityService {
             case GESTURE_SWIPE_DOWN:
                 Toast.makeText(getApplication(), "SWIPE_DOWN", Toast.LENGTH_LONG).show();
                 performGlobalAction(AccessibilityService.GLOBAL_ACTION_HOME);
+                tts.speak("애플리케이션 종료하기", TextToSpeech.QUEUE_FLUSH, null, "TextToSpeech_ID");
                 disableSelf();
                 System.runFinalizersOnExit(true);
                 System.exit(0);
@@ -362,11 +366,12 @@ public class aAccessibilityService extends AccessibilityService {
         Log.e(TAG, "Catch Event TEXT : " + event.getText());
         Log.e(TAG, "Catch Event ContentDescription : " + event.getContentDescription());
         Log.e(TAG, "Catch Event getSource : " + event.getSource());
+        Log.e(TAG, "=========================================================================");
         // 발생한 이벤트로부터 Source를 get
         source = event.getSource();
-        Log.e(TAG, "Catch View ID : " + source.getViewIdResourceName() + " " + source.getWindowId());
-        Log.e(TAG, "Catch before or after item by focusing : " + source.getTraversalBefore() + " " +  source.getTraversalAfter());
-        Log.e(TAG, "=========================================================================");
+        //Log.e(TAG, "Catch View ID : " + source.getViewIdResourceName() + " " + source.getWindowId());
+        //Log.e(TAG, "Catch before or after item by focusing : " + source.getTraversalBefore() + " " +  source.getTraversalAfter());
+        //Log.e(TAG, "=========================================================================");
         // 실현 시간 상수로서 접근성 서비스에 대한 이벤트 타입 변수 선언 및 생성
         final int eventType =  event.getEventType();
 
@@ -471,7 +476,7 @@ public class aAccessibilityService extends AccessibilityService {
                             ListView listviewtemp = ((aRecentVideoActivity)aRecentVideoActivity.context).listView;
                             listviewtemp.performItemClick(listviewtemp.getAdapter().getView(listviewitemposition, null, null), listviewitemposition, listviewtemp.getItemIdAtPosition(listviewitemposition));
                         }
-                    }, 15000);
+                    }, 10000);
                 }
             }
 
