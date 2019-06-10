@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -38,6 +39,7 @@ public class aRecentVideoActivity extends AppCompatActivity {
     public int focusposition = 0;
     public ConstraintLayout constraintLayout;
     public static Context context;
+    private ProgressBar progressBar;
 
     private int count = 0;
 
@@ -82,6 +84,9 @@ public class aRecentVideoActivity extends AppCompatActivity {
             }
         } );
         */
+
+        progressBar = findViewById(R.id.progressBar3);
+        progressBar.setMax(100);
 
         getData();
         context = this;
@@ -211,7 +216,7 @@ public class aRecentVideoActivity extends AppCompatActivity {
                 }
 
                 adapter.notifyDataSetChanged();
-
+                progressBar.setVisibility(View.GONE);
 
                 for(int i = 0 ; i < childRowCount ; i++)
                     Log.e(TAG, "listviewitem print " + listView.getAdapter().getView(i, null, listView));

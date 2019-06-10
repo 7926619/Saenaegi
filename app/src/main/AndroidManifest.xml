@@ -52,22 +52,24 @@
         <activity android:name=".aSettingsActivity" />
         <activity android:name=".aNoticeActivity" />
         <activity android:name=".aLikeVideoActivity" />
-        <activity android:name=".aRequestVideoActivity" />
+        <activity android:name=".aRequestVideoActivity">
+        </activity>
         <activity android:name=".aSearchActivity" />
         <activity android:name=".aRecentVideoActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
-        <activity android:name=".aWatchVideoMenuActivitiy" />
+        <activity android:name=".aWatchVideoMenuActivitiy">
+        </activity>
         <activity android:name=".aHowToUseActivity" />
         <activity android:name=".aLfreeMainActivity">
         </activity>
         <activity android:name=".VideoCommentaryListActivity" />
         <activity android:name=".ChoiceActivity" />
         <activity android:name=".LfreeMainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".MainActivity" />
     </application>
