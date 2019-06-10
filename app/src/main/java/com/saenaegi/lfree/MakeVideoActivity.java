@@ -18,6 +18,7 @@ import android.support.v7.app.AppCompatCallback;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.InputFilter;
 import android.util.Log;
 import android.util.TypedValue;
@@ -80,6 +81,7 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
     private DatabaseReference databaseReference=firebaseDatabase.getReference().child( "LFREE" ).child( "VIDEO" );
     private int min;
     private int sec;
+    private TextView subtitlebox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,6 +150,8 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
                 createTableRow(view);
             }
         });
+
+        subtitlebox = (TextView) findViewById(R.id.subtitle);
 
         /* 동영상 로드 및 초기화 */
         final Intent data = getIntent();
@@ -235,7 +239,7 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
             subtitle.setType( false );
 
         /* EditText */
-        EditText startTime = new EditText(this);
+        final EditText startTime = new EditText(this);
         startTime.setHint("00:00");
         startTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
         startTime.setGravity(Gravity.CENTER);
@@ -245,7 +249,7 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         endTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
         endTime.setGravity(Gravity.CENTER);
         endTime.setFilters(new InputFilter[] { new InputFilter.LengthFilter(5) });
-        EditText subTitle = new EditText(this);
+        final EditText subTitle = new EditText(this);
         subTitle.setHint("해설을 입력해주세요.");
         subTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
         setEditTextMaxLength(subTitle, 20);
@@ -361,6 +365,16 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
 
                 ImageView iv1 = new ImageView(MakeVideoActivity.this);
                 iv1.setImageResource(R.drawable.play);
+                iv1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String time = startTime.getText().toString();
+                        subtitlebox.setText(subTitle.getText().toString());
+                        int point = ((Integer.parseInt(time.split(":")[0])*60) + Integer.parseInt(time.split(":")[1])) * 1000;
+                        player.seekToMillis(point);
+
+                    }
+                });
                 ImageView iv2 = new ImageView(MakeVideoActivity.this);
                 iv2.setImageResource(R.drawable.more_menu);
                 iv2.setOnClickListener(new View.OnClickListener() {
