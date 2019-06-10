@@ -578,21 +578,19 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
                                 dataController.deleteData(sectionCount, sectionSubtitles);
                                 adapter2.removeItem( position );
                                 adapter2.notifyDataSetChanged();
-                                TextView partText = findViewById(R.id.partText);
-
-                                RecyclerAdapter.ItemViewHolder viewHolder;
-                                viewHolder = (RecyclerAdapter.ItemViewHolder)recyclerView1.findViewHolderForAdapterPosition(prePosition);
-                                viewHolder.imageView.setColorFilter(Color.argb(0, 0, 0, 0));
-                                prePosition = -1;
-                                partText.setVisibility(View.VISIBLE);
-                                recyclerView2.setVisibility(View.GONE);
 
                                 if(sectionSubtitles.get( String.valueOf( posi )).isEmpty()){
+                                    TextView partText = findViewById(R.id.partText);
+
+                                    RecyclerAdapter.ItemViewHolder viewHolder;
+                                    viewHolder = (RecyclerAdapter.ItemViewHolder)recyclerView1.findViewHolderForAdapterPosition(prePosition);
+                                    viewHolder.imageView.setColorFilter(Color.argb(0, 0, 0, 0));
+                                    prePosition = -1;
+                                    partText.setVisibility(View.VISIBLE);
+                                    recyclerView2.setVisibility(View.GONE);
                                     adapter1.delItem(posi);
                                     adapter1.notifyDataSetChanged();
                                 }
-
-
                             }
                             else {
                                 Toast.makeText(getApplicationContext(), "제작자가 아니면 삭제할 수 없습니다.", Toast.LENGTH_SHORT).show();
