@@ -70,6 +70,7 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
     private NavigationView navigationView;
     private ProgressBar progressBar;
 
+    private ArrayList<Video> videos=new ArrayList<>( );
     private ArrayList<ListviewItem> data = new ArrayList<>();
     private ArrayList<Video> rvideos = new ArrayList<>();
     private ListView listView;
@@ -217,7 +218,11 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
                                         else
                                             section = (tmp / 10) + 1;
 
-                                        setVideoQuery(videoID, title, false, false,  section, 0,BitMapToString(thumb));
+                                        if(!setVideoQuery(videoID, title, false, false,  section, 0,BitMapToString(thumb))){
+                                            Looper.prepare();
+                                            Toast.makeText(getApplicationContext(), "이미 요청된 영상입니다.", Toast.LENGTH_LONG).show();
+                                            Looper.loop();
+                                        }
                                     }
                                 }
                             }.start();
@@ -242,6 +247,7 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 data.clear();
+                videos.clear();
                 rvideos.clear();
                 for(DataSnapshot snapshot:dataSnapshot.getChildren()){
                     Video video=snapshot.getValue(Video.class);
@@ -250,6 +256,7 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
                         rvideos.add(video);
                         data.add(0,temp);
                     }
+                    videos.add(video);
                 }
                 adapter.notifyDataSetChanged();
                 setListViewHeightBasedOnChildren(listView);
@@ -264,8 +271,18 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
 
     public boolean setVideoQuery(String link, String title, boolean lookstate, boolean listenstate, int sectionCount,int view,String thumbnail) {
         Video video=new Video(link,title,lookstate,listenstate,sectionCount,view,thumbnail);
-        databaseReference.push().setValue(video);
-        return true;
+        boolean check=true;
+        for(Video temp:videos) {
+            if(temp.getLink().equals( video.getLink() )) {
+                check = false;
+                break;
+            }
+        }
+        if(check) {
+            databaseReference.push().setValue( video );
+            return true;
+        }
+        else return false;
     }
 
     public void setListViewHeightBasedOnChildren(ListView listView) {
