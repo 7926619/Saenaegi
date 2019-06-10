@@ -4,18 +4,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".aLfreeMainActivity">
+    tools:context=".aLfreeMainActivity"
+    android:importantForAccessibility="no">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:importantForAccessibility="no">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:background="#FFF">
+            android:background="#FFF"
+            android:importantForAccessibility="no">
 
             <TextView
                 android:id="@+id/textView9"
@@ -33,6 +36,7 @@
                 android:nextFocusUp="@+id/back"
                 android:accessibilityTraversalAfter="@+id/textView18"
                 android:accessibilityTraversalBefore="@+id/back"
+                android:importantForAccessibility="yes"
                 android:text="영상 시청" />
 
             <View
@@ -52,8 +56,6 @@
             android:layout_width="match_parent"
             android:layout_height="110dp"
             android:importantForAccessibility="no"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
             />
 
         <LinearLayout
@@ -70,6 +72,8 @@
                 android:layout_marginBottom="10dp"
                 android:gravity="center"
                 android:text="[ 영상 제목 ]"
+                android:contentDescription="영상 제목"
+                android:textSize="20sp"
                 android:textColor="#363636"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
@@ -77,7 +81,7 @@
                 android:nextFocusUp="@+id/back"
                 android:accessibilityTraversalAfter="@+id/textView22"
                 android:accessibilityTraversalBefore="@+id/back"
-                android:textSize="20sp" />
+                android:importantForAccessibility="yes"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -94,13 +98,14 @@
                     android:gravity="center"
                     android:textColor="#363636"
                     android:contentDescription="재생"
+                    android:text="재생"
                     android:focusable="true"
                     android:focusableInTouchMode="true"
-                    android:nextFocusRight="@+id/textView22"
+                    android:nextFocusDown="@+id/textView19"
                     android:nextFocusUp="@+id/textView18"
-                    android:accessibilityTraversalAfter="@+id/textView22"
+                    android:accessibilityTraversalAfter="@+id/textView19"
                     android:accessibilityTraversalBefore="@+id/textView18"
-                    android:text="재생" />
+                    android:importantForAccessibility="yes"/>
 
                 <TextView
                     android:id="@+id/textView19"
@@ -111,13 +116,14 @@
                     android:gravity="center"
                     android:textColor="#363636"
                     android:contentDescription="정지"
+                    android:text="정지"
                     android:focusable="true"
                     android:focusableInTouchMode="true"
-                    android:nextFocusRight="@+id/textView21"
-                    android:nextFocusLeft="@+id/textView22"
+                    android:nextFocusDown="@+id/textView21"
+                    android:nextFocusUp="@+id/textView22"
                     android:accessibilityTraversalAfter="@+id/textView21"
                     android:accessibilityTraversalBefore="@+id/textView22"
-                    android:text="정지" />
+                    android:importantForAccessibility="yes"/>
 
                 <TextView
                     android:id="@+id/textView21"
@@ -128,13 +134,14 @@
                     android:gravity="center"
                     android:textColor="#363636"
                     android:contentDescription="10초 앞으로"
+                    android:text=" 10초 앞으로"
                     android:focusable="true"
                     android:focusableInTouchMode="true"
-                    android:nextFocusRight="@+id/textView20"
-                    android:nextFocusLeft="@+id/textView19"
+                    android:nextFocusDown="@+id/textView20"
+                    android:nextFocusUp="@+id/textView19"
                     android:accessibilityTraversalAfter="@+id/textView20"
                     android:accessibilityTraversalBefore="@+id/textView19"
-                    android:text=" 10초 앞으로" />
+                    android:importantForAccessibility="yes"/>
 
                 <TextView
                     android:id="@+id/textView20"
@@ -145,13 +152,14 @@
                     android:gravity="center"
                     android:textColor="#363636"
                     android:contentDescription="10초 뒤로"
+                    android:text=" 10초 뒤로"
                     android:focusable="true"
                     android:focusableInTouchMode="true"
                     android:nextFocusDown="@+id/textView16"
-                    android:nextFocusLeft="@+id/textView21"
+                    android:nextFocusUp="@+id/textView21"
                     android:accessibilityTraversalAfter="@+id/textView16"
                     android:accessibilityTraversalBefore="@+id/textView21"
-                    android:text=" 10초 뒤로" />
+                    android:importantForAccessibility="yes"/>
 
             </LinearLayout>
 
@@ -163,29 +171,31 @@
                 android:layout_marginBottom="10dp"
                 android:textColor="#363636"
                 android:contentDescription="파트 선택"
+                android:text="파트 선택"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
-                android:nextFocusDown="@+id/textView15"
+                android:nextFocusDown="@+id/textView"
                 android:nextFocusUp="@+id/textView20"
-                android:accessibilityTraversalAfter="@+id/textView15"
+                android:accessibilityTraversalAfter="@+id/textView"
                 android:accessibilityTraversalBefore="@+id/textView20"
-                android:text="파트 선택" />
+                android:importantForAccessibility="yes"/>
 
             <TextView
                 android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:accessibilityTraversalAfter="@+id/back"
-                android:accessibilityTraversalBefore="@+id/textView16"
                 android:contentDescription="같은 파트에 다른 것 선택"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:nextFocusUp="@+id/textView16"
-                android:nextFocusDown="@+id/back"
                 android:text="같은 파트에 다른 것 선택"
                 android:textColor="#363636"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:nextFocusDown="@+id/textView15"
+                android:nextFocusUp="@+id/textView16"
+                android:accessibilityTraversalAfter="@+id/textView15"
+                android:accessibilityTraversalBefore="@+id/textView16"
+                android:importantForAccessibility="yes"/>
 
             <TextView
                 android:id="@+id/textView15"
@@ -195,29 +205,31 @@
                 android:layout_marginBottom="10dp"
                 android:textColor="#363636"
                 android:contentDescription="추천하기"
+                android:text="추천하기"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
-                android:nextFocusDown="@+id/back"
-                android:nextFocusUp="@+id/textView16"
-                android:accessibilityTraversalAfter="@+id/back"
-                android:accessibilityTraversalBefore="@+id/textView16"
-                android:text="추천하기" />
+                android:nextFocusDown="@+id/textView5"
+                android:nextFocusUp="@+id/textView"
+                android:accessibilityTraversalAfter="@+id/textView5"
+                android:accessibilityTraversalBefore="@+id/textView"
+                android:importantForAccessibility="yes" />
 
             <TextView
                 android:id="@+id/textView5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:accessibilityTraversalAfter="@+id/back"
-                android:accessibilityTraversalBefore="@+id/textView16"
+                android:textColor="#363636"
+                android:textSize="20sp"
+                android:text="신고하기"
                 android:contentDescription="신고하기"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
-                android:nextFocusUp="@+id/textView16"
                 android:nextFocusDown="@+id/back"
-                android:text="신고하기"
-                android:textColor="#363636"
-                android:textSize="20sp" />
+                android:nextFocusUp="@+id/textView15"
+                android:accessibilityTraversalAfter="@+id/back"
+                android:accessibilityTraversalBefore="@+id/textView15"
+                android:importantForAccessibility="yes"/>
 
             <TextView
                 android:id="@+id/back"
@@ -227,13 +239,14 @@
                 android:layout_marginBottom="10dp"
                 android:textColor="#363636"
                 android:contentDescription="뒤로가기"
+                android:text="뒤로가기"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:nextFocusDown="@+id/textView18"
-                android:nextFocusUp="@+id/textView15"
+                android:nextFocusUp="@+id/textView5"
                 android:accessibilityTraversalAfter="@+id/textView18"
-                android:accessibilityTraversalBefore="@+id/textView15"
-                android:text="뒤로가기" />
+                android:accessibilityTraversalBefore="@+id/textView5"
+                android:importantForAccessibility="yes" />
 
         </LinearLayout>
     </LinearLayout>
