@@ -235,8 +235,6 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
             subtitle.setSectionS((sectionNum-1)+"0:00");
             subtitle.setSectionF(sectionNum+"0:00");
         }
-        Log.e("S",""+subtitle.getSectionS());
-        Log.e("F",""+subtitle.getSectionF());
         subtitle.setIdgoogle("userid");
         subtitle.setName( "username" );
         subtitle.setRecommend(0);
@@ -300,13 +298,9 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
                 }
 
                 startTime = subTime(start.substring(0, 2)) * 60 + subTime(start.substring(3, 5));
-                Log.e("sT",""+startTime);
                 endTime = subTime(end.substring(0, 2)) * 60 + subTime(end.substring(3, 5));
-                Log.e("eT",""+endTime);
                 sectionST = subTime(subtitle.getSectionS().substring(0,2)) * 60 + subTime(subtitle.getSectionS().substring(3,5));
-                Log.e("ST",""+sectionST);
                 sectionFT = subTime(subtitle.getSectionF().substring(0,2)) * 60 + subTime(subtitle.getSectionF().substring(3,5));
-                Log.e("FT",""+sectionFT);
 
                 if (startTime > endTime) {
                     Toast.makeText(getApplicationContext(), "종료 시간이 시작 시간보다 빠릅니다.", Toast.LENGTH_LONG).show();
@@ -376,6 +370,8 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
                 iv1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        if(!player.isPlaying())
+                            player.play();
                         String stime = startTime.getText().toString();
                         subtitlebox.setText(subTitle.getText().toString());
                         int spoint = ((Integer.parseInt(stime.split(":")[0])*60) + Integer.parseInt(stime.split(":")[1])) * 1000;
@@ -387,6 +383,7 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
                             public void run() {
                                 while(true) {
                                     if((player.getCurrentTimeMillis()/1000) == epoint){
+                                        subtitlebox.setText("");
                                         player.pause();
                                         break;
                                     }
