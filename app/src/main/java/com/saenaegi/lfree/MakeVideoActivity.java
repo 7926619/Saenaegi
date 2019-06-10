@@ -219,16 +219,24 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         sectionNum = Integer.parseInt(data.getExtras().getString("part"));
         if((sectionNum > (min / 10)) && ((min % 10) > 3)){
             subtitle.setSectionS((sectionNum-1)+"0:00");
-            subtitle.setSectionF(min+":"+sec);
+            if(sec < 10)
+                subtitle.setSectionF(min+":0"+sec);
+            else
+                subtitle.setSectionF(min+":0"+sec);
         }
         else if(sectionNum == (min / 10) && ((min % 10) < 4)) {
             subtitle.setSectionS((sectionNum-1)+"0:00");
-            subtitle.setSectionF(min+":"+sec);
+            if(sec < 10)
+                subtitle.setSectionF(min+":0"+sec);
+            else
+                subtitle.setSectionF(min+":0"+sec);
         }
         else {
             subtitle.setSectionS((sectionNum-1)+"0:00");
             subtitle.setSectionF(sectionNum+"0:00");
         }
+        Log.e("S",""+subtitle.getSectionS());
+        Log.e("F",""+subtitle.getSectionF());
         subtitle.setIdgoogle("userid");
         subtitle.setName( "username" );
         subtitle.setRecommend(0);
