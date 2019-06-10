@@ -252,7 +252,7 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         startTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
         startTime.setGravity(Gravity.CENTER);
         startTime.setFilters(new InputFilter[] { new InputFilter.LengthFilter(5) });
-        EditText endTime = new EditText(this);
+        final EditText endTime = new EditText(this);
         endTime.setHint("00:00");
         endTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
         endTime.setGravity(Gravity.CENTER);
@@ -376,11 +376,24 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
                 iv1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        String time = startTime.getText().toString();
+                        String stime = startTime.getText().toString();
                         subtitlebox.setText(subTitle.getText().toString());
-                        int point = ((Integer.parseInt(time.split(":")[0])*60) + Integer.parseInt(time.split(":")[1])) * 1000;
-                        player.seekToMillis(point);
-
+                        int spoint = ((Integer.parseInt(stime.split(":")[0])*60) + Integer.parseInt(stime.split(":")[1])) * 1000;
+                        player.seekToMillis(spoint);
+                        String etime = endTime.getText().toString();
+                        final int epoint = ((Integer.parseInt(etime.split(":")[0])*60) + Integer.parseInt(etime.split(":")[1]));
+                        Thread th = new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                while(true) {
+                                    if((player.getCurrentTimeMillis()/1000) == epoint){
+                                        player.pause();
+                                        break;
+                                    }
+                                }
+                            }
+                        });
+                        th.start();
                     }
                 });
                 ImageView iv2 = new ImageView(MakeVideoActivity.this);
