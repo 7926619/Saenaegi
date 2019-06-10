@@ -4,7 +4,9 @@ import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.AccessibilityServiceInfo;
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
+import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
 import android.util.Log;
 import android.view.View;
@@ -19,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+
 import com.saenaegi.lfree.ListviewController.aListviewAdapter;
 import com.saenaegi.lfree.ListviewController.aListviewItem;
 
@@ -28,6 +31,8 @@ public class aAccessibilityService extends AccessibilityService {
 
     AccessibilityNodeInfo source;
     AccessibilityNodeInfo temp;
+
+    int listviewitemposition = 0;
     //int tempGestureId;
 
     ArrayList<View> arr = new ArrayList<>();
@@ -96,6 +101,7 @@ public class aAccessibilityService extends AccessibilityService {
                     arr2.remove(0);
                     arr.remove(0);
                     focusposition = 0;
+                    listviewitemposition = focusposition;
                     return;
                 }
             }
@@ -121,6 +127,7 @@ public class aAccessibilityService extends AccessibilityService {
                     arr2.remove(0);
                     arr.remove(0);
                     focusposition = (rowtemp.size()-1);
+                    listviewitemposition = focusposition;
                     return;
                 }
             }
@@ -159,6 +166,7 @@ public class aAccessibilityService extends AccessibilityService {
                                 arr2.remove(0);
                                 arr.remove(0);
                                 focusposition = 0;
+                                listviewitemposition = focusposition;
                                 return;
                             }
                         }
@@ -178,6 +186,7 @@ public class aAccessibilityService extends AccessibilityService {
                                 arr2.remove(0);
                                 arr.remove(0);
                                 focusposition = i + 1;
+                                listviewitemposition = focusposition;
                                 return;
                             }
                         }
@@ -216,6 +225,7 @@ public class aAccessibilityService extends AccessibilityService {
                                 arr2.remove(0);
                                 arr.remove(0);
                                 focusposition = (rowtemp.size() - 1);
+                                listviewitemposition = focusposition;
                                 return;
                             }
                         }
@@ -235,6 +245,7 @@ public class aAccessibilityService extends AccessibilityService {
                                 arr2.remove(0);
                                 arr.remove(0);
                                 focusposition = i - 1;
+                                listviewitemposition = focusposition;
                                 return;
                             }
                         }
@@ -342,6 +353,9 @@ public class aAccessibilityService extends AccessibilityService {
     // 이벤트가 발생할때마다 실행되는 부분
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
+        long startTime;
+        final int MAX_DURATION = 200;
+
         Log.e(TAG, "=========================================================================");
         Log.e(TAG, "Catch Event : " + event.toString());
         Log.e(TAG, "Catch Event Package Name : " + event.getPackageName());
@@ -371,15 +385,38 @@ public class aAccessibilityService extends AccessibilityService {
             return;
         }
 
+        /*
+        ActivityManager am2 = (ActivityManager)this.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningTaskInfo> rti2 = am2.getRunningTasks(1);
+        if((rti2.get(0).topActivity.getClassName()).contains("aRecentVideoActivity") && source.getViewIdResourceName().contains("constraint1")) {
+            startTime = System.currentTimeMillis();
+            ListView listviewtemp = ((aRecentVideoActivity)aRecentVideoActivity.context).listView;
+            int focusposition = ((aRecentVideoActivity)aRecentVideoActivity.context).focusposition;
+            if(event.getAction() == MotionEvent.ACTION_DOWN) {
+                if(System.currentTimeMillis() - startTime <= MAX_DURATION) {
+                    Log.e(TAG, "CLICKCLICKCLICK");
+                    listviewtemp.getAdapter().getView(focusposition, null, listviewtemp).performClick();
+                }
+            }
+        }
+        */
+
         if(eventType == AccessibilityEvent.TYPE_VIEW_CLICKED || eventType == AccessibilityEvent.TYPE_VIEW_HOVER_ENTER) {
             // 이벤트를 발생시킨 해당 소스에 대한 Action 실행. 이 때의 Action은 접근성 서비스를 위한 FOCUS
             eventText = "클릭됨 : ";
             eventText = eventText + event.getContentDescription();
-            source.performAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS);
+            eventText = eventText.replace("constraint_", "");
             Toast.makeText(getApplication(), eventText, Toast.LENGTH_SHORT).show();
+            source.performAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS);
             // 다시 사용할 수 있도록 해당 인스턴스를 반환
             source.recycle();
         }
+
+        /*
+        if(source.getViewIdResourceName().equalsIgnoreCase("com.saenaegi.lfree:id/constraint1") && eventType == AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUSED) {
+            Log.e(TAG, "12345678900987654321");
+        }
+        */
 
         else{
             switch (eventType) {
@@ -406,7 +443,8 @@ public class aAccessibilityService extends AccessibilityService {
                     //else if(source.getViewIdResourceName().equalsIgnoreCase("com.saenaegi.lfree:id/title"))
                 else if(source.getViewIdResourceName().equalsIgnoreCase("com.saenaegi.lfree:id/constraint1")) {
                     eventText = eventText.replace("constraint_", "");
-                    eventText = eventText + introText;
+                    //eventText = eventText + introText;
+                    eventText = eventText + " 제스처를 수행하지 않을 시, 10초 이내로 실행됩니다.";
                 }
                 Toast.makeText(getApplication(), eventText, Toast.LENGTH_SHORT).show();
 
@@ -424,6 +462,16 @@ public class aAccessibilityService extends AccessibilityService {
                     } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                         tts.speak("스크롤 중", TextToSpeech.QUEUE_FLUSH, null);
                     }
+                }
+
+                if(eventText.contains("10초 이내로")) {
+                    new Handler().postDelayed(new Runnable(){
+                        @Override
+                        public void run() {
+                            ListView listviewtemp = ((aRecentVideoActivity)aRecentVideoActivity.context).listView;
+                            listviewtemp.performItemClick(listviewtemp.getAdapter().getView(listviewitemposition, null, null), listviewitemposition, listviewtemp.getItemIdAtPosition(listviewitemposition));
+                        }
+                    }, 15000);
                 }
             }
 

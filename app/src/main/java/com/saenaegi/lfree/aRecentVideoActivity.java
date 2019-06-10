@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -60,6 +61,7 @@ public class aRecentVideoActivity extends AppCompatActivity {
         listView.setOnItemClickListener( new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.e(TAG, "CLICKED! " + parent + " " + view + " "  + position + " " + id);
                 Intent intent = new Intent(aRecentVideoActivity.this, aWatchVideoActivity.class);
                 intent.putExtra("link",videos.get(position).getLink());
                 intent.putExtra("count",videos.get(position).getSectionCount());
@@ -210,10 +212,10 @@ public class aRecentVideoActivity extends AppCompatActivity {
 
                 adapter.notifyDataSetChanged();
 
-                /*
+
                 for(int i = 0 ; i < childRowCount ; i++)
                     Log.e(TAG, "listviewitem print " + listView.getAdapter().getView(i, null, listView));
-                */
+
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
