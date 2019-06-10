@@ -70,6 +70,7 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
         videoID = data.getExtras().getString( "link" );
         sectionCount = data.getExtras().getInt( "count" );
         nowSection = data.getExtras().getInt( "nowSection" );   //nowSection이 잘 넘어오는 지 확인
+        madesection=new String[sectionCount];
 
         /* 동영상 로드 및 초기화 */
         listener = new YouTubePlayer.OnInitializedListener() {
