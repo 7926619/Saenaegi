@@ -185,7 +185,7 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
             @Override
             public void onInit(int status) {
                 if (status == TextToSpeech.SUCCESS) {
-                    int result = tts.setLanguage(Locale.KOREAN);
+                    int result = tts.setLanguage( Locale.KOREAN);
                 }
                 else
                     Toast.makeText(getApplication(), "TTS : TTS's Initialization is Failed!", Toast.LENGTH_SHORT).show();
@@ -468,7 +468,10 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
                     Intent intent = new Intent(WatchVideoActivity.this, MakeVideoActivity.class);
                     intent.putExtra("link", videoID);
                     intent.putExtra("count", sectionCount);
-                    intent.putExtra("type", type[0]);
+                    if(type[0].equals( "자막" ))
+                        intent.putExtra("type", true);
+                    else
+                        intent.putExtra( "type",false );
                     intent.putExtra("part", dropdown.getSelectedItem().toString());
                     startActivityForResult(intent, 2);
                 }
@@ -490,6 +493,7 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
                 Log.e("1","1");
                 flag = -1;
                 while(flag2==0) {
+                    Log.e("flag",""+flag);
                     Log.e("2","2");
                 }
                 Log.e("3","3");
@@ -505,6 +509,7 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
                 Log.e("5","5");
                 flag = -1;
                 while(flag2==0) {
+                    Log.e("flag",""+flag);
                     Log.e("6","6");
                 }
                 Log.e("7","7");
@@ -569,8 +574,8 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
                         case R.id.opt4:
                             if(userid.equals( makeUserid )){
                                 DeleteDataController dataController=new DeleteDataController(idvideo,key,posi,type);
-                                dataController.deleteData();
                                 sectionSubtitles.get( String.valueOf( posi ) ).remove( position );
+                                dataController.deleteData(sectionCount, sectionSubtitles);
                                 adapter2.removeItem( position );
                                 adapter2.notifyDataSetChanged();
                                 TextView partText = findViewById(R.id.partText);
@@ -586,6 +591,8 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
                                     adapter1.delItem(posi);
                                     adapter1.notifyDataSetChanged();
                                 }
+
+
                             }
                             else {
                                 Toast.makeText(getApplicationContext(), "제작자가 아니면 삭제할 수 없습니다.", Toast.LENGTH_SHORT).show();
@@ -632,6 +639,7 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case android.R.id.home:{ //toolbar의 back키 눌렀을 때 동작
+                tts.shutdown();
                 flag = -1;
                 while(flag2==0) {
                 }
@@ -705,6 +713,8 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
                 time = System.currentTimeMillis();
                 Toast.makeText(getApplicationContext(),"\'뒤로\' 버튼을 한번 더 누르면 종료합니다.",Toast.LENGTH_SHORT).show();
             } else if (System.currentTimeMillis() - time < 2000) {
+                flag = -1;
+                tts.shutdown();
                 ActivityCompat.finishAffinity(this);
             }
         }
@@ -726,13 +736,17 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
             breakpoint:
             while(true) {
                 for(int i=0; i < subtitleDatas.size(); i++) {
-                    if(flag == -1)
+                    if(flag == -1) {
+                        flag2 = -1;
                         break breakpoint;
+                    }
                     if((player.getCurrentTimeMillis()/1000) >= compare_s[i] && (player.getCurrentTimeMillis()/1000) < compare_f[i]) {
                         subtitlebox.setText(subtitleDatas.get(i).getSubString());
                         while((player.getCurrentTimeMillis()/1000) >= compare_s[i] && (player.getCurrentTimeMillis()/1000) < compare_f[i]) {
-                            if(flag == -1)
+                            if(flag == -1) {
+                                flag2 = -1;
                                 break breakpoint;
+                            }
                         }
                     }
                     else
@@ -764,14 +778,20 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
             breakpoint:
             while(true) {
                 for(int i=0; i < subtitleDatas.size(); i++) {
-                    if(flag == -1)
+                    if(flag == -1) {
+                        tts.stop();
+                        flag2 = -1;
                         break breakpoint;
+                    }
                     if((player.getCurrentTimeMillis()/1000) >= compare_s[i] && (player.getCurrentTimeMillis()/1000) < compare_f[i]) {
                         tts.setSpeechRate((float)0.87);
                         tts.speak(subtitleDatas.get(i).getSubString(), TextToSpeech.QUEUE_FLUSH, null);
                         while((player.getCurrentTimeMillis()/1000) >= compare_s[i] && (player.getCurrentTimeMillis()/1000) < compare_f[i]) {
-                            if(flag == -1)
+                            if(flag == -1) {
+                                tts.stop();
+                                flag2 = -1;
                                 break breakpoint;
+                            }
                         }
                     }
                     try {

@@ -28,7 +28,43 @@ public class InputDataController {
     private StorageReference ListorageReference=firebaseStorage.getReference().child( "ListenSubtitle");
     private StorageReference LostorageReference=firebaseStorage.getReference().child( "LookSubtitle");
 
-    public void modifyData(String key,ArrayList<SubtitleData> subtitlesData, String idvideo,File filedirectory, int sectionNum) {
+    public void modifyData(String key,ArrayList<SubtitleData> subtitlesData, String idvideo,File filedirectory, int sectionNum,boolean type) {
+        ArrayList<String> subtitles=new ArrayList<>();
+        for(SubtitleData subtitleData:subtitlesData){
+            subtitles.add(subtitleData.getString());
+        }
+        String filename=key+".txt";
+        File storagefile=writeFile( subtitles, filename,filedirectory );
+
+        Uri file=Uri.fromFile(storagefile);
+        UploadTask uploadTask;
+        if(type){
+            uploadTask=ListorageReference.child(idvideo+"/"+sectionNum+"/"+file.getLastPathSegment()).putFile(file);
+            uploadTask.addOnFailureListener( new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.e("errorInput","false");
+                }
+            } ).addOnSuccessListener( new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Log.e("errorInput","success");
+                }
+            } );
+        }else {
+            uploadTask=LostorageReference.child(idvideo+"/"+sectionNum+"/"+file.getLastPathSegment()).putFile(file);
+            uploadTask.addOnFailureListener( new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.e("errorInput","false");
+                }
+            } ).addOnSuccessListener( new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Log.e("errorInput","success");
+                }
+            } );
+        }
 
     }
     public void storeData(Subtitle subtitle,ArrayList<SubtitleData> subtitlesData, String idvideo,File filedirectory, int sectionNum){

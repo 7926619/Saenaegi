@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -52,6 +53,7 @@ import com.saenaegi.lfree.SubtitleController.InputDataController;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
@@ -72,6 +74,7 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
     private View view1;
     private ArrayList<SubtitleData> subtitles =new ArrayList<>();
     private Subtitle subtitle=new Subtitle();
+    private ArrayList<String> madeSection=new ArrayList<>();
     private boolean modify=false;
     private String idsubtitle;
     private InputDataController inputDataController;
@@ -80,12 +83,15 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
     private String videoID;
     private int sectionCount;
     private int sectionNum;
+    private int allSectionCount;
     private String idvideo;
     private FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference=firebaseDatabase.getReference().child( "LFREE" ).child( "VIDEO" );
     private int min;
     private int sec;
     private TextView subtitlebox;
+    private boolean ty;
+    private TextToSpeech tts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,9 +147,25 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
                 inputDataController = new InputDataController();
                 if(modify == false) {
                     inputDataController.storeData( subtitle, subtitles, idvideo, filedirectory, sectionNum );
+                    String tmp= String.valueOf(sectionNum);
+                    boolean check=true;
+                    for(String string:madeSection){
+                        if(string.equals(tmp)){
+                            check=false;
+                        }
+                    }
+                    if(check) {
+                        madeSection.add( tmp );
+                        if(madeSection.size()==allSectionCount){
+                            if(ty)
+                             databaseReference.child( idvideo ).child("listenstate").setValue( true );
+                            else
+                             databaseReference.child( idvideo ).child("lookstate").setValue( true );
+                        }
+                    }
                 }
                 else{
-                    inputDataController.modifyData( idsubtitle, subtitles, idvideo, filedirectory, sectionNum );
+                    inputDataController.modifyData( idsubtitle, subtitles, idvideo, filedirectory, sectionNum ,ty);
                 }
                 Intent intent = new Intent(MakeVideoActivity.this, WatchVideoActivity.class);
                 intent.putExtra("link", videoID);
@@ -166,11 +188,24 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
 
         subtitlebox = (TextView) findViewById(R.id.subtitle);
 
+        /* 전자친구 */
+        tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS) {
+                    int result = tts.setLanguage(Locale.KOREAN);
+                }
+                else
+                    Toast.makeText(getApplication(), "TTS : TTS's Initialization is Failed!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         /* 동영상 로드 및 초기화 */
         final Intent data = getIntent();
         videoID = data.getExtras().getString("link");
         sectionCount = data.getExtras().getInt("count");
         modify = data.getExtras().getBoolean( "modify" );
+        ty = data.getExtras().getBoolean("type");
         YouTubePlayerSupportFragment frag = (YouTubePlayerSupportFragment) getSupportFragmentManager().findFragmentById(R.id.youtube_screen);
         frag.initialize("AIzaSyAn_HFubCwx1rbM2q45hMGGhCPUx2AEOz4", new YouTubePlayer.OnInitializedListener() {
             @Override
@@ -440,17 +475,10 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         subtitle.setName( "username" );
         subtitle.setRecommend(0);
         subtitle.setType( true );
-        if(modify == true) {
-            if(data.getExtras().getBoolean("type"))
-                subtitle.setType( true );
-            else
-                subtitle.setType( false );
-        } else {
-            if (data.getExtras().getString("type").equals("자막"))
-                subtitle.setType(true);
-            else
-                subtitle.setType(false);
-        }
+        if(ty)
+            subtitle.setType( true );
+        else
+            subtitle.setType( false );
 
         /* EditText */
         EditText startTime = new EditText(this);
@@ -595,25 +623,49 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
                 iv1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if(!player.isPlaying())
-                            player.play();
-                        subtitlebox.setText(subTitle.getText().toString());
-                        int spoint = ((Integer.parseInt(start.split(":")[0])*60) + Integer.parseInt(start.split(":")[1])) * 1000;
-                        player.seekToMillis(spoint);
-                        final int epoint = ((Integer.parseInt(end.split(":")[0])*60) + Integer.parseInt(end.split(":")[1]));
-                        Thread th = new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                while(true) {
-                                    if((player.getCurrentTimeMillis()/1000) == epoint){
-                                        subtitlebox.setText("");
-                                        player.pause();
-                                        break;
+                        if(ty){
+                            if(!player.isPlaying())
+                                player.play();
+                            subtitlebox.setText(subTitle.getText().toString());
+                            int spoint = ((Integer.parseInt(start.split(":")[0])*60) + Integer.parseInt(start.split(":")[1])) * 1000;
+                            player.seekToMillis(spoint);
+                            final int epoint = ((Integer.parseInt(end.split(":")[0])*60) + Integer.parseInt(end.split(":")[1]));
+                            Thread th = new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    while(true) {
+                                        if((player.getCurrentTimeMillis()/1000) >= epoint){
+                                            subtitlebox.setText("");
+                                            player.pause();
+                                            break;
+                                        }
                                     }
                                 }
-                            }
-                        });
-                        th.start();
+                            });
+                            th.start();
+                        }
+                        else {
+                            if(!player.isPlaying())
+                                player.play();
+                            int spoint = ((Integer.parseInt(start.split(":")[0])*60) + Integer.parseInt(start.split(":")[1])) * 1000;
+                            player.seekToMillis(spoint);
+                            tts.setSpeechRate((float)0.87);
+                            tts.speak(subTitle.getText().toString(), TextToSpeech.QUEUE_FLUSH, null);
+                            final int epoint = ((Integer.parseInt(end.split(":")[0])*60) + Integer.parseInt(end.split(":")[1]));
+                            Thread th = new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    while(true) {
+                                        if((player.getCurrentTimeMillis()/1000) >= epoint){
+                                            tts.stop();
+                                            player.pause();
+                                            break;
+                                        }
+                                    }
+                                }
+                            });
+                            th.start();
+                        }
                     }
                 });
                 ImageView iv2 = new ImageView(MakeVideoActivity.this);
@@ -748,8 +800,20 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot snapshot:dataSnapshot.getChildren()){
                     Video video=snapshot.getValue( Video.class );
-                    if(video.getLink().equals( videoID ))
-                        idvideo=snapshot.getKey();
+                    if(video.getLink().equals( videoID )) {
+                        idvideo = snapshot.getKey();
+                        allSectionCount=video.getSectionCount();
+                        for(DataSnapshot snapshot1:snapshot.child( "SUBTITLE" ).getChildren()) {
+                            for (DataSnapshot snapshot2 : snapshot1.getChildren()) {
+                                Subtitle temp = snapshot2.getValue( Subtitle.class );
+                                if (temp.isType() == ty) {
+                                    madeSection.add( snapshot1.getKey() );
+                                    break;
+                                }
+                            }
+                        }
+                        break;
+                    }
                 }
             }
             @Override

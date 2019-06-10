@@ -10,6 +10,10 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class DeleteDataController {
 
     private FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
@@ -32,7 +36,7 @@ public class DeleteDataController {
         this.type=type;
     }
 
-    public void deleteData(){
+    public void deleteData(int sectionCount, HashMap<String, ArrayList<SubtitleAndKey>> temp){
         DatabaseReference dataRef2=databaseReference.child( "VIDEO" );
         dataRef2.child( idvideo ).child( "SUBTITLE" ).child( String.valueOf(sectionNum) ).child( idsubtitle ).removeValue();
 
@@ -42,5 +46,28 @@ public class DeleteDataController {
         else{
             LostorageReference.child( idvideo).child( String.valueOf( sectionNum )).child( idsubtitle +".txt").delete();
         }
+
+        int madeSection=0;
+        if(sectionCount==temp.size()) {
+            for (int i = 0; i < sectionCount; i++) {
+                ArrayList<SubtitleAndKey> tmp;
+                tmp = temp.get( String.valueOf( i+1 ) );
+                for (SubtitleAndKey subtitleAndKey : tmp) {
+                    if (type == subtitleAndKey.type) {
+                        madeSection=madeSection+1;
+                        break;
+                    }
+                }
+            }
+            if(madeSection!=sectionCount){
+                if(type) dataRef2.child( idvideo ).child("listenstate").setValue( false );
+                else  dataRef2.child( idvideo ).child("lookstate").setValue( false );
+            }
+        }
+        else{
+            if(type) dataRef2.child( idvideo ).child("listenstate").setValue( false );
+            else  dataRef2.child( idvideo ).child("lookstate").setValue( false );
+        }
+
     }
 }
