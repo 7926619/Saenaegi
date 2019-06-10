@@ -1,6 +1,7 @@
 package com.saenaegi.lfree;
 
 import android.graphics.Point;
+import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
 import android.view.Display;
@@ -27,6 +28,7 @@ import com.saenaegi.lfree.SubtitleController.outputDataController;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
@@ -41,12 +43,14 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
     private String idvideo;
     private int sectionCount;
     private int nowSection;
+    private int position=0;
     private String userid="userid";
     private HashMap<String, ArrayList<SubtitleAndKey>> sectionSubtitles = new HashMap<>();
     private ArrayList<SubtitleData> subtitleDatas = new ArrayList<>();
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference = firebaseDatabase.getReference().child( "LFREE" ).child( "VIDEO" );
-    private DatabaseReference databaseReference2=firebaseDatabase.getReference().child( "LFREE" );
+    private DatabaseReference databaseReference2=firebaseDatabase.getReference().child( "LFREE" ).child( "LIKEVIDEO" ).child( userid );
+    private ArrayList<String> likesubtitleKey=new ArrayList<>();
     private outputDataController output;
 
 
@@ -68,8 +72,6 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
         videoID = data.getExtras().getString( "link" );
         sectionCount = data.getExtras().getInt( "count" );
         nowSection = data.getExtras().getInt( "nowSection" );
-
-
         /* 동영상 로드 및 초기화 */
         listener = new YouTubePlayer.OnInitializedListener() {
             @Override
@@ -166,31 +168,38 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
             }
         } );
 
-        TextView tv2 = (TextView) findViewById( R.id.textView15 );
+        TextView tv2 = (TextView) findViewById( R.id.textView );
         tv1.setOnClickListener( new View.OnClickListener() {
             public void onClick(View v) {
-                SubtitleAndKey subtitleAndKey=sectionSubtitles.get( nowSection ).get(0);
-                Subtitle temp=subtitleAndKey.getSubtitle();
-                final String key=subtitleAndKey.getKey();
-                final int recommend=subtitleAndKey.getRecommend();
-                final String makeUserid=temp.getIdgoogle();
-                final boolean type=temp.isType();
-                DatabaseReference dataRef2=databaseReference2.child( "LIKEVIDEO" ).child( userid );
-                dataRef2.child( idvideo ).child( key ).setValue( "idsubtitle" ).addOnSuccessListener( new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        DatabaseReference dataRef1=databaseReference2.child( "VIDEO" ).child( idvideo ).child( "SUBTITLE" ).child(String.valueOf( nowSection));
-                        dataRef1.child( key).child("recommend").setValue( recommend+1 );
-                    }
-                }
-                );
+                position=position+1;
             }
         } );
 
-        TextView tv3 = (TextView) findViewById( R.id.textView5 );
+        TextView tv3 = (TextView) findViewById( R.id.textView15 );
         tv1.setOnClickListener( new View.OnClickListener() {
             public void onClick(View v) {
-                SubtitleAndKey subtitleAndKey=sectionSubtitles.get( nowSection ).get(0);
+                SubtitleAndKey subtitleAndKey=sectionSubtitles.get( nowSection ).get(0); //몇 번째 자막을 선택 하느냐,
+                final String key=subtitleAndKey.getKey();
+                final int recommend=subtitleAndKey.getRecommend();
+                boolean exist=false;
+                for(String tmp:likesubtitleKey) {
+                    if (tmp.equals( key )) {
+                        exist = true;
+                        break;
+                    }
+                }
+                if(!exist){
+                    likesubtitleKey.add( key );
+                    databaseReference2.child( idvideo ).child( key ).setValue( "idsubtitle" );
+                    databaseReference.child( idvideo ).child( "SUBTITLE" ).child( String.valueOf( nowSection ) ).child( key ).child( "recommend" ).setValue( recommend + 1 );
+                }
+            }
+        } );
+
+        TextView tv4 = (TextView) findViewById( R.id.textView5 );
+        tv1.setOnClickListener( new View.OnClickListener() {
+            public void onClick(View v) {
+                SubtitleAndKey subtitleAndKey=sectionSubtitles.get( nowSection ).get(position);
                 Subtitle temp=subtitleAndKey.getSubtitle();
                 final String key=subtitleAndKey.getKey();
                 DatabaseReference dataRef=databaseReference2.child( "DECLARATION" ).child( key );
@@ -198,8 +207,29 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
             }
         } );
         getData();
+        getLikeVideo();
     }
 
+    public  void getLikeVideo(){
+        databaseReference2.addListenerForSingleValueEvent( new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                likesubtitleKey.clear();
+                for(DataSnapshot snapshot:dataSnapshot.getChildren()){
+                    if(snapshot.getKey().equals( idvideo )){
+                        for(DataSnapshot snapshot1:snapshot.getChildren()){
+                            String temp=snapshot1.getKey();
+                            likesubtitleKey.add( temp );
+                        }
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        } );
+    }
     public void getData() {
         databaseReference.addListenerForSingleValueEvent( new ValueEventListener() {
             @Override
@@ -240,9 +270,13 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
 
         output=new outputDataController();
         ArrayList<SubtitleAndKey> temp=sectionSubtitles.get( String.valueOf( nowSection));
-        subtitleDatas = output.getLookSubtitleData( filedirectory, nowSection, idvideo, "-Lg6q60mYea5eRmHxSsd" );
+        Collections.sort( temp );
+        String key=temp.get( position ).getKey();
+        subtitleDatas = output.getLookSubtitleData( filedirectory, nowSection, idvideo, key );
         // cash error로 인하여
-        subtitleDatas = output.getLookSubtitleData( filedirectory, nowSection, idvideo, "-Lg6q60mYea5eRmHxSsd");
+        subtitleDatas = output.getLookSubtitleData( filedirectory, nowSection, idvideo, key); //삭제 하면 은영이 울어요.
+
+        //이제 데이터를 TTS로 유투브 시간에 맞게 뽑아줘용
 
     }
 

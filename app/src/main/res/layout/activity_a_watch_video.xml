@@ -172,6 +172,22 @@
                 android:text="파트 선택" />
 
             <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:accessibilityTraversalAfter="@+id/back"
+                android:accessibilityTraversalBefore="@+id/textView16"
+                android:contentDescription="같은 파트에 다른 것 선택"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:nextFocusUp="@+id/textView16"
+                android:nextFocusDown="@+id/back"
+                android:text="같은 파트에 다른 것 선택"
+                android:textColor="#363636"
+                android:textSize="20sp" />
+
+            <TextView
                 android:id="@+id/textView15"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

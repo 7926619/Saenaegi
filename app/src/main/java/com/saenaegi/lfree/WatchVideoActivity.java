@@ -345,7 +345,7 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
             subtitleDatas = output.getLookSubtitleData( filedirectory, posi, idvideo, sectionSubtitles.get( String.valueOf( posi ) ).get( position ).getKey() ); //  이 줄 삭제 하면 안됩니다. 큰일 나요. !! --> 가끔 파일이 생성 안되어 안 받아 올때를 대비
         }
 
-        //type이 false 면 귀때기를 선택하였다는 것이다. -> 시각 지원을 해야 한다. TTS 음성 읽어 주기
+        //type이 false 면 귀때기를 선택하였다는 것이다. -> 시각 지원을 해야 한다. TTS 음성 읽어 주기 이 부분만 구현 하시면 됩니당~
 
         Thread th = new Thread(new Runnable() {
             @Override
