@@ -29,6 +29,7 @@ public class aSelectPartActivity extends AppCompatActivity {
     private aListviewAdapter adapter;
     private ArrayList<aListviewItem> sdata = new ArrayList<>();
     private String videoID;
+    private String[] madesection;
     private int sectionCount;
 
     @Override
@@ -40,16 +41,20 @@ public class aSelectPartActivity extends AppCompatActivity {
         final Intent data=getIntent();
         videoID = data.getExtras().getString("link");
         sectionCount=data.getExtras().getInt( "count" );
+        madesection=data.getExtras().getStringArray( "mmadesection" );
 
         sectionCount=10;
         listView = (ListView) findViewById(R.id.listview);
         adapter = new aListviewAdapter(this, R.layout.a_list_item, sdata);
         listView.setAdapter(adapter);
 
+        //만들어 진 secton Num만 출력이 되는 지 확인 -> subtitle의 type의 값이 false인 데이터만 취급해야 한다.
         sdata.clear();
-        for(int i=0;i<sectionCount;i++){
-            aListviewItem temp=new aListviewItem( String.valueOf(i+1) );
-            sdata.add(temp);
+        for(int i=0;i<madesection.length;i++){
+            if(madesection[i]!=null) {
+                aListviewItem temp = new aListviewItem( madesection[i] );
+                sdata.add( temp );
+            }
         }
         adapter.notifyDataSetChanged();
 
@@ -59,7 +64,7 @@ public class aSelectPartActivity extends AppCompatActivity {
                 Intent intent = new Intent(aSelectPartActivity.this, aWatchVideoActivity.class);
                 intent.putExtra("link",videoID);
                 intent.putExtra("count",sectionCount);
-                intent.putExtra( "nowSection", position+1);
+                intent.putExtra( "nowSection", madesection[position]);
                 startActivity(intent);
             }
         } );
