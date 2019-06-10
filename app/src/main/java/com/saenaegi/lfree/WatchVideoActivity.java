@@ -274,7 +274,6 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
             type.add(tmp.type);
         }
 
-        adapter2.delItem();
         for (int i = 0; i < listName.size(); i++) {
             // 각 List의 값들을 data 객체에 set 해줍니다.
             DataS dataS = new DataS();
