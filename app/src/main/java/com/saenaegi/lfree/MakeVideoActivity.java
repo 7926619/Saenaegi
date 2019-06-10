@@ -19,6 +19,7 @@ import android.support.v7.app.AppCompatCallback;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.InputFilter;
 import android.util.Log;
 import android.util.TypedValue;
@@ -81,6 +82,7 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
     private DatabaseReference databaseReference=firebaseDatabase.getReference().child( "LFREE" ).child( "VIDEO" );
     private int min;
     private int sec;
+    private TextView subtitlebox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,6 +152,8 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
             }
         });
 
+        subtitlebox = (TextView) findViewById(R.id.subtitle);
+
         /* 동영상 로드 및 초기화 */
         final Intent data = getIntent();
         videoID = data.getExtras().getString("link");
@@ -217,11 +221,17 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         sectionNum = Integer.parseInt(data.getExtras().getString("part"));
         if((sectionNum > (min / 10)) && ((min % 10) > 3)){
             subtitle.setSectionS((sectionNum-1)+"0:00");
-            subtitle.setSectionF(min+":"+sec);
+            if(sec < 10)
+                subtitle.setSectionF(min+":0"+sec);
+            else
+                subtitle.setSectionF(min+":0"+sec);
         }
         else if(sectionNum == (min / 10) && ((min % 10) < 4)) {
             subtitle.setSectionS((sectionNum-1)+"0:00");
-            subtitle.setSectionF(min+":"+sec);
+            if(sec < 10)
+                subtitle.setSectionF(min+":0"+sec);
+            else
+                subtitle.setSectionF(min+":0"+sec);
         }
         else {
             subtitle.setSectionS((sectionNum-1)+"0:00");
@@ -237,17 +247,17 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
             subtitle.setType( false );
 
         /* EditText */
-        EditText startTime = new EditText(this);
+        final EditText startTime = new EditText(this);
         startTime.setHint("00:00");
         startTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
         startTime.setGravity(Gravity.CENTER);
         startTime.setFilters(new InputFilter[] { new InputFilter.LengthFilter(5) });
-        EditText endTime = new EditText(this);
+        final EditText endTime = new EditText(this);
         endTime.setHint("00:00");
         endTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
         endTime.setGravity(Gravity.CENTER);
         endTime.setFilters(new InputFilter[] { new InputFilter.LengthFilter(5) });
-        EditText subTitle = new EditText(this);
+        final EditText subTitle = new EditText(this);
         subTitle.setHint("해설을 입력해주세요.");
         subTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
         setEditTextMaxLength(subTitle, 20);
@@ -296,13 +306,9 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
                 }
 
                 startTime = subTime(start.substring(0, 2)) * 60 + subTime(start.substring(3, 5));
-                Log.e("sT",""+startTime);
                 endTime = subTime(end.substring(0, 2)) * 60 + subTime(end.substring(3, 5));
-                Log.e("eT",""+endTime);
                 sectionST = subTime(subtitle.getSectionS().substring(0,2)) * 60 + subTime(subtitle.getSectionS().substring(3,5));
-                Log.e("ST",""+sectionST);
                 sectionFT = subTime(subtitle.getSectionF().substring(0,2)) * 60 + subTime(subtitle.getSectionF().substring(3,5));
-                Log.e("FT",""+sectionFT);
 
                 if (startTime > endTime) {
                     Toast.makeText(getApplicationContext(), "종료 시간이 시작 시간보다 빠릅니다.", Toast.LENGTH_LONG).show();
@@ -380,6 +386,32 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
 
                 ImageView iv1 = new ImageView(MakeVideoActivity.this);
                 iv1.setImageResource(R.drawable.play);
+                iv1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if(!player.isPlaying())
+                            player.play();
+                        String stime = startTime.getText().toString();
+                        subtitlebox.setText(subTitle.getText().toString());
+                        int spoint = ((Integer.parseInt(stime.split(":")[0])*60) + Integer.parseInt(stime.split(":")[1])) * 1000;
+                        player.seekToMillis(spoint);
+                        String etime = endTime.getText().toString();
+                        final int epoint = ((Integer.parseInt(etime.split(":")[0])*60) + Integer.parseInt(etime.split(":")[1]));
+                        Thread th = new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                while(true) {
+                                    if((player.getCurrentTimeMillis()/1000) == epoint){
+                                        subtitlebox.setText("");
+                                        player.pause();
+                                        break;
+                                    }
+                                }
+                            }
+                        });
+                        th.start();
+                    }
+                });
                 ImageView iv2 = new ImageView(MakeVideoActivity.this);
                 iv2.setImageResource(R.drawable.more_menu);
                 iv2.setOnClickListener(new View.OnClickListener() {
