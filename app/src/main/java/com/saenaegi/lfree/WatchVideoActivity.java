@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -18,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.text.TextUtils;
@@ -90,6 +92,9 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
     private ArrayList<String> likesubtitleKey=new ArrayList<>();
     private CustomDialog customDialog;
     private TextView subtitlebox;
+    private int flag = 1;
+    private int flag2 = 1;
+    private TextToSpeech tts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,7 +105,7 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
         filedirectory = this.getCacheDir();
 
         /* scroll on top */
-        final ScrollView scroll_view = (ScrollView) findViewById(R.id.scroll_view);
+        final ScrollView scroll_view = findViewById(R.id.scroll_view);
         scroll_view.post(new Runnable() {
             public void run() {
                 scroll_view.scrollTo(0, 0);
@@ -108,23 +113,23 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
         });
 
         /* Action Bar */
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(null);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         /* navigation */
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+        drawerLayout = findViewById(R.id.drawerLayout);
 
-        final ImageButton drawerButton = (ImageButton) findViewById(R.id.drawer_icon);
+        final ImageButton drawerButton = findViewById(R.id.drawer_icon);
         drawerButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 drawerLayout.openDrawer(GravityCompat.START);
             }
         });
 
-        navigationView = (NavigationView) findViewById(R.id.navigationView);
+        navigationView = findViewById(R.id.navigationView);
         navigationView.setNavigationItemSelectedListener(this);
 
         /* youtube_screen */
@@ -133,7 +138,7 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
         display.getSize(size);
         int screen_height = size.x * 9 / 16;    // 16:9 비율
 
-        View youtube_screen = (View) findViewById(R.id.youtube_screen);
+        View youtube_screen = findViewById(R.id.youtube_screen);
         ViewGroup.LayoutParams params = youtube_screen.getLayoutParams();
         params.height = screen_height;
         youtube_screen.setLayoutParams(params);
@@ -172,7 +177,19 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
         adapter2 = new RecyclerAdapterS(this, this);
         recyclerView2.setAdapter(adapter2);
 
-        subtitlebox = (TextView) findViewById(R.id.subtitle);
+        subtitlebox = findViewById(R.id.subtitle);
+
+        /* 전자친구 */
+        tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS) {
+                    int result = tts.setLanguage(Locale.KOREAN);
+                }
+                else
+                    Toast.makeText(getApplication(), "TTS : TTS's Initialization is Failed!", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         /* 동영상 로드 및 초기화 */
         YouTubePlayerSupportFragment frag = (YouTubePlayerSupportFragment) getSupportFragmentManager().findFragmentById(R.id.youtube_screen);
@@ -216,12 +233,12 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
             }
         });
 
-        /* footer */
+            /* footer */
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.footer, new FooterFragment());
         fragmentTransaction.commit();
-    }
+        }
 
     public void getLikeVideo(){
         databaseReference2.addListenerForSingleValueEvent( new ValueEventListener() {
@@ -256,7 +273,6 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
             type.add(tmp.type);
         }
 
-        adapter2.delItem();
         for (int i = 0; i < listName.size(); i++) {
             // 각 List의 값들을 data 객체에 set 해줍니다.
             DataS dataS = new DataS();
@@ -333,7 +349,6 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
         // adapter의 값이 변경되었다는 것을 알려줍니다.
         adapter1.notifyDataSetChanged();
     }
-
     public void setSubtitleDatas(int position, boolean type){
         output=new outputDataController();
         if(type) {
@@ -346,39 +361,36 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
         }
     }
 
-    public void getListenSubtitle(int position,boolean type) {
-        setSubtitleDatas( position,type );
-        //type이 false 면 귀때기를 선택하였다는 것이다. -> 시각 지원을 해야 한다. TTS 음성 읽어 주기 이 부분만 구현 하시면 됩니당~
+    public void getListenSubtitle(int position) {
+        output=new outputDataController();
+        subtitleDatas = output.getListenSubtitleData( filedirectory, posi, idvideo, sectionSubtitles.get( String.valueOf( posi ) ).get( position ).getKey() );
+        subtitleDatas = output.getListenSubtitleData( filedirectory, posi, idvideo, sectionSubtitles.get( String.valueOf( posi ) ).get( position ).getKey() ); //  이 줄 삭제 하면 안됩니다. 큰일 나요. !! --> 가끔 파일이 생성 안되어 안 받아 올때를 대비
 
-        Thread th = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                int[] compare_s = new int[subtitleDatas.size()];
-                int[] compare_f = new int[subtitleDatas.size()];
-                for(int i = 0 ; i < subtitleDatas.size(); i++){
-                    String min = subtitleDatas.get(i).getSectionS().split(":")[0];
-                    String sec = subtitleDatas.get(i).getSectionS().split(":")[1];
-                    compare_s[i] = (Integer.parseInt(min)*60) + Integer.parseInt(sec);
-                    String min1 = subtitleDatas.get(i).getSectionE().split(":")[0];
-                    String sec1 = subtitleDatas.get(i).getSectionE().split(":")[1];
-                    compare_f[i] = (Integer.parseInt(min1)*60) + Integer.parseInt(sec1);
-                }
-                while(true) {
-                    for(int i=0; i < subtitleDatas.size(); i++) {
-                        if((player.getCurrentTimeMillis()/1000) >= compare_s[i] && player.getCurrentTimeMillis()/1000 < compare_f[i]) {
-                            subtitlebox.setText(subtitleDatas.get(i).getSubString());
-                        }
-                        try {
-                            Thread.sleep(1000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            }
-        });
+        String min = sectionSubtitles.get(String.valueOf(posi)).get(position).getSubtitle().getSectionS().split(":")[0];
+        String sec = sectionSubtitles.get(String.valueOf(posi)).get(position).getSubtitle().getSectionS().split(":")[1];
+        int compare = ((Integer.parseInt(min)*60) + Integer.parseInt(sec))*1000;
 
+        player.seekToMillis(compare);
+        flag = 0;
+        flag2 = 0;
+        Thread th = new Thread(r);
         th.start();
+    }
+
+    public void getLookSubtitle(int position) {
+        output=new outputDataController();
+        subtitleDatas = output.getLookSubtitleData( filedirectory, posi, idvideo, sectionSubtitles.get( String.valueOf( posi ) ).get( position ).getKey() );
+        subtitleDatas = output.getLookSubtitleData( filedirectory, posi, idvideo, sectionSubtitles.get( String.valueOf( posi ) ).get( position ).getKey() ); //  이 줄 삭제 하면 안됩니다. 큰일 나요. !! --> 가끔 파일이 생성 안되어 안 받아 올때를 대비
+
+        String min = sectionSubtitles.get(String.valueOf(posi)).get(position).getSubtitle().getSectionS().split(":")[0];
+        String sec = sectionSubtitles.get(String.valueOf(posi)).get(position).getSubtitle().getSectionS().split(":")[1];
+        int compare = ((Integer.parseInt(min)*60) + Integer.parseInt(sec))*1000;
+
+        player.seekToMillis(compare);
+        flag = 0;
+        flag2 = 0;
+        Thread th2 = new Thread(r2);
+        th2.start();
     }
 
     void type_choice() {
@@ -427,6 +439,9 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
         builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                flag = -1;
+                while(flag2==0) {
+                }
             }
         });
 
@@ -453,7 +468,6 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
                     intent.putExtra("link", videoID);
                     intent.putExtra("type", type[0]);
                     intent.putExtra("part", dropdown.getSelectedItem().toString());
-                    intent.putExtra( "modify",false );
                     startActivity(intent);
                 }
                 //Do stuff, possibly set wantToCloseDialog to true then...
@@ -470,9 +484,34 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
         viewHolder = (RecyclerAdapterS.ItemViewHolder)recyclerView2.findViewHolderForAdapterPosition(position);
 
         if(v.equals(viewHolder.subtitleButton)) {
-            getListenSubtitle(position,true);
+            if(flag == 0) {
+                Log.e("1","1");
+                flag = -1;
+                while(flag2==0) {
+                    Log.e("2","2");
+                }
+                Log.e("3","3");
+                getListenSubtitle(position);
+            }
+            else {
+                Log.e("4","4");
+                getListenSubtitle(position);
+            }
         } else if(v.equals(viewHolder.soundButton)) {
-            getListenSubtitle(position,false);
+            subtitlebox.setText("");
+            if(flag == 0) {
+                Log.e("5","5");
+                flag = -1;
+                while(flag2==0) {
+                    Log.e("6","6");
+                }
+                Log.e("7","7");
+                getLookSubtitle(position);
+            }
+            else {
+                Log.e("8","8");
+                getLookSubtitle(position);
+            }
         } else if(v.equals( viewHolder.moreButton )){
             final SubtitleAndKey subtitleAndKey=temp.get( position );
             final Subtitle temp=subtitleAndKey.getSubtitle();
@@ -559,7 +598,7 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
     public void onItemSelected(View v, int position) {
         RecyclerAdapter.ItemViewHolder viewHolder;
         if(prePosition == -1) {
-            TextView partText = (TextView) findViewById(R.id.partText);
+            TextView partText = findViewById(R.id.partText);
             partText.setVisibility(View.GONE);
             viewHolder = (RecyclerAdapter.ItemViewHolder)recyclerView1.findViewHolderForAdapterPosition(0);
             viewHolder.imageView.setColorFilter(Color.argb(0, 0, 0, 0));
@@ -581,6 +620,9 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case android.R.id.home:{ //toolbar의 back키 눌렀을 때 동작
+                flag = -1;
+                while(flag2==0) {
+                }
                 finish();
                 return true;
             }
@@ -644,4 +686,80 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
             }
         }
     }
+
+    Runnable r = new Runnable() {
+        @Override
+        public void run() {
+            int[] compare_s = new int[subtitleDatas.size()];
+            int[] compare_f = new int[subtitleDatas.size()];
+            for(int i = 0 ; i < subtitleDatas.size(); i++){
+                String min1 = subtitleDatas.get(i).getSectionS().split(":")[0];
+                String sec1 = subtitleDatas.get(i).getSectionS().split(":")[1];
+                compare_s[i] = (Integer.parseInt(min1)*60) + Integer.parseInt(sec1);
+                String min2 = subtitleDatas.get(i).getSectionE().split(":")[0];
+                String sec2 = subtitleDatas.get(i).getSectionE().split(":")[1];
+                compare_f[i] = (Integer.parseInt(min2)*60) + Integer.parseInt(sec2);
+            }
+            breakpoint:
+            while(true) {
+                for(int i=0; i < subtitleDatas.size(); i++) {
+                    if(flag == -1)
+                        break breakpoint;
+                    if((player.getCurrentTimeMillis()/1000) >= compare_s[i] && (player.getCurrentTimeMillis()/1000) < compare_f[i]) {
+                        subtitlebox.setText(subtitleDatas.get(i).getSubString());
+                        while((player.getCurrentTimeMillis()/1000) >= compare_s[i] && (player.getCurrentTimeMillis()/1000) < compare_f[i]) {
+                            if(flag == -1)
+                                break breakpoint;
+                        }
+                    }
+                    else
+                        subtitlebox.setText("");
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            flag2 = -1;
+        }
+    };
+
+    Runnable r2 = new Runnable() {
+        @Override
+        public void run() {
+            int[] compare_s = new int[subtitleDatas.size()];
+            int[] compare_f = new int[subtitleDatas.size()];
+            for(int i = 0 ; i < subtitleDatas.size(); i++){
+                String min1 = subtitleDatas.get(i).getSectionS().split(":")[0];
+                String sec1 = subtitleDatas.get(i).getSectionS().split(":")[1];
+                compare_s[i] = (Integer.parseInt(min1)*60) + Integer.parseInt(sec1);
+                String min2 = subtitleDatas.get(i).getSectionE().split(":")[0];
+                String sec2 = subtitleDatas.get(i).getSectionE().split(":")[1];
+                compare_f[i] = (Integer.parseInt(min2)*60) + Integer.parseInt(sec2);
+            }
+            breakpoint:
+            while(true) {
+                for(int i=0; i < subtitleDatas.size(); i++) {
+                    if(flag == -1)
+                        break breakpoint;
+                    if((player.getCurrentTimeMillis()/1000) >= compare_s[i] && (player.getCurrentTimeMillis()/1000) < compare_f[i]) {
+                        tts.setSpeechRate((float)0.87);
+                        tts.speak(subtitleDatas.get(i).getSubString(), TextToSpeech.QUEUE_FLUSH, null);
+                        while((player.getCurrentTimeMillis()/1000) >= compare_s[i] && (player.getCurrentTimeMillis()/1000) < compare_f[i]) {
+                            if(flag == -1)
+                                break breakpoint;
+                        }
+                    }
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            tts.stop();
+            flag2 = -1;
+        }
+    };
 }
