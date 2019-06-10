@@ -33,6 +33,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCanceledListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
@@ -84,7 +86,8 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
     private ArrayList<SubtitleAndKey> temp=new ArrayList<>();
     private FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference=firebaseDatabase.getReference().child( "LFREE" ).child( "VIDEO" );
-    private DatabaseReference databaseReference2=firebaseDatabase.getReference().child( "LFREE" );
+    private DatabaseReference databaseReference2=firebaseDatabase.getReference().child( "LFREE" ).child( "LIKEVIDEO" ).child( userid );
+    private ArrayList<String> likesubtitleKey=new ArrayList<>();
     private CustomDialog customDialog;
     private TextView subtitlebox;
 
@@ -159,7 +162,7 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
         sectionCount = activityData1.getExtras().getInt("count");
 
         getSections();
-
+        getLikeVideo();
         /* recycle view(subtitles) */
         recyclerView2 = findViewById(R.id.sub_list);
 
@@ -220,6 +223,26 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
         fragmentTransaction.commit();
     }
 
+    public void getLikeVideo(){
+        databaseReference2.addListenerForSingleValueEvent( new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                likesubtitleKey.clear();
+                for(DataSnapshot snapshot:dataSnapshot.getChildren()){
+                    if(snapshot.getKey().equals( idvideo )){
+                        for(DataSnapshot snapshot1:snapshot.getChildren()){
+                            String temp=snapshot1.getKey();
+                            likesubtitleKey.add( temp );
+                        }
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        } );
+    }
     private void getData() {
         // 데이터 초기화
         adapter2.delItem();
@@ -311,10 +334,18 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
         adapter1.notifyDataSetChanged();
     }
 
-    public void getListenSubtitle(int position) {
+    public void getListenSubtitle(int position,boolean type) {
         output=new outputDataController();
-        subtitleDatas = output.getListenSubtitleData( filedirectory, posi, idvideo, sectionSubtitles.get(String.valueOf(posi)).get(position).getKey() );
-        subtitleDatas = output.getListenSubtitleData( filedirectory, posi, idvideo, sectionSubtitles.get(String.valueOf(posi)).get(position).getKey() ); //  이 줄 삭제 하면 안됩니다. 큰일 나요. !! --> 가끔 파일이 생성 안되어 안 받아 올때를 대비
+        if(type) {
+            subtitleDatas = output.getListenSubtitleData( filedirectory, posi, idvideo, sectionSubtitles.get( String.valueOf( posi ) ).get( position ).getKey() );
+            subtitleDatas = output.getListenSubtitleData( filedirectory, posi, idvideo, sectionSubtitles.get( String.valueOf( posi ) ).get( position ).getKey() ); //  이 줄 삭제 하면 안됩니다. 큰일 나요. !! --> 가끔 파일이 생성 안되어 안 받아 올때를 대비
+        }
+        else{
+            subtitleDatas = output.getLookSubtitleData( filedirectory, posi, idvideo, sectionSubtitles.get( String.valueOf( posi ) ).get( position ).getKey() );
+            subtitleDatas = output.getLookSubtitleData( filedirectory, posi, idvideo, sectionSubtitles.get( String.valueOf( posi ) ).get( position ).getKey() ); //  이 줄 삭제 하면 안됩니다. 큰일 나요. !! --> 가끔 파일이 생성 안되어 안 받아 올때를 대비
+        }
+
+        //type이 false 면 귀때기를 선택하였다는 것이다. -> 시각 지원을 해야 한다. TTS 음성 읽어 주기
 
         Thread th = new Thread(new Runnable() {
             @Override
@@ -435,9 +466,9 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
         viewHolder = (RecyclerAdapterS.ItemViewHolder)recyclerView2.findViewHolderForAdapterPosition(position);
 
         if(v.equals(viewHolder.subtitleButton)) {
-            getListenSubtitle(position);
+            getListenSubtitle(position,true);
         } else if(v.equals(viewHolder.soundButton)) {
-            Toast.makeText(getApplicationContext(), "귀때기"+position, Toast.LENGTH_SHORT).show();
+            getListenSubtitle(position,false);
         } else if(v.equals( viewHolder.moreButton )){
             final SubtitleAndKey subtitleAndKey=temp.get( position );
             final Subtitle temp=subtitleAndKey.getSubtitle();
@@ -452,15 +483,20 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
                     final boolean type=temp.isType();
                     switch (item.getItemId()) {
                         case R.id.opt1:
-                            DatabaseReference dataRef2=databaseReference2.child( "LIKEVIDEO" ).child( userid );
-                            dataRef2.child( idvideo ).child( key ).setValue( "idsubtitle" ).addOnSuccessListener( new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            DatabaseReference dataRef1=databaseReference2.child( "VIDEO" ).child( idvideo ).child( "SUBTITLE" ).child(String.valueOf( posi));
-                                            dataRef1.child( key).child("recommend").setValue( recommend+1 );
-                                        }
-                                    }
-                            );
+                            boolean exist=false;
+                            for(String temp:likesubtitleKey) {
+                                if (temp.equals( key )) {
+                                    Toast.makeText( getApplicationContext(), "한 번 추천한 영상은 다시 추천할 수 없습니다.", Toast.LENGTH_SHORT ).show();
+                                    exist = true;
+                                    break;
+                                }
+                            }
+                             if(!exist){
+                                 likesubtitleKey.add( key );
+                                 databaseReference2.child( idvideo ).child( key ).setValue( "idsubtitle" );
+                                 databaseReference.child( idvideo ).child( "SUBTITLE" ).child( String.valueOf( posi ) ).child( key ).child( "recommend" ).setValue( recommend + 1 );
+                                 Toast.makeText( getApplicationContext(), "추천되었습니다.", Toast.LENGTH_SHORT ).show();
+                             }
                             break;
                         case R.id.opt2:
                             DatabaseReference dataRef=databaseReference2.child( "DECLARATION" ).child( key );
