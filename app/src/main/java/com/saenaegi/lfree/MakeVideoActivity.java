@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -145,7 +146,7 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
             @Override
             public void onClick(View view) {
                 view.setVisibility(View.INVISIBLE);
-                createTableRow(view);
+                createTableRow(null);
             }
         });
 
@@ -204,7 +205,8 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         fragmentTransaction.commit();
     }
 
-    public void createTableRow(View v) {
+    public void createTableRow(final SubtitleData subData) {
+        final int subIndex = subtitles.indexOf(subData);
         TableLayout tl = (TableLayout) findViewById(R.id.tableLayout);
         TableRow tr = new TableRow(this);
         TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
@@ -250,6 +252,12 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         subTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
         setEditTextMaxLength(subTitle, 20);
 
+        if(subData != null) {
+            startTime.setText(subData.getSectionS());
+            endTime.setText(subData.getSectionE());
+            subTitle.setText(subData.getSubString());
+        }
+
         tr.addView(startTime);
         tr.addView(endTime);
         tr.addView(subTitle);
@@ -267,8 +275,8 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
                 return Integer.parseInt(buf.substring(0, 2));
             }
             boolean checkInput(String start, String end, String sub) {
-                int startTime, endTime, preEndTime, sectionST, sectionFT;
-                SubtitleData preSub;
+                int startTime, endTime, preEndTime, nextStartTime, sectionST, sectionFT;
+                SubtitleData preSub, nextSub;
 
                 if(start.length() == 0 || end.length() == 0 || sub.length() == 0) {
                     Toast.makeText(getApplicationContext(), "빈칸이 존재합니다.", Toast.LENGTH_LONG).show();
@@ -302,11 +310,22 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
                 } else if (sectionST > startTime || startTime > sectionFT || endTime < sectionST || endTime > sectionFT) {
                     Toast.makeText(getApplicationContext(), "해당 파트의 시간은 "+subtitle.getSectionS()+" ~ "+subtitle.getSectionF()+" 입니다.", Toast.LENGTH_LONG).show();
                     return true;
-                } else if (subtitles.size() != 0) {
-                    preSub = subtitles.get(subtitles.size() - 1);
+                } else if (subtitles.size() != 0 && subIndex != 0) {
+                    if(subData != null) {
+                        preSub = subtitles.get(subIndex - 1);
+                    } else {
+                        preSub = subtitles.get(subtitles.size() - 1);
+                    }
                     preEndTime = subTime(preSub.getSectionE().substring(0, 2)) * 60 + subTime(preSub.getSectionE().substring(3, 5));
-                    if (preEndTime > startTime) {
-                        Toast.makeText(getApplicationContext(), "시작 시간이 이전 종료 시간보다 빠릅니다.", Toast.LENGTH_LONG).show();
+                    if (preEndTime >= startTime) {
+                        Toast.makeText(getApplicationContext(), "시작 시간이 이전 종료 시간보다 같거나 빠릅니다.", Toast.LENGTH_LONG).show();
+                        return true;
+                    }
+                } else if (subtitles.size() != 0 && subIndex != (subtitles.size() - 1)) {
+                    nextSub = subtitles.get(subIndex + 1);
+                    nextStartTime = subTime(nextSub.getSectionS().substring(0, 2)) * 60 + subTime(nextSub.getSectionS().substring(3, 5));
+                    if (endTime >= nextStartTime) {
+                        Toast.makeText(getApplicationContext(), "종료 시간이 다음 시작 시간보다 같거나 빠릅니다.", Toast.LENGTH_LONG).show();
                         return true;
                     }
                 }
@@ -372,16 +391,25 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
                         p.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                             @Override
                             public boolean onMenuItemClick(MenuItem item) {
+                                ViewGroup parentView, parentView1, parentView2, parentView3;
+                                int index;
                                 switch (item.getItemId()) {
                                     case R.id.m1:
-                                        Toast.makeText(getApplication(), "수정", Toast.LENGTH_SHORT).show();
+                                        parentView = (ViewGroup) view1.getParent();
+                                        parentView1 = (ViewGroup) parentView.getParent();
+                                        parentView2 = (ViewGroup) parentView1.getParent();
+                                        parentView3 = (ViewGroup) parentView2.getParent();
+                                        index = parentView3.indexOfChild(parentView2);  // (TableRow) tr's
+                                        parentView3.removeView(parentView3.getChildAt(index));
+                                        parentView3.removeView(parentView3.getChildAt(index));  // line remove
+                                        createTableRow(subtitles.get((index - 1) / 2));
                                         break;
                                     case R.id.m2:
-                                        ViewGroup parentView = (ViewGroup) view1.getParent();
-                                        ViewGroup parentView1 = (ViewGroup) parentView.getParent();
-                                        ViewGroup parentView2 = (ViewGroup) parentView1.getParent();
-                                        ViewGroup parentView3 = (ViewGroup) parentView2.getParent();
-                                        int index = parentView3.indexOfChild(parentView2);  // (TableRow) tr's number
+                                        parentView = (ViewGroup) view1.getParent();
+                                        parentView1 = (ViewGroup) parentView.getParent();
+                                        parentView2 = (ViewGroup) parentView1.getParent();
+                                        parentView3 = (ViewGroup) parentView2.getParent();
+                                        index = parentView3.indexOfChild(parentView2);  // (TableRow) tr's number
                                         subtitles.remove((index - 1) / 2);
                                         parentView3.removeView(parentView3.getChildAt(index));
                                         parentView3.removeView(parentView3.getChildAt(index));  // line remove
@@ -415,16 +443,26 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
                 tr.addView(t2);
                 tr.addView(sub_col);
 
-                SubtitleData subtitleData=new SubtitleData(start,end,sub);
-                subtitles.add( subtitleData );
+                SubtitleData subtitleData = new SubtitleData(start,end,sub);
+                if(subData != null) {
+                    subtitles.set(subIndex, subtitleData);
+                }
+                else {
+                    subtitles.add(subtitleData);
+                }
 
                 /* line */
                 View line = new View(MakeVideoActivity.this);
                 line.setBackgroundColor(Color.parseColor("#d5d5d5"));
 
                 /* add to TableLayout */
-                tl.addView(tr, new TableLayout.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-                tl.addView(line, new TableLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, 1));
+                if(subData != null) {
+                    tl.addView(tr, subIndex+1, new TableLayout.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+                    tl.addView(line, subIndex+2, new TableLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, 1));
+                } else {
+                    tl.addView(tr, new TableLayout.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+                    tl.addView(line, new TableLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, 1));
+                }
 
                 /* show plus button */
                 ViewGroup parentView3 = (ViewGroup)parentView2.getParent();
@@ -453,8 +491,14 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         ll.setGravity(Gravity.END);
 
         /* add to TableLayout */
-        tl.addView(tr, new TableLayout.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-        tl.addView(ll, new TableLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        if(subData != null) {
+            tl.addView(tr, subIndex+1, new TableLayout.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+            tl.addView(ll, subIndex+2, new TableLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        }
+        else {
+            tl.addView(tr, new TableLayout.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+            tl.addView(ll, new TableLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        }
     }
 
     public void getIdvideo(){
@@ -532,12 +576,18 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         return false;
     }
 
+    private long time= 0;
     @Override
     public void onBackPressed() {
         if(drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            if(System.currentTimeMillis() - time >= 2000) {
+                time = System.currentTimeMillis();
+                Toast.makeText(getApplicationContext(),"\'뒤로\' 버튼을 한번 더 누르면 종료합니다.",Toast.LENGTH_SHORT).show();
+            } else if (System.currentTimeMillis() - time < 2000) {
+                ActivityCompat.finishAffinity(this);
+            }
         }
     }
 }
