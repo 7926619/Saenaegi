@@ -1,7 +1,6 @@
 package com.saenaegi.lfree;
 
 import android.graphics.Point;
-import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
 import android.view.Display;
@@ -10,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.content.Intent;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
@@ -30,7 +28,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 
 public class aWatchVideoActivity extends YouTubeBaseActivity {
 
@@ -46,6 +43,7 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
     private int position=0;
     private String userid="userid";
     private HashMap<String, ArrayList<SubtitleAndKey>> sectionSubtitles = new HashMap<>();
+    private String[] madesection;
     private ArrayList<SubtitleData> subtitleDatas = new ArrayList<>();
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference = firebaseDatabase.getReference().child( "LFREE" ).child( "VIDEO" );
@@ -71,7 +69,8 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
         final Intent data = getIntent();
         videoID = data.getExtras().getString( "link" );
         sectionCount = data.getExtras().getInt( "count" );
-        nowSection = data.getExtras().getInt( "nowSection" );
+        nowSection = data.getExtras().getInt( "nowSection" );   //nowSection이 잘 넘어오는 지 확인
+
         /* 동영상 로드 및 초기화 */
         listener = new YouTubePlayer.OnInitializedListener() {
             @Override
@@ -164,21 +163,28 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
                 Intent intent = new Intent( aWatchVideoActivity.this, aSelectPartActivity.class );
                 intent.putExtra( "link", videoID );
                 intent.putExtra( "count", sectionCount );
+                intent.putExtra( "madesection",madesection );
                 startActivity( intent );
             }
         } );
 
         TextView tv2 = (TextView) findViewById( R.id.textView );
         tv1.setOnClickListener( new View.OnClickListener() {
+            //조회수가 가장 높은 영상부터 차례차례 읽다가 더이상 읽을 영상이 없으면 다시 조회수가 가장 높은 영상으로 돌아간다.
             public void onClick(View v) {
                 position=position+1;
+                if(position>=sectionSubtitles.get( String.valueOf( nowSection ) ).size()){
+                    position=0;
+                }
+                readingSubtitle();
             }
         } );
 
         TextView tv3 = (TextView) findViewById( R.id.textView15 );
         tv1.setOnClickListener( new View.OnClickListener() {
             public void onClick(View v) {
-                SubtitleAndKey subtitleAndKey=sectionSubtitles.get( nowSection ).get(0); //몇 번째 자막을 선택 하느냐,
+                //제대로 되는 지 확인
+                SubtitleAndKey subtitleAndKey=sectionSubtitles.get( nowSection ).get(position); //몇 번째 자막을 선택 하느냐,
                 final String key=subtitleAndKey.getKey();
                 final int recommend=subtitleAndKey.getRecommend();
                 boolean exist=false;
@@ -206,8 +212,12 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
                 dataRef.child( userid ).setValue( "신고자 id" );
             }
         } );
+
         getData();
         getLikeVideo();
+        if(nowSection!=-0){
+            readingSubtitle();
+        }
     }
 
     public  void getLikeVideo(){
@@ -250,13 +260,22 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
                                 }
                             }
                             String index = subtitleSnap.getKey();
-                            sectionSubtitles.put( index, subtitles );
+                            if(subtitles.size()!=0) {
+                                Collections.sort( subtitles );
+                                sectionSubtitles.put( index, subtitles );
+                            }
                         }
                         break;
                     }
 
                 }
-                readingSubtitle();
+                //type이 false인 요소들만 저장이 되는가?
+                int i=0;
+                for(String temp:sectionSubtitles.keySet()){
+                    madesection[i]=temp;
+                    i++;
+                }
+
             }
 
             @Override
@@ -270,7 +289,6 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
 
         output=new outputDataController();
         ArrayList<SubtitleAndKey> temp=sectionSubtitles.get( String.valueOf( nowSection));
-        Collections.sort( temp );
         String key=temp.get( position ).getKey();
         subtitleDatas = output.getLookSubtitleData( filedirectory, nowSection, idvideo, key );
         // cash error로 인하여
