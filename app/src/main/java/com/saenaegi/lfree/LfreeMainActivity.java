@@ -132,11 +132,15 @@ public class LfreeMainActivity extends AppCompatActivity implements NavigationVi
 
         LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(this);
         linearLayoutManager1.setOrientation(LinearLayoutManager.HORIZONTAL);
+        linearLayoutManager1.setReverseLayout(true);
+        linearLayoutManager1.setStackFromEnd(true);
         recyclerView1.setLayoutManager(linearLayoutManager1);
 
         recyclerView2 = findViewById(R.id.making_list);
         LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(this);
         linearLayoutManager2.setOrientation(LinearLayoutManager.HORIZONTAL);
+        linearLayoutManager2.setReverseLayout(true);
+        linearLayoutManager2.setStackFromEnd(true);
         recyclerView2.setLayoutManager(linearLayoutManager2);
 
         adapter1 = new RecyclerAdapter(this, this);
