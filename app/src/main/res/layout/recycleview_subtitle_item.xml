@@ -28,7 +28,7 @@
         <ImageButton
             android:id="@+id/sub_subtitle"
             android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_height="wrap_content"
             android:scaleType="centerInside"
             android:background="@drawable/ripple"
             android:layout_marginRight="23dp"
@@ -38,7 +38,7 @@
         <ImageButton
             android:id="@+id/sub_sound"
             android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_height="wrap_content"
             android:scaleType="centerInside"
             android:background="@drawable/ripple"
             android:layout_marginRight="20dp"
@@ -48,7 +48,7 @@
         <ImageButton
             android:id="@+id/sub_more"
             android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_height="wrap_content"
             android:scaleType="centerInside"
             android:background="@drawable/ripple"
             android:layout_gravity="right|center_vertical"

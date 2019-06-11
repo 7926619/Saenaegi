@@ -326,6 +326,7 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         sub_col.setOrientation(LinearLayout.HORIZONTAL);
         TextView t3 = new TextView(this);
         t3.setText(sub);
+        t3.setMaxWidth(400);
 
         /* subtitle needs 2 buttons */
         LinearLayout ll = new LinearLayout(this);
@@ -408,7 +409,7 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         View blank = new View(this);
         blank.setBackgroundColor(Color.WHITE);
 
-        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(50, 50);
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(50, ViewGroup.LayoutParams.WRAP_CONTENT);
         iv1.setLayoutParams(params);
         iv2.setLayoutParams(params);
         blank.setLayoutParams(params);
@@ -494,6 +495,7 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         final EditText subTitle = new EditText(this);
         subTitle.setHint("해설을 입력해주세요.");
         subTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
+        subTitle.setHorizontallyScrolling(true);
         setEditTextMaxLength(subTitle, 20);
 
         if(subData != null) {
@@ -611,6 +613,7 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
                 sub_col.setOrientation(LinearLayout.HORIZONTAL);
                 TextView t3 = new TextView(MakeVideoActivity.this);
                 t3.setText(sub);
+                t3.setMaxWidth(400);
 
                 /* subtitle needs 2 buttons */
                 LinearLayout ll = new LinearLayout(MakeVideoActivity.this);
@@ -716,7 +719,7 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
                 View blank = new View(MakeVideoActivity.this);
                 blank.setBackgroundColor(Color.WHITE);
 
-                ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(50, 50);
+                ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(50, ViewGroup.LayoutParams.WRAP_CONTENT);
                 iv1.setLayoutParams(params);
                 iv2.setLayoutParams(params);
                 blank.setLayoutParams(params);

@@ -3,12 +3,14 @@ package com.saenaegi.lfree.RecycleviewController_s;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -92,14 +94,15 @@ public class RecyclerAdapterS extends RecyclerView.Adapter<RecyclerAdapterS.Item
             moreButton = itemView.findViewById(R.id.sub_more);
         }
 
-        void onBind(final DataS dataS, final int position) {
+        void onBind(DataS dataS, int position) {
             this.dataS = dataS;
             this.position = position;
 
             nameView.setText(dataS.getName());
 
-            if(!dataS.getOnSubtitle())
+            if(!dataS.getOnSubtitle()) {
                 subtitleButton.setAlpha((float) 0.3);
+            }
             else {
                 subtitleButton.setOnClickListener(new View.OnClickListener() {
                     @Override
