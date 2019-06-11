@@ -55,18 +55,19 @@
         <activity android:name=".aSearchActivity" />
         <activity android:name=".aRecentVideoActivity" >
         </activity>
+        <activity android:name=".aSearchVideoActivity" />
         <activity android:name=".aWatchVideoMenuActivitiy" />
         <activity android:name=".aHowToUseActivity" />
         <activity android:name=".aLfreeMainActivity">
-        </activity>
-        <activity android:name=".VideoCommentaryListActivity" />
-        <activity android:name=".ChoiceActivity" />
-        <activity android:name=".LfreeMainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".VideoCommentaryListActivity" />
+        <activity android:name=".ChoiceActivity" />
+        <activity android:name=".LfreeMainActivity">
         </activity>
         <activity android:name=".MainActivity" />
     </application>
