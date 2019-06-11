@@ -354,19 +354,22 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
     public void setSubtitleDatas(int position, boolean type){
         output=new outputDataController();
         if(type) {
-            subtitleDatas = output.getListenSubtitleData( filedirectory, posi, idvideo, sectionSubtitles.get( String.valueOf( posi ) ).get( position ).getKey() );
-            subtitleDatas = output.getListenSubtitleData( filedirectory, posi, idvideo, sectionSubtitles.get( String.valueOf( posi ) ).get( position ).getKey() ); //  이 줄 삭제 하면 안됩니다. 큰일 나요. !! --> 가끔 파일이 생성 안되어 안 받아 올때를 대비
+            while (subtitleDatas.size() == 0) {
+                subtitleDatas = output.getListenSubtitleData(filedirectory, posi, idvideo, sectionSubtitles.get(String.valueOf(posi)).get(position).getKey());
+            }
         }
         else{
-            subtitleDatas = output.getLookSubtitleData( filedirectory, posi, idvideo, sectionSubtitles.get( String.valueOf( posi ) ).get( position ).getKey() );
-            subtitleDatas = output.getLookSubtitleData( filedirectory, posi, idvideo, sectionSubtitles.get( String.valueOf( posi ) ).get( position ).getKey() ); //  이 줄 삭제 하면 안됩니다. 큰일 나요. !! --> 가끔 파일이 생성 안되어 안 받아 올때를 대비
+            while (subtitleDatas.size() == 0) {
+                subtitleDatas = output.getLookSubtitleData(filedirectory, posi, idvideo, sectionSubtitles.get(String.valueOf(posi)).get(position).getKey());
+            }
         }
     }
 
     public void getListenSubtitle(int position) {
         output=new outputDataController();
-        subtitleDatas = output.getListenSubtitleData( filedirectory, posi, idvideo, sectionSubtitles.get( String.valueOf( posi ) ).get( position ).getKey() );
-        subtitleDatas = output.getListenSubtitleData( filedirectory, posi, idvideo, sectionSubtitles.get( String.valueOf( posi ) ).get( position ).getKey() ); //  이 줄 삭제 하면 안됩니다. 큰일 나요. !! --> 가끔 파일이 생성 안되어 안 받아 올때를 대비
+        while (subtitleDatas.size() == 0) {
+            subtitleDatas = output.getListenSubtitleData(filedirectory, posi, idvideo, sectionSubtitles.get(String.valueOf(posi)).get(position).getKey());
+        }
 
         String min = sectionSubtitles.get(String.valueOf(posi)).get(position).getSubtitle().getSectionS().split(":")[0];
         String sec = sectionSubtitles.get(String.valueOf(posi)).get(position).getSubtitle().getSectionS().split(":")[1];
@@ -381,8 +384,9 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
 
     public void getLookSubtitle(int position) {
         output=new outputDataController();
-        subtitleDatas = output.getLookSubtitleData( filedirectory, posi, idvideo, sectionSubtitles.get( String.valueOf( posi ) ).get( position ).getKey() );
-        subtitleDatas = output.getLookSubtitleData( filedirectory, posi, idvideo, sectionSubtitles.get( String.valueOf( posi ) ).get( position ).getKey() ); //  이 줄 삭제 하면 안됩니다. 큰일 나요. !! --> 가끔 파일이 생성 안되어 안 받아 올때를 대비
+        while (subtitleDatas.size() == 0) {
+            subtitleDatas = output.getLookSubtitleData(filedirectory, posi, idvideo, sectionSubtitles.get(String.valueOf(posi)).get(position).getKey());
+        }
 
         String min = sectionSubtitles.get(String.valueOf(posi)).get(position).getSubtitle().getSectionS().split(":")[0];
         String sec = sectionSubtitles.get(String.valueOf(posi)).get(position).getSubtitle().getSectionS().split(":")[1];
