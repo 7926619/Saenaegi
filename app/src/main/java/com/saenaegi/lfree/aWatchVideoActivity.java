@@ -188,9 +188,10 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
                     startActivity( intent );
                 }
                 else{
+                    String eventText = "재생 버튼 클릭 : 이 영상은 아직 미제작 되었습니다.";
+                    Toast.makeText(getApplication(), eventText, Toast.LENGTH_SHORT).show();
                     tts.setSpeechRate((float)0.87);
-                    tts.speak(" 이 영상은 아직 미제작 되었습니다.", TextToSpeech.QUEUE_FLUSH, null);
-                    tts.stop();
+                    tts.speak(eventText, TextToSpeech.QUEUE_FLUSH, null);
                 }
             }
         } );
@@ -206,9 +207,10 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
                     }
                     readingSubtitle();
                 }else {
+                    String eventText = "같은 파트에 다른 것 선택 버튼 클릭 : 파트를 먼저 선택하여 주세요";
+                    Toast.makeText(getApplication(), eventText, Toast.LENGTH_SHORT).show();
                     tts.setSpeechRate((float)0.87);
-                    tts.speak(" 파트를 먼저 선택하여 주세요.", TextToSpeech.QUEUE_FLUSH, null);
-                    tts.stop();
+                    tts.speak(eventText, TextToSpeech.QUEUE_FLUSH, null);
                 }
             }
         } );
@@ -235,9 +237,10 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
                     }
                 }
                 else{
+                    String eventText = "추천하기 버튼 클릭 : 파트를 선택해야만 추천이 가능합니다.";
+                    Toast.makeText(getApplication(), eventText, Toast.LENGTH_SHORT).show();
                     tts.setSpeechRate((float)0.87);
-                    tts.speak("파트를 선택해야 추천이 됩니다.", TextToSpeech.QUEUE_FLUSH, null);
-                    tts.stop();
+                    tts.speak(eventText, TextToSpeech.QUEUE_FLUSH, null);
                 }
             }
         } );
@@ -253,9 +256,10 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
                     dataRef.child( userid ).setValue( "신고자 id" );
                 }
                 else{
+                    String eventText = "신고하기 버튼 클릭 : 파트를 선택해야만 신고가 가능합니다.";
+                    Toast.makeText(getApplication(), eventText, Toast.LENGTH_SHORT).show();
                     tts.setSpeechRate((float)0.87);
-                    tts.speak(" 파트를 선택해야 신고 됩니다.", TextToSpeech.QUEUE_FLUSH, null);
-                    tts.stop();
+                    tts.speak(eventText, TextToSpeech.QUEUE_FLUSH, null);
                 }
             }
         } );
