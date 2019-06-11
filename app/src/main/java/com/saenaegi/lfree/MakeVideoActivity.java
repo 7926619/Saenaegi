@@ -339,25 +339,49 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         iv1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!player.isPlaying())
-                    player.play();
-                subtitlebox.setText(sub);
-                int spoint = ((Integer.parseInt(start.split(":")[0]) * 60) + Integer.parseInt(start.split(":")[1])) * 1000;
-                player.seekToMillis(spoint);
-                final int epoint = ((Integer.parseInt(end.split(":")[0]) * 60) + Integer.parseInt(end.split(":")[1]));
-                Thread th = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        while (true) {
-                            if ((player.getCurrentTimeMillis() / 1000) == epoint) {
-                                subtitlebox.setText("");
-                                player.pause();
-                                break;
+                if(ty){
+                    if(!player.isPlaying())
+                        player.play();
+                    subtitlebox.setText(sub);
+                    int spoint = ((Integer.parseInt(start.split(":")[0])*60) + Integer.parseInt(start.split(":")[1])) * 1000;
+                    player.seekToMillis(spoint);
+                    final int epoint = ((Integer.parseInt(end.split(":")[0])*60) + Integer.parseInt(end.split(":")[1]));
+                    Thread th = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            while(true) {
+                                if((player.getCurrentTimeMillis()/1000) >= epoint){
+                                    subtitlebox.setText("");
+                                    player.pause();
+                                    break;
+                                }
                             }
                         }
-                    }
-                });
-
+                    });
+                    th.start();
+                }
+                else {
+                    if(!player.isPlaying())
+                        player.play();
+                    int spoint = ((Integer.parseInt(start.split(":")[0])*60) + Integer.parseInt(start.split(":")[1])) * 1000;
+                    player.seekToMillis(spoint);
+                    tts.setSpeechRate((float)0.87);
+                    tts.speak(sub, TextToSpeech.QUEUE_FLUSH, null);
+                    final int epoint = ((Integer.parseInt(end.split(":")[0])*60) + Integer.parseInt(end.split(":")[1]));
+                    Thread th = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            while(true) {
+                                if((player.getCurrentTimeMillis()/1000) >= epoint){
+                                    tts.stop();
+                                    player.pause();
+                                    break;
+                                }
+                            }
+                        }
+                    });
+                    th.start();
+                }
             }
         });
 
@@ -629,7 +653,7 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
                         if(ty){
                             if(!player.isPlaying())
                                 player.play();
-                            subtitlebox.setText(subTitle.getText().toString());
+                            subtitlebox.setText(sub);
                             int spoint = ((Integer.parseInt(start.split(":")[0])*60) + Integer.parseInt(start.split(":")[1])) * 1000;
                             player.seekToMillis(spoint);
                             final int epoint = ((Integer.parseInt(end.split(":")[0])*60) + Integer.parseInt(end.split(":")[1]));
@@ -653,7 +677,7 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
                             int spoint = ((Integer.parseInt(start.split(":")[0])*60) + Integer.parseInt(start.split(":")[1])) * 1000;
                             player.seekToMillis(spoint);
                             tts.setSpeechRate((float)0.87);
-                            tts.speak(subTitle.getText().toString(), TextToSpeech.QUEUE_FLUSH, null);
+                            tts.speak(sub, TextToSpeech.QUEUE_FLUSH, null);
                             final int epoint = ((Integer.parseInt(end.split(":")[0])*60) + Integer.parseInt(end.split(":")[1]));
                             Thread th = new Thread(new Runnable() {
                                 @Override
