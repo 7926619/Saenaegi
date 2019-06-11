@@ -5,9 +5,10 @@
     <!-- Accessibility -->
     <string name="accessibility_description">제스처 기능을 사용하기 위해서는 안드로이드 접근성 권한을 필요로 합니다.</string>
     <string name="title_activity_main2">Main2Activity</string>
-    <string name="how_to_use">저시력자 및 중증 시각장애인을 위해 구성된 기능입니다. 하단에 절반정도 위치해있는 제스처 영역에서
-    오른쪽에서 왼쪽으로 스와이프를 하는 경우 현재 버튼에서 다음 버튼을 가리키며, 왼쪽에서 오른쪽으로 스와이프를 하는 경우 현재 버튼에서
-    이전 버튼을 가리키게 됩니다. 특정 버튼의 액션을 실행하고자 하는 경우, 탭을 연속으로 두번 수행하면 됩니다. 뒤로 가기는 아래에서 위로 스와이프를, 애플리케이션 종료는 위에서 아래로 스와이프를 하면 됩니다.</string>
+    <string name="how_to_use">저시력자 및 중증 시각장애인을 위해 구성된 기능입니다.\n\n
+        하단에 절반정도 위치해있는 제스처 영역에서 오른쪽에서 왼쪽으로 스와이프를 하는 경우 현재 버튼에서 다음 버튼을 가리키며,\n\n
+        왼쪽에서 오른쪽으로 스와이프를 하는 경우 현재 버튼에서 이전 버튼을 가리키게 됩니다. 특정 버튼의 액션을 실행하고자 하는 경우,\n\n
+        탭을 연속으로 두번 수행하면 됩니다. 뒤로 가기는 아래에서 위로 스와이프를, 애플리케이션 종료는 위에서 아래로 스와이프를 하면 됩니다.</string>
     <string name="useText">
         ① 홈\n
         Lfree의 메인 화면이 나타나는 곳입니다.\n
@@ -56,14 +57,14 @@
         어플의 환경을 설정할 수 있는 곳입니다.\n
         \n\n
         ⑦ 종료\n
-        LFREE 어플리케이션을 정상적으로 종료합니다\n\n\n
+        LFREE 어플리케이션을 정상적으로 종료합니다
     </string>
     <string name="opensourceText">This application is Copyright LFREE Saenaegi TEAM. All right reserved.\n
     This Application use Open Source Software(OSS). You can find the source code of these open source projects, along with applicable license\n
         information, below. We are deeply grateful to these developers for their work and contributions.\n\n
-        Any questions about our use of licensed work can be send to Saenaegi TEAM, Kyonggi Univ.\n\n\n
+        Any questions about our use of licensed work can be send to Saenaegi TEAM, Kyonggi Univ.
     </string>
-    <string name="versionText">1.0.0.0</string>
+    <string name="versionText">버전 정보 1.0.0.0</string>
     <string name="centerText">경기대학교 새내기팀</string>
     <string name="privacyText">Lfree(이하 ‘회사’라 한다)는 개인정보 보호법 제30조에 따라 정보주체의 개인정보를 보호하고 이와 관련한 고충을 신속하고 원활하게 처리할 수 있도록 하기 위하여 다음과 같이 개인정보 처리지침을 수립․공개합니다.\n\n
 제1조(개인정보의 처리목적) 회사는 다음의 목적을 위하여 개인정보를 처리합니다. 처리하고 있는 개인정보는 다음의 목적 이외의 용도로는 이용되지 않으며, 이용 목적이 변경되는 경우에는 개인정보 보호법 제18조에 따라 별도의 동의를 받는 등 필요한 조치를 이행할 예정입니다.\n\n
