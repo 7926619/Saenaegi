@@ -1,6 +1,7 @@
 package com.saenaegi.lfree;
 
 import android.graphics.Point;
+import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
 import android.view.Display;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.content.Intent;
+import android.widget.Toast;
 
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
@@ -29,6 +31,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Locale;
 
 public class aWatchVideoActivity extends YouTubeBaseActivity {
 
@@ -51,6 +54,7 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
     private DatabaseReference databaseReference2=firebaseDatabase.getReference().child( "LFREE" ).child( "LIKEVIDEO" ).child( userid );
     private ArrayList<String> likesubtitleKey=new ArrayList<>();
     private outputDataController output;
+    private TextToSpeech tts;
 
 
     @Override
@@ -151,7 +155,17 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
                 player.seekRelativeMillis( 10000 );
             }
         } );
-
+        /* 전자친구 */
+        tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS) {
+                    int result = tts.setLanguage( Locale.KOREAN);
+                }
+                else
+                    Toast.makeText(getApplication(), "TTS : TTS's Initialization is Failed!", Toast.LENGTH_SHORT).show();
+            }
+        });
         /* youtube_screen */
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -166,11 +180,18 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
         TextView tv1 = (TextView) findViewById( R.id.textView22 );
         tv1.setOnClickListener( new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent( aWatchVideoActivity.this, aSelectPartActivity.class );
-                intent.putExtra( "link", videoID );
-                intent.putExtra( "count", sectionCount );
-                intent.putExtra( "madesection",madesection );
-                startActivity( intent );
+                if(sectionSubtitles.size()!=0) {
+                    Intent intent = new Intent( aWatchVideoActivity.this, aSelectPartActivity.class );
+                    intent.putExtra( "link", videoID );
+                    intent.putExtra( "count", sectionCount );
+                    intent.putExtra( "madesection", madesection );
+                    startActivity( intent );
+                }
+                else{
+                    tts.setSpeechRate((float)0.87);
+                    tts.speak(" 이 영상은 아직 미제작 되었습니다.", TextToSpeech.QUEUE_FLUSH, null);
+                    tts.stop();
+                }
             }
         } );
 
@@ -178,32 +199,45 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
         tv2.setOnClickListener( new View.OnClickListener() {
             //조회수가 가장 높은 영상부터 차례차례 읽다가 더이상 읽을 영상이 없으면 다시 조회수가 가장 높은 영상으로 돌아간다.
             public void onClick(View v) {
-                position=position+1;
-                if(position>=sectionSubtitles.get( String.valueOf( nowSection ) ).size()){
-                    position=0;
+                if(nowSection!=0&&sectionSubtitles.size()!=0) {
+                    position = position + 1;
+                    if (position >= sectionSubtitles.get( String.valueOf( nowSection ) ).size()) {
+                        position = 0;
+                    }
+                    readingSubtitle();
+                }else {
+                    tts.setSpeechRate((float)0.87);
+                    tts.speak(" 파트를 먼저 선택하여 주세요.", TextToSpeech.QUEUE_FLUSH, null);
+                    tts.stop();
                 }
-                readingSubtitle();
             }
         } );
 
         TextView tv3 = (TextView) findViewById( R.id.textView15 );
         tv3.setOnClickListener( new View.OnClickListener() {
             public void onClick(View v) {
-                //제대로 되는 지 확인
-                SubtitleAndKey subtitleAndKey=sectionSubtitles.get( nowSection ).get(position); //몇 번째 자막을 선택 하느냐,
-                final String key=subtitleAndKey.getKey();
-                final int recommend=subtitleAndKey.getRecommend();
-                boolean exist=false;
-                for(String tmp:likesubtitleKey) {
-                    if (tmp.equals( key )) {
-                        exist = true;
-                        break;
+                if(nowSection!=0) {
+                    //제대로 되는 지 확인
+                    SubtitleAndKey subtitleAndKey = sectionSubtitles.get( String.valueOf( nowSection )).get( position ); //몇 번째 자막을 선택 하느냐,
+                    final String key = subtitleAndKey.getKey();
+                    final int recommend = subtitleAndKey.getRecommend();
+                    boolean exist = false;
+                    for (String tmp : likesubtitleKey) {
+                        if (tmp.equals( key )) {
+                            exist = true;
+                            break;
+                        }
+                    }
+                    if (!exist) {
+                        likesubtitleKey.add( key );
+                        databaseReference2.child( idvideo ).child( key ).setValue( "idsubtitle" );
+                        databaseReference.child( idvideo ).child( "SUBTITLE" ).child( String.valueOf( nowSection ) ).child( key ).child( "recommend" ).setValue( recommend + 1 );
                     }
                 }
-                if(!exist){
-                    likesubtitleKey.add( key );
-                    databaseReference2.child( idvideo ).child( key ).setValue( "idsubtitle" );
-                    databaseReference.child( idvideo ).child( "SUBTITLE" ).child( String.valueOf( nowSection ) ).child( key ).child( "recommend" ).setValue( recommend + 1 );
+                else{
+                    tts.setSpeechRate((float)0.87);
+                    tts.speak("파트를 선택해야 추천이 됩니다.", TextToSpeech.QUEUE_FLUSH, null);
+                    tts.stop();
                 }
             }
         } );
@@ -211,17 +245,24 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
         TextView tv4 = (TextView) findViewById( R.id.textView5 );
         tv4.setOnClickListener( new View.OnClickListener() {
             public void onClick(View v) {
-                SubtitleAndKey subtitleAndKey=sectionSubtitles.get( nowSection ).get(position);
-                Subtitle temp=subtitleAndKey.getSubtitle();
-                final String key=subtitleAndKey.getKey();
-                DatabaseReference dataRef=databaseReference2.child( "DECLARATION" ).child( key );
-                dataRef.child( userid ).setValue( "신고자 id" );
+                if(nowSection!=0) {
+                    SubtitleAndKey subtitleAndKey = sectionSubtitles.get( String.valueOf( nowSection ) ).get( position );
+                    Subtitle temp = subtitleAndKey.getSubtitle();
+                    final String key = subtitleAndKey.getKey();
+                    DatabaseReference dataRef = databaseReference2.child( "DECLARATION" ).child( key );
+                    dataRef.child( userid ).setValue( "신고자 id" );
+                }
+                else{
+                    tts.setSpeechRate((float)0.87);
+                    tts.speak(" 파트를 선택해야 신고 됩니다.", TextToSpeech.QUEUE_FLUSH, null);
+                    tts.stop();
+                }
             }
         } );
 
         getData();
         getLikeVideo();
-        if(nowSection!=-0){
+        if(nowSection!=0&&sectionSubtitles.size()!=0){
             readingSubtitle();
         }
     }
