@@ -55,9 +55,9 @@ public class aListviewAdapter extends BaseAdapter {
         LinearLayout linearLayout = (LinearLayout)name.getParent();
         linearLayout.setContentDescription("linear2_" + alistviewitem.getName());
         LinearLayout linearLayout1 = (LinearLayout)((name.getParent()).getParent());
-        linearLayout1.setContentDescription("linear1" + alistviewitem.getName());
+        linearLayout1.setContentDescription("linear1_" + alistviewitem.getName());
         ConstraintLayout constraintLayout = ((ConstraintLayout)((name.getParent()).getParent()).getParent());
-        constraintLayout.setContentDescription("constraint_"+alistviewitem.getName());
+        constraintLayout.setContentDescription("constraint_" + alistviewitem.getName());
 
         name.setText(alistviewitem.getName());
         name.setTag(alistviewitem.getTag());

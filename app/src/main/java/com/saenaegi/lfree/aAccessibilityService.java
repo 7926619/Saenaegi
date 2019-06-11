@@ -83,30 +83,6 @@ public class aAccessibilityService extends AccessibilityService {
                     arr2.get(0).setFocusable(true);
                     arr2.get(0).setFocusableInTouchMode(true);
                     arr2.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
-                    //arr.get(0).setFocusable(true);
-                    //arr.get(0).setFocusableInTouchMode(true);
-                    //arr.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
-                    //(listviewtemp.getAdapter().getView(0, null, listviewtemp)).setFocusable(true);
-                    //(listviewtemp.getAdapter().getView(0, null, listviewtemp)).setFocusableInTouchMode(true);
-                    //(listviewtemp.getAdapter().getView(0, null, listviewtemp)).setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_YES);
-                    //(listviewtemp.getAdapter().getView(0, null, listviewtemp)).setContentDescription(arr.get(0).getContentDescription());
-                    /*
-                    constraintLayout = (ConstraintLayout) listviewtemp.getAdapter().getView(0, null, listviewtemp);
-                    constraintLayout.setFocusable(true);
-                    constraintLayout.setFocusableInTouchMode(true);
-                    constraintLayout.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_AUTO);
-                    constraintLayout.setContentDescription(arr.get(0).getContentDescription());
-                    aListviewAdaptertemp.notifyDataSetChanged();
-                    Log.e(TAG, "constraintLayout : " + constraintLayout);
-                    Log.e(TAG, "constraintLayout ContentDescription : " + constraintLayout.getContentDescription());
-                    ((ConstraintLayout)listviewtemp.getAdapter().getView(0, null, listviewtemp)).setContentDescription(constraintLayout.getContentDescription());
-                    aListviewAdaptertemp.notifyDataSetChanged();
-                    Log.e(TAG, "listLayout : " + (listviewtemp.getAdapter().getView(0, null, listviewtemp)));
-                    Log.e(TAG, "list ContentDescription : " + (listviewtemp.getAdapter().getView(0, null, listviewtemp)).getContentDescription());
-                    //constraintLayout.performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
-                    aListviewAdaptertemp.notifyDataSetChanged();
-                    (listviewtemp.getAdapter().getView(0, null, listviewtemp)).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
-                    */
                     arr2.remove(0);
                     arr.remove(0);
                     focusposition = 0;
@@ -622,7 +598,7 @@ public class aAccessibilityService extends AccessibilityService {
                 ActivityManager am3 = (ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE);
                 List<ActivityManager.RunningTaskInfo> rti3 = am3.getRunningTasks(1);
 
-                if(eventText.length() < 30 && eventType != AccessibilityEvent.TYPE_VIEW_SELECTED && eventType != AccessibilityEvent.TYPE_VIEW_FOCUSED && eventType != AccessibilityEvent.TYPE_VIEW_SCROLLED && eventType != AccessibilityEvent.TYPE_VIEW_CLICKED && !source.getViewIdResourceName().equalsIgnoreCase("com.saenaegi.lfree:id/textView9") && !source.getViewIdResourceName().equalsIgnoreCase("com.saenaegi.lfree:id/lfree"))
+                if(eventText.length() < 30 && eventType != AccessibilityEvent.TYPE_VIEW_SELECTED && eventType != AccessibilityEvent.TYPE_VIEW_FOCUSED && eventType != AccessibilityEvent.TYPE_VIEW_SCROLLED && eventType != AccessibilityEvent.TYPE_VIEW_CLICKED && !source.getViewIdResourceName().equalsIgnoreCase("com.saenaegi.lfree:id/textView9") && !source.getViewIdResourceName().equalsIgnoreCase("com.saenaegi.lfree:id/lfree") && (!(rti3.get(0).topActivity.getClassName()).contains("aRecentVideoActivity")) && (!(rti3.get(0).topActivity.getClassName()).contains("aSelectPartActivity")))
                     eventText = eventText + introText;
                     //else if(source.getViewIdResourceName().equalsIgnoreCase("com.saenaegi.lfree:id/title"))
                 else if(source.getViewIdResourceName().equalsIgnoreCase("com.saenaegi.lfree:id/constraint1") && (rti3.get(0).topActivity.getClassName()).contains("aRecentVideoActivity")) {
@@ -632,7 +608,8 @@ public class aAccessibilityService extends AccessibilityService {
                 }
                 else if(source.getViewIdResourceName().equalsIgnoreCase("com.saenaegi.lfree:id/constraint1") && (rti3.get(0).topActivity.getClassName()).contains("aSelectPartActivity")) {
                     eventText = eventText.replace("constraint_", "");
-                    eventText = "음성 해설 파트 " + eventText + "\n\n" + "제스처를 수행하지 않을 시, 15초 이내로 선택합니다.";
+                    eventText = eventText.replace("접근성 포커싱됨 : ", "");
+                    eventText = "접근성 포커싱됨 : 음성 해설 파트 " + eventText + "\n\n" + "제스처를 수행하지 않을 시, 11초 이내로 선택합니다.";
                 }
 
                 Toast.makeText(getApplication(), eventText, Toast.LENGTH_SHORT).show();
@@ -695,7 +672,7 @@ public class aAccessibilityService extends AccessibilityService {
                     timercount++;
                 }
 
-                else if(eventText.contains("15초 이내로")) {
+                else if(eventText.contains("11초 이내로")) {
                     if(timercount2 != 0 && mHandler2 != null){
                         mHandler2.removeMessages(0);
                         mHandler2 = null;
