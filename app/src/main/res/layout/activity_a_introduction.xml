@@ -59,7 +59,7 @@
                 android:textSize="20sp"
                 android:layout_marginBottom="10dp"
                 android:textColor="#363636"
-                android:contentDescription="흠"
+                android:contentDescription="@string/ausetext"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:nextFocusDown="@+id/textView9"
