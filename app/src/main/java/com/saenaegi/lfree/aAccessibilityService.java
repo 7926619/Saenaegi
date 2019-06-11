@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
+import android.os.Message;
 import android.support.constraint.ConstraintLayout;
 import android.util.Log;
 import android.view.View;
@@ -20,7 +21,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
+import java.util.Timer;
+import java.util.TimerTask;
 
 import com.saenaegi.lfree.ListviewController.aListviewAdapter;
 import com.saenaegi.lfree.ListviewController.aListviewItem;
@@ -33,6 +35,10 @@ public class aAccessibilityService extends AccessibilityService {
     AccessibilityNodeInfo temp;
 
     int listviewitemposition = 0;
+    int timercount = 0;
+    TimerTask mTask = null;
+    Timer mTimer = null;
+    Handler mHandler = null;
     //int tempGestureId;
 
     ArrayList<View> arr = new ArrayList<>();
@@ -357,8 +363,6 @@ public class aAccessibilityService extends AccessibilityService {
     // 이벤트가 발생할때마다 실행되는 부분
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
-        long startTime;
-        final int MAX_DURATION = 200;
 
         Log.e(TAG, "=========================================================================");
         Log.e(TAG, "Catch Event : " + event.toString());
@@ -389,6 +393,11 @@ public class aAccessibilityService extends AccessibilityService {
             //Toast.makeText(getApplicationContext(), "VIEW ID or Content is NULL!", Toast.LENGTH_LONG).show();
             return;
         }
+
+        ActivityManager am2 = (ActivityManager)this.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningTaskInfo> rti2 = am2.getRunningTasks(1);
+        if(!((rti2.get(0).topActivity.getClassName()).contains("aRecentVideoActivity")))
+            timercount = 0;
 
         /*
         ActivityManager am2 = (ActivityManager)this.getSystemService(Context.ACTIVITY_SERVICE);
@@ -470,13 +479,45 @@ public class aAccessibilityService extends AccessibilityService {
                 }
 
                 if(eventText.contains("10초 이내로")) {
-                    new Handler().postDelayed(new Runnable(){
+                    /*
+                    if(mTask != null) {
+                        mTask.cancel();
+                        mTask = null;
+                    }
+
+                    if(mTimer != null) {
+                        mTimer.cancel();
+                        mTimer.purge();
+                        mTimer = null;
+                    }
+
+                    mTask = new TimerTask() {
+                        @Override
+                        public void run() {
+                            ListView listviewtemp = ((aRecentVideoActivity)aRecentVideoActivity.context).listView;
+                            listviewtemp.performItemClick(listviewtemp.getAdapter().getView(listviewitemposition, null, null), listviewitemposition, listviewtemp.getItemIdAtPosition(listviewitemposition));
+                            Log.e(TAG, "TimerRUNRUNRUN~~");
+                        }
+                   };
+
+                   mTimer = new Timer();
+
+                   mTimer.schedule(mTask, 10000);
+                   */
+
+                    if(timercount != 0 && mHandler != null){
+                        mHandler.removeMessages(0);
+                        mHandler = null;
+                    }
+                    mHandler = new Handler();
+                    mHandler.postDelayed(new Runnable(){
                         @Override
                         public void run() {
                             ListView listviewtemp = ((aRecentVideoActivity)aRecentVideoActivity.context).listView;
                             listviewtemp.performItemClick(listviewtemp.getAdapter().getView(listviewitemposition, null, null), listviewitemposition, listviewtemp.getItemIdAtPosition(listviewitemposition));
                         }
                     }, 10000);
+                    timercount++;
                 }
             }
 
