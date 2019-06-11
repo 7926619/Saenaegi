@@ -91,14 +91,14 @@
                 android:textSize="20sp"
                 android:layout_marginBottom="10dp"
                 android:textColor="#363636"
-                android:contentDescription="버전 정보"
+                android:contentDescription="@string/versionText"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:nextFocusDown="@+id/textView15"
                 android:nextFocusUp="@+id/textView17"
                 android:accessibilityTraversalAfter="@+id/textView15"
                 android:accessibilityTraversalBefore="@+id/textView17"
-                android:text="버전 정보" />
+                android:text="@string/versionText" />
 
             <TextView
                 android:id="@+id/textView15"
