@@ -273,14 +273,21 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
             if(sec < 10)
                 subtitle.setSectionF(min+":0"+sec);
             else
-                subtitle.setSectionF(min+":0"+sec);
+                subtitle.setSectionF(min+":"+sec);
         }
         else if(sectionNum == (min / 10) && ((min % 10) < 4)) {
             subtitle.setSectionS((sectionNum-1)+"0:00");
             if(sec < 10)
                 subtitle.setSectionF(min+":0"+sec);
             else
+                subtitle.setSectionF(min+":"+sec);
+        }
+        else if(min < 10) {
+            subtitle.setSectionS((sectionNum-1)+"0:00");
+            if(sec < 10)
                 subtitle.setSectionF(min+":0"+sec);
+            else
+                subtitle.setSectionF(min+":"+sec);
         }
         else {
             subtitle.setSectionS((sectionNum-1)+"0:00");
