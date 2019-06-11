@@ -1,5 +1,6 @@
 package com.saenaegi.lfree;
 
+import android.content.Context;
 import android.graphics.Point;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
@@ -177,7 +178,7 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
         params.height = screen_height;
         youtube_screen.setLayoutParams( params );
 
-        TextView tv1 = (TextView) findViewById( R.id.textView22 );
+        TextView tv1 = (TextView) findViewById( R.id.textView16 );
         tv1.setOnClickListener( new View.OnClickListener() {
             public void onClick(View v) {
                 if(sectionSubtitles.size()!=0) {
@@ -188,7 +189,7 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
                     startActivity( intent );
                 }
                 else{
-                    String eventText = "재생 버튼 클릭 : 이 영상은 아직 미제작 되었습니다.";
+                    String eventText = "파트 선택 버튼 클릭 : 이 영상은 아직 미제작 되었습니다.";
                     Toast.makeText(getApplication(), eventText, Toast.LENGTH_SHORT).show();
                     tts.setSpeechRate((float)0.87);
                     tts.speak(eventText, TextToSpeech.QUEUE_FLUSH, null);
@@ -267,6 +268,7 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
         getData();
         getLikeVideo();
         if(nowSection!=0&&sectionSubtitles.size()!=0){
+            Toast.makeText(getApplication(), "자막읽자읽자읽자!!!!!!!!!!!!!!!!!!", Toast.LENGTH_LONG).show();
             readingSubtitle();
         }
     }
