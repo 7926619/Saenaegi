@@ -30,16 +30,6 @@ public class aSettingsActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        /*
-        TextView tv3 = (TextView) findViewById(R.id.textView16);
-        tv3.setOnClickListener(new View.OnClickListener()
-        {
-            public void onClick(View v) {
-                Intent intent = new Intent(aSettingsActivity.this, aRequestVideoActivity.class);
-                startActivity(intent);
-            }
-        });
-        */
         TextView tv4 = (TextView) findViewById(R.id.textView15);
         tv4.setOnClickListener(new View.OnClickListener()
         {

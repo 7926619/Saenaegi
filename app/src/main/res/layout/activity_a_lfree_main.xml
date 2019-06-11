@@ -78,22 +78,6 @@
                 android:text="영상 시청하기" />
 
             <TextView
-                android:id="@+id/textView16"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:layout_marginBottom="10dp"
-                android:textColor="#363636"
-                android:contentDescription="영상 요청하기"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:nextFocusDown="@+id/textView15"
-                android:nextFocusUp="@+id/textView17"
-                android:accessibilityTraversalAfter="@+id/textView15"
-                android:accessibilityTraversalBefore="@+id/textView17"
-                android:text="영상 요청하기" />
-
-            <TextView
                 android:id="@+id/textView15"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

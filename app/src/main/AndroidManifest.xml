@@ -52,7 +52,6 @@
         <activity android:name=".aSettingsActivity" />
         <activity android:name=".aNoticeActivity" />
         <activity android:name=".aLikeVideoActivity" />
-        <activity android:name=".aRequestVideoActivity" />
         <activity android:name=".aSearchActivity" />
         <activity android:name=".aRecentVideoActivity" >
         </activity>
