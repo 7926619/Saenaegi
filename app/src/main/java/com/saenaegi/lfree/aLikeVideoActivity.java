@@ -1,10 +1,13 @@
 package com.saenaegi.lfree;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -49,8 +52,19 @@ public class aLikeVideoActivity extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.listview);
         adapter = new aListviewAdapter(this, R.layout.a_list_item, data);
         listView.setAdapter(adapter);
-        getData();
 
+        listView.setOnItemClickListener( new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(aLikeVideoActivity.this, aWatchVideoActivity.class);
+                intent.putExtra("link",videos.get(position).getLink());
+                intent.putExtra("count",videos.get(position).getSectionCount());
+                intent.putExtra( "nowSection" ,0 );
+                startActivity(intent);
+            }
+        } );
+
+        getData();
         context = this;
     }
     public void getData() {

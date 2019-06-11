@@ -63,7 +63,6 @@ public class aRecentVideoActivity extends AppCompatActivity {
         listView.setOnItemClickListener( new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.e(TAG, "CLICKED! " + parent + " " + view + " " + view.getContentDescription()  + " " + position + " " + id);
                 Intent intent = new Intent(aRecentVideoActivity.this, aWatchVideoActivity.class);
                 intent.putExtra("link",videos.get(position).getLink());
                 intent.putExtra("count",videos.get(position).getSectionCount());

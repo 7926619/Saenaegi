@@ -874,21 +874,6 @@ public class aAccessibilityService extends AccessibilityService {
         else if(!((rti2.get(0).topActivity.getClassName()).contains("aNoticeActivity")))
             timercount4 = 0;
 
-        /*
-        ActivityManager am2 = (ActivityManager)this.getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningTaskInfo> rti2 = am2.getRunningTasks(1);
-        if((rti2.get(0).topActivity.getClassName()).contains("aRecentVideoActivity") && source.getViewIdResourceName().contains("constraint1")) {
-            startTime = System.currentTimeMillis();
-            ListView listviewtemp = ((aRecentVideoActivity)aRecentVideoActivity.context).listView;
-            int focusposition = ((aRecentVideoActivity)aRecentVideoActivity.context).focusposition;
-            if(event.getAction() == MotionEvent.ACTION_DOWN) {
-                if(System.currentTimeMillis() - startTime <= MAX_DURATION) {
-                    Log.e(TAG, "CLICKCLICKCLICK");
-                    listviewtemp.getAdapter().getView(focusposition, null, listviewtemp).performClick();
-                }
-            }
-        }
-        */
         //if(eventType == AccessibilityEvent.TYPE_VIEW_CLICKED || eventType == AccessibilityEvent.TYPE_VIEW_HOVER_ENTER)
         if(eventType == AccessibilityEvent.TYPE_VIEW_HOVER_ENTER) {
             // 이벤트를 발생시킨 해당 소스에 대한 Action 실행. 이 때의 Action은 접근성 서비스를 위한 FOCUS
@@ -900,12 +885,6 @@ public class aAccessibilityService extends AccessibilityService {
             // 다시 사용할 수 있도록 해당 인스턴스를 반환
             source.recycle();
         }
-
-        /*
-        if(source.getViewIdResourceName().equalsIgnoreCase("com.saenaegi.lfree:id/constraint1") && eventType == AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUSED) {
-            Log.e(TAG, "12345678900987654321");
-        }
-        */
 
         else{
             switch (eventType) {
@@ -937,19 +916,19 @@ public class aAccessibilityService extends AccessibilityService {
                 else if(source.getViewIdResourceName().equalsIgnoreCase("com.saenaegi.lfree:id/constraint1") && (rti3.get(0).topActivity.getClassName()).contains("aRecentVideoActivity")) {
                     eventText = eventText.replace("constraint_", "");
                     //eventText = eventText + introText;
-                    eventText = eventText + " 제스처를 수행하지 않을 시, 10초 이내로 실행됩니다.";
+                    eventText = eventText + " 제스처를 수행하지 않을 시, 15초 이후로 실행됩니다.";
                 }
                 else if(source.getViewIdResourceName().equalsIgnoreCase("com.saenaegi.lfree:id/constraint1") && (rti3.get(0).topActivity.getClassName()).contains("aSelectPartActivity")) {
                     eventText = eventText.replace("constraint_", "");
                     eventText = eventText.replace("접근성 포커싱됨 : ", "");
-                    eventText = "접근성 포커싱됨 : 음성 해설 파트 " + eventText + "\n\n" + "제스처를 수행하지 않을 시, 11초 이내로 선택합니다.";
+                    eventText = "접근성 포커싱됨 : 음성 해설 파트 " + eventText + "\n\n" + "제스처를 수행하지 않을 시, 8초 이후로 선택합니다.";
                 }
                 else if(source.getViewIdResourceName().equalsIgnoreCase("com.saenaegi.lfree:id/constraint1") && (rti3.get(0).topActivity.getClassName()).contains("aLikeVideoActivity")) {
                     eventText = eventText.replace("constraint_", "");
+                    eventText = eventText + " 제스처를 수행하지 않을 시, 12초 이후로 실행됩니다.";
                 }
-                else if(source.getViewIdResourceName().equalsIgnoreCase("com.saenaegi.lfree:id/constraint1") && (rti3.get(0).topActivity.getClassName()).contains("aNoticeActivity")) {
+                else if(source.getViewIdResourceName().equalsIgnoreCase("com.saenaegi.lfree:id/constraint1") && (rti3.get(0).topActivity.getClassName()).contains("aNoticeActivity"))
                     eventText = eventText.replace("constraint_", "");
-                }
 
                 Toast.makeText(getApplication(), eventText, Toast.LENGTH_SHORT).show();
 
@@ -969,33 +948,7 @@ public class aAccessibilityService extends AccessibilityService {
                     }
                 }
 
-                if(eventText.contains("10초 이내로")) {
-                    /*
-                    if(mTask != null) {
-                        mTask.cancel();
-                        mTask = null;
-                    }
-
-                    if(mTimer != null) {
-                        mTimer.cancel();
-                        mTimer.purge();
-                        mTimer = null;
-                    }
-
-                    mTask = new TimerTask() {
-                        @Override
-                        public void run() {
-                            ListView listviewtemp = ((aRecentVideoActivity)aRecentVideoActivity.context).listView;
-                            listviewtemp.performItemClick(listviewtemp.getAdapter().getView(listviewitemposition, null, null), listviewitemposition, listviewtemp.getItemIdAtPosition(listviewitemposition));
-                            Log.e(TAG, "TimerRUNRUNRUN~~");
-                        }
-                   };
-
-                   mTimer = new Timer();
-
-                   mTimer.schedule(mTask, 10000);
-                   */
-
+                if(eventText.contains("15초 이후로")) {
                     if(timercount != 0 && mHandler != null){
                         mHandler.removeMessages(0);
                         mHandler = null;
@@ -1007,11 +960,11 @@ public class aAccessibilityService extends AccessibilityService {
                             ListView listviewtemp = ((aRecentVideoActivity)aRecentVideoActivity.context).listView;
                             listviewtemp.performItemClick(listviewtemp.getAdapter().getView(listviewitemposition, null, null), listviewitemposition, listviewtemp.getItemIdAtPosition(listviewitemposition));
                         }
-                    }, 10000);
+                    }, 15000);
                     timercount++;
                 }
 
-                else if(eventText.contains("11초 이내로")) {
+                else if(eventText.contains("8초 이후로")) {
                     if(timercount2 != 0 && mHandler2 != null){
                         mHandler2.removeMessages(0);
                         mHandler2 = null;
@@ -1023,9 +976,26 @@ public class aAccessibilityService extends AccessibilityService {
                             ListView listviewtemp = ((aSelectPartActivity)aSelectPartActivity.context).listView;
                             listviewtemp.performItemClick(listviewtemp.getAdapter().getView(listviewitemposition2, null, null), listviewitemposition2, listviewtemp.getItemIdAtPosition(listviewitemposition2));
                         }
-                    }, 15000);
+                    }, 8000);
 
                     timercount2++;
+                }
+
+                else if(eventText.contains("12초 이후로")) {
+                    if(timercount3 != 0 && mHandler3 != null){
+                        mHandler3.removeMessages(0);
+                        mHandler3 = null;
+                    }
+                    mHandler3 = new Handler();
+                    mHandler3.postDelayed(new Runnable(){
+                        @Override
+                        public void run() {
+                            ListView listviewtemp = ((aLikeVideoActivity)aLikeVideoActivity.context).listView;
+                            listviewtemp.performItemClick(listviewtemp.getAdapter().getView(listviewitemposition3, null, null), listviewitemposition3, listviewtemp.getItemIdAtPosition(listviewitemposition3));
+                        }
+                    }, 12000);
+
+                    timercount3++;
                 }
             }
 
