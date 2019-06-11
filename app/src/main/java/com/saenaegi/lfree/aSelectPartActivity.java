@@ -41,7 +41,7 @@ public class aSelectPartActivity extends AppCompatActivity {
         final Intent data=getIntent();
         videoID = data.getExtras().getString("link");
         sectionCount=data.getExtras().getInt( "count" );
-        madesection=data.getExtras().getStringArray( "mmadesection" );
+        madesection=data.getExtras().getStringArray( "madesection" );
 
         sectionCount=10;
         listView = (ListView) findViewById(R.id.listview);
@@ -69,6 +69,6 @@ public class aSelectPartActivity extends AppCompatActivity {
             }
         } );
 
-
+        adapter.notifyDataSetChanged();
     }
 }

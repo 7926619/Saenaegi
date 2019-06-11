@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.content.Intent;
 
@@ -57,6 +58,10 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
         super.onCreate( savedInstanceState );
         this.overridePendingTransition( R.anim.fade_in, R.anim.fade_out );
         setContentView( R.layout.activity_a_watch_video );
+
+        //TextView gesturetext = (TextView)findViewById(R.id.gesture);
+        //gesturetext.setLayoutParams(new RelativeLayout.LayoutParams(50,50));
+
         filedirectory=this.getCacheDir();
 
         /* youtube용 변수 */
@@ -170,7 +175,7 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
         } );
 
         TextView tv2 = (TextView) findViewById( R.id.textView );
-        tv1.setOnClickListener( new View.OnClickListener() {
+        tv2.setOnClickListener( new View.OnClickListener() {
             //조회수가 가장 높은 영상부터 차례차례 읽다가 더이상 읽을 영상이 없으면 다시 조회수가 가장 높은 영상으로 돌아간다.
             public void onClick(View v) {
                 position=position+1;
@@ -182,7 +187,7 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
         } );
 
         TextView tv3 = (TextView) findViewById( R.id.textView15 );
-        tv1.setOnClickListener( new View.OnClickListener() {
+        tv3.setOnClickListener( new View.OnClickListener() {
             public void onClick(View v) {
                 //제대로 되는 지 확인
                 SubtitleAndKey subtitleAndKey=sectionSubtitles.get( nowSection ).get(position); //몇 번째 자막을 선택 하느냐,
@@ -204,7 +209,7 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
         } );
 
         TextView tv4 = (TextView) findViewById( R.id.textView5 );
-        tv1.setOnClickListener( new View.OnClickListener() {
+        tv4.setOnClickListener( new View.OnClickListener() {
             public void onClick(View v) {
                 SubtitleAndKey subtitleAndKey=sectionSubtitles.get( nowSection ).get(position);
                 Subtitle temp=subtitleAndKey.getSubtitle();
