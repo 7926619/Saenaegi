@@ -54,6 +54,7 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference = firebaseDatabase.getReference().child( "LFREE" ).child( "VIDEO" );
     private DatabaseReference databaseReference2=firebaseDatabase.getReference().child( "LFREE" ).child( "LIKEVIDEO" ).child( userid );
+    private DatabaseReference databaseReference3=firebaseDatabase.getReference().child( "LFREE" );
     private ArrayList<String> likesubtitleKey=new ArrayList<>();
     private outputDataController output;
     private TextToSpeech tts;
@@ -207,6 +208,7 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
                     if (position >= sectionSubtitles.get( String.valueOf( nowSection ) ).size()) {
                         position = 0;
                     }
+                    Log.e( "position",String.valueOf(position) );
                     readingSubtitle();
                 }else {
                     String eventText = "같은 파트에 다른 것 선택 버튼 클릭 : 파트를 먼저 선택하여 주세요";
@@ -254,7 +256,7 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
                     SubtitleAndKey subtitleAndKey = sectionSubtitles.get( String.valueOf( nowSection ) ).get( position );
                     Subtitle temp = subtitleAndKey.getSubtitle();
                     final String key = subtitleAndKey.getKey();
-                    DatabaseReference dataRef = databaseReference2.child( "DECLARATION" ).child( key );
+                    DatabaseReference dataRef = databaseReference3.child( "DECLARATION" ).child( key );
                     dataRef.child( userid ).setValue( "신고자 id" );
                 }
                 else{
@@ -268,10 +270,6 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
 
         getData();
         getLikeVideo();
-        if(nowSection!=0&&sectionSubtitles.size()!=0){
-            Toast.makeText(getApplication(), "자막읽자읽자읽자!!!!!!!!!!!!!!!!!!", Toast.LENGTH_LONG).show();
-            readingSubtitle();
-        }
     }
 
     public  void getLikeVideo(){
@@ -329,6 +327,10 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
                     madesection[i]=temp;
                     i++;
                 }
+                if(nowSection!=0){
+                    Toast.makeText(getApplication(), "자막읽자읽자읽자!!!!!!!!!!!!!!!!!!", Toast.LENGTH_LONG).show();
+                    readingSubtitle();
+                }
 
             }
 
@@ -347,7 +349,6 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
         subtitleDatas = output.getLookSubtitleData( filedirectory, nowSection, idvideo, key );
         // cash error로 인하여
         subtitleDatas = output.getLookSubtitleData( filedirectory, nowSection, idvideo, key); //삭제 하면 은영이 울어요.
-
         //이제 데이터를 TTS로 유투브 시간에 맞게 뽑아줘용
 
     }

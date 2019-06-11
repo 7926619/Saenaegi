@@ -1,6 +1,8 @@
 package com.saenaegi.lfree.SubtitleController;
 
+import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -36,7 +38,8 @@ public class outputDataController {
             filedirectory.mkdirs();
 
         readFile= new File(file,key+".txt");
-        fileDownloadTask=ListorageReference.child( idvideo ).child( String.valueOf( sectionNum )).child( key+".txt" ).getFile(readFile);
+        Uri readFileUri=Uri.fromFile(readFile);
+        fileDownloadTask=ListorageReference.child( idvideo ).child( String.valueOf( sectionNum )).child( key+".txt" ).getFile(readFileUri);
         parsingFile( key );
         return allOfSubtitle;
     }
@@ -50,7 +53,8 @@ public class outputDataController {
             filedirectory.mkdirs();
 
         readFile= new File(file,key+".txt");
-        fileDownloadTask=LookReference.child( idvideo ).child( String.valueOf( sectionNum )).child( key+".txt" ).getFile(readFile);
+        Uri readFileUri=Uri.fromFile(readFile);
+        fileDownloadTask=LookReference.child( idvideo ).child( String.valueOf( sectionNum )).child( key+".txt" ).getFile(readFileUri);
         parsingFile( key );
 
         return allOfSubtitle;
@@ -59,6 +63,7 @@ public class outputDataController {
     public void parsingFile(String key){
         String oneLine=null;
         try {
+            Log.e( "inputsection","들어 왔어용" );
             FileReader fileReader=new FileReader( readFile );
             BufferedReader bufferedReader=new BufferedReader(fileReader);
             while((oneLine=bufferedReader.readLine())!=null){
