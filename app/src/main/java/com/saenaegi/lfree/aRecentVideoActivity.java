@@ -111,15 +111,6 @@ public class aRecentVideoActivity extends AppCompatActivity {
                         break;
                     else if(childRowCount >= 2 && i - firstpos == 0) {
                         row = (TextView) linearLayout1.findViewWithTag(i - firstpos);
-                        /*
-                        Log.e(TAG, "row content : " + row.getContentDescription());
-                        //constraintLayout.setContentDescription(row.getContentDescription());
-                        //Log.e(TAG, "constraint ID : " + constraintLayout.getId());
-                        //Log.e(TAG, "constraint content : " + constraintLayout.getContentDescription());
-                        ((ConstraintLayout) listView.getAdapter().getView(i - firstpos, null, listView)).setContentDescription(row.getContentDescription());
-                        Log.e(TAG, "constraint ID : " + ((ConstraintLayout) listView.getAdapter().getView(i - firstpos, null, listView)).getId());
-                        Log.e(TAG, "constraint content : " + ((ConstraintLayout) listView.getAdapter().getView(i - firstpos, null, listView)).getContentDescription());
-                        */
                         row.setId(i - firstpos);
 
                         constraintLayout = (ConstraintLayout) listView.getAdapter().getView(lastpos  - firstpos, null, listView);
@@ -141,15 +132,6 @@ public class aRecentVideoActivity extends AppCompatActivity {
                     }
                     else if(childRowCount >= 2 && (i + 1 - firstpos) < childRowCount && i - firstpos >= 1) {
                         row = (TextView) linearLayout1.findViewWithTag(i - firstpos);
-                        /*
-                        Log.e(TAG, "row content : " + row.getContentDescription());
-                        //constraintLayout.setContentDescription(row.getContentDescription());
-                        //Log.e(TAG, "constraint ID : " + constraintLayout.getId());
-                        //Log.e(TAG, "constraint content : " + constraintLayout.getContentDescription());
-                        ((ConstraintLayout) listView.getAdapter().getView(i - firstpos, null, listView)).setContentDescription(row.getContentDescription());
-                        Log.e(TAG, "constraint ID : " + ((ConstraintLayout) listView.getAdapter().getView(i - firstpos, null, listView)).getId());
-                        Log.e(TAG, "constraint content : " + ((ConstraintLayout) listView.getAdapter().getView(i - firstpos, null, listView)).getContentDescription());
-                        */
                         row.setId(i - firstpos);
 
                         constraintLayout = (ConstraintLayout) listView.getAdapter().getView(i - 1 - firstpos, null, listView);
@@ -171,15 +153,6 @@ public class aRecentVideoActivity extends AppCompatActivity {
                     }
                     else if(childRowCount-1 == i - firstpos) {
                         row = (TextView) linearLayout1.findViewWithTag(i - firstpos);
-                        /*
-                        Log.e(TAG, "row content : " + row.getContentDescription());
-                        //constraintLayout.setContentDescription(row.getContentDescription());
-                        //Log.e(TAG, "constraint ID : " + constraintLayout.getId());
-                        //Log.e(TAG, "constraint content : " + constraintLayout.getContentDescription());
-                        ((ConstraintLayout) listView.getAdapter().getView(i - firstpos, null, listView)).setContentDescription(row.getContentDescription());
-                        Log.e(TAG, "constraint ID : " + ((ConstraintLayout) listView.getAdapter().getView(i - firstpos, null, listView)).getId());
-                        Log.e(TAG, "constraint content : " + ((ConstraintLayout) listView.getAdapter().getView(i - firstpos, null, listView)).getContentDescription());
-                        */
                         row.setId(i - firstpos);
 
                         constraintLayout = (ConstraintLayout) listView.getAdapter().getView(i - 1 - firstpos, null, listView);
@@ -203,10 +176,6 @@ public class aRecentVideoActivity extends AppCompatActivity {
 
                 adapter.notifyDataSetChanged();
                 progressBar.setVisibility(View.GONE);
-
-                for(int i = 0 ; i < childRowCount ; i++)
-                    Log.e(TAG, "listviewitem print " + listView.getAdapter().getView(i, null, listView));
-
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {

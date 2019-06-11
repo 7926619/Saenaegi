@@ -5,8 +5,10 @@ import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -33,7 +35,8 @@ public class aNoticeActivity extends AppCompatActivity {
 
     private FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference=firebaseDatabase.getReference().child( "LFREE" ).child( "NOTICE" );
-    private ArrayList<Notice> notices=new ArrayList<>(  );
+    private ArrayList<Notice> notices=new ArrayList<>();
+    private ProgressBar progressBar;
 
     private int count = 0;
 
@@ -48,6 +51,9 @@ public class aNoticeActivity extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.listview);
         adapter = new aListviewAdapter(this, R.layout.a_list_item, data);
         listView.setAdapter(adapter);
+
+        progressBar = findViewById(R.id.progressBar3);
+        progressBar.setMax(100);
 
         getDataQuery();
 
@@ -149,6 +155,7 @@ public class aNoticeActivity extends AppCompatActivity {
                 }
 
                 adapter.notifyDataSetChanged();
+                progressBar.setVisibility(View.GONE);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {

@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -38,6 +39,7 @@ public class aLikeVideoActivity extends AppCompatActivity {
     private DatabaseReference databaseReference=firebaseDatabase.getReference().child( "LFREE" );
     private ArrayList<Video> videos=new ArrayList<>();
     private ArrayList<String> lvideos=new ArrayList<>();
+    private ProgressBar progressBar;
 
     public static Context context;
 
@@ -63,6 +65,9 @@ public class aLikeVideoActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         } );
+
+        progressBar = findViewById(R.id.progressBar3);
+        progressBar.setMax(100);
 
         getData();
         context = this;
@@ -175,6 +180,7 @@ public class aLikeVideoActivity extends AppCompatActivity {
                 }
 
                 adapter.notifyDataSetChanged();
+                progressBar.setVisibility(View.GONE);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
