@@ -268,7 +268,14 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         Intent data = getIntent();
         // section의 처음과 끝 시간-> 유투브 시간을 불러와서 넣어 주어야 한다. 미리 넣어 줘야 하는 것들
         sectionNum = data.getExtras().getInt("part");
-        if((sectionNum > (min / 10)) && ((min % 10) > 3)){
+        if(min < 10) {
+            subtitle.setSectionS((sectionNum-1)+"0:00");
+            if(sec < 10)
+                subtitle.setSectionF("0"+min+":0"+sec);
+            else
+                subtitle.setSectionF("0"+min+":"+sec);
+        }
+        else if((sectionNum > (min / 10)) && ((min % 10) > 3)){
             subtitle.setSectionS((sectionNum-1)+"0:00");
             if(sec < 10)
                 subtitle.setSectionF(min+":0"+sec);
@@ -276,13 +283,6 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
                 subtitle.setSectionF(min+":"+sec);
         }
         else if(sectionNum == (min / 10) && ((min % 10) < 4)) {
-            subtitle.setSectionS((sectionNum-1)+"0:00");
-            if(sec < 10)
-                subtitle.setSectionF(min+":0"+sec);
-            else
-                subtitle.setSectionF(min+":"+sec);
-        }
-        else if(min < 10) {
             subtitle.setSectionS((sectionNum-1)+"0:00");
             if(sec < 10)
                 subtitle.setSectionF(min+":0"+sec);
@@ -485,19 +485,26 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         } else {
             sectionNum = Integer.parseInt(data.getExtras().getString("part"));
         }
-        if((sectionNum > (min / 10)) && ((min % 10) > 3)){
+        if(min < 10) {
+            subtitle.setSectionS((sectionNum-1)+"0:00");
+            if(sec < 10)
+                subtitle.setSectionF("0"+min+":0"+sec);
+            else
+                subtitle.setSectionF("0"+min+":"+sec);
+        }
+        else if((sectionNum > (min / 10)) && ((min % 10) > 3)){
             subtitle.setSectionS((sectionNum-1)+"0:00");
             if(sec < 10)
                 subtitle.setSectionF(min+":0"+sec);
             else
-                subtitle.setSectionF(min+":0"+sec);
+                subtitle.setSectionF(min+":"+sec);
         }
         else if(sectionNum == (min / 10) && ((min % 10) < 4)) {
             subtitle.setSectionS((sectionNum-1)+"0:00");
             if(sec < 10)
                 subtitle.setSectionF(min+":0"+sec);
             else
-                subtitle.setSectionF(min+":0"+sec);
+                subtitle.setSectionF(min+":"+sec);
         }
         else {
             subtitle.setSectionS((sectionNum-1)+"0:00");
