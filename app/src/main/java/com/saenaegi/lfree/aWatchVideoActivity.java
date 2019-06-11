@@ -4,6 +4,7 @@ import android.graphics.Point;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
@@ -204,6 +205,7 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
                     if (position >= sectionSubtitles.get( String.valueOf( nowSection ) ).size()) {
                         position = 0;
                     }
+                    Log.e("position",String.valueOf( position));
                     readingSubtitle();
                 }else {
                     tts.setSpeechRate((float)0.87);
@@ -263,6 +265,7 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
         getData();
         getLikeVideo();
         if(nowSection!=0&&sectionSubtitles.size()!=0){
+            Log.e("position",String.valueOf( position));
             readingSubtitle();
         }
     }

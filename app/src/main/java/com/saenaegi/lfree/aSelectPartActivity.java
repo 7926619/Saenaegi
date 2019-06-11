@@ -64,7 +64,7 @@ public class aSelectPartActivity extends AppCompatActivity {
                 Intent intent = new Intent(aSelectPartActivity.this, aWatchVideoActivity.class);
                 intent.putExtra("link",videoID);
                 intent.putExtra("count",sectionCount);
-                intent.putExtra( "nowSection", madesection[position]);
+                intent.putExtra( "nowSection", Integer.parseInt(madesection[position]));
                 startActivity(intent);
             }
         } );
