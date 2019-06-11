@@ -293,6 +293,7 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
 
         // adapter의 값이 변경되었다는 것을 알려줍니다.
         adapter2.notifyDataSetChanged();
+        recyclerView2.setAdapter(adapter2);
     }
 
     public void getSections(){

@@ -326,6 +326,7 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         sub_col.setOrientation(LinearLayout.HORIZONTAL);
         TextView t3 = new TextView(this);
         t3.setText(sub);
+        t3.setMaxWidth(400);
 
         /* subtitle needs 2 buttons */
         LinearLayout ll = new LinearLayout(this);
@@ -338,25 +339,49 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         iv1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!player.isPlaying())
-                    player.play();
-                subtitlebox.setText(sub);
-                int spoint = ((Integer.parseInt(start.split(":")[0]) * 60) + Integer.parseInt(start.split(":")[1])) * 1000;
-                player.seekToMillis(spoint);
-                final int epoint = ((Integer.parseInt(end.split(":")[0]) * 60) + Integer.parseInt(end.split(":")[1]));
-                Thread th = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        while (true) {
-                            if ((player.getCurrentTimeMillis() / 1000) == epoint) {
-                                subtitlebox.setText("");
-                                player.pause();
-                                break;
+                if(ty){
+                    if(!player.isPlaying())
+                        player.play();
+                    subtitlebox.setText(sub);
+                    int spoint = ((Integer.parseInt(start.split(":")[0])*60) + Integer.parseInt(start.split(":")[1])) * 1000;
+                    player.seekToMillis(spoint);
+                    final int epoint = ((Integer.parseInt(end.split(":")[0])*60) + Integer.parseInt(end.split(":")[1]));
+                    Thread th = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            while(true) {
+                                if((player.getCurrentTimeMillis()/1000) >= epoint){
+                                    subtitlebox.setText("");
+                                    player.pause();
+                                    break;
+                                }
                             }
                         }
-                    }
-                });
-
+                    });
+                    th.start();
+                }
+                else {
+                    if(!player.isPlaying())
+                        player.play();
+                    int spoint = ((Integer.parseInt(start.split(":")[0])*60) + Integer.parseInt(start.split(":")[1])) * 1000;
+                    player.seekToMillis(spoint);
+                    tts.setSpeechRate((float)0.87);
+                    tts.speak(sub, TextToSpeech.QUEUE_FLUSH, null);
+                    final int epoint = ((Integer.parseInt(end.split(":")[0])*60) + Integer.parseInt(end.split(":")[1]));
+                    Thread th = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            while(true) {
+                                if((player.getCurrentTimeMillis()/1000) >= epoint){
+                                    tts.stop();
+                                    player.pause();
+                                    break;
+                                }
+                            }
+                        }
+                    });
+                    th.start();
+                }
             }
         });
 
@@ -408,7 +433,7 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         View blank = new View(this);
         blank.setBackgroundColor(Color.WHITE);
 
-        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(50, 50);
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(50, ViewGroup.LayoutParams.WRAP_CONTENT);
         iv1.setLayoutParams(params);
         iv2.setLayoutParams(params);
         blank.setLayoutParams(params);
@@ -494,6 +519,7 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         final EditText subTitle = new EditText(this);
         subTitle.setHint("해설을 입력해주세요.");
         subTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
+        subTitle.setHorizontallyScrolling(true);
         setEditTextMaxLength(subTitle, 20);
 
         if(subData != null) {
@@ -611,6 +637,7 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
                 sub_col.setOrientation(LinearLayout.HORIZONTAL);
                 TextView t3 = new TextView(MakeVideoActivity.this);
                 t3.setText(sub);
+                t3.setMaxWidth(400);
 
                 /* subtitle needs 2 buttons */
                 LinearLayout ll = new LinearLayout(MakeVideoActivity.this);
@@ -626,7 +653,7 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
                         if(ty){
                             if(!player.isPlaying())
                                 player.play();
-                            subtitlebox.setText(subTitle.getText().toString());
+                            subtitlebox.setText(sub);
                             int spoint = ((Integer.parseInt(start.split(":")[0])*60) + Integer.parseInt(start.split(":")[1])) * 1000;
                             player.seekToMillis(spoint);
                             final int epoint = ((Integer.parseInt(end.split(":")[0])*60) + Integer.parseInt(end.split(":")[1]));
@@ -650,7 +677,7 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
                             int spoint = ((Integer.parseInt(start.split(":")[0])*60) + Integer.parseInt(start.split(":")[1])) * 1000;
                             player.seekToMillis(spoint);
                             tts.setSpeechRate((float)0.87);
-                            tts.speak(subTitle.getText().toString(), TextToSpeech.QUEUE_FLUSH, null);
+                            tts.speak(sub, TextToSpeech.QUEUE_FLUSH, null);
                             final int epoint = ((Integer.parseInt(end.split(":")[0])*60) + Integer.parseInt(end.split(":")[1]));
                             Thread th = new Thread(new Runnable() {
                                 @Override
@@ -716,7 +743,7 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
                 View blank = new View(MakeVideoActivity.this);
                 blank.setBackgroundColor(Color.WHITE);
 
-                ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(50, 50);
+                ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(50, ViewGroup.LayoutParams.WRAP_CONTENT);
                 iv1.setLayoutParams(params);
                 iv2.setLayoutParams(params);
                 blank.setLayoutParams(params);

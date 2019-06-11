@@ -11,23 +11,13 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.google.android.youtube.player.YouTubePlayer;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.saenaegi.lfree.Data.Video;
 import com.saenaegi.lfree.ListviewController.aListviewAdapter;
 import com.saenaegi.lfree.ListviewController.aListviewItem;
-import com.saenaegi.lfree.SubtitleController.SubtitleAndKey;
-import com.saenaegi.lfree.SubtitleController.SubtitleData;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 
 public class aSelectPartActivity extends AppCompatActivity {
 
@@ -43,6 +33,7 @@ public class aSelectPartActivity extends AppCompatActivity {
     private String videoID;
     private String[] madesection;
     private int sectionCount;
+    private ProgressBar progressBar;
 
     private int count = 0;
 
@@ -65,6 +56,9 @@ public class aSelectPartActivity extends AppCompatActivity {
 
         listView.setItemsCanFocus(true);
         listView.setAdapter(adapter);
+
+        progressBar = findViewById(R.id.progressBar3);
+        progressBar.setMax(100);
 
         //만들어 진 secton Num만 출력이 되는 지 확인 -> subtitle의 type의 값이 false인 데이터만 취급해야 한다.
         sdata.clear();
@@ -169,8 +163,8 @@ public class aSelectPartActivity extends AppCompatActivity {
             }
         } );
 
-        //adapter.notifyDataSetChanged();
-
+        adapter.notifyDataSetChanged();
+        progressBar.setVisibility(View.GONE);
         context = this;
     }
 }
