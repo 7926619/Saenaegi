@@ -71,9 +71,9 @@
                 android:contentDescription="영상 시청하기"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
-                android:nextFocusDown="@+id/textView16"
+                android:nextFocusDown="@+id/textView15"
                 android:nextFocusUp="@+id/textView18"
-                android:accessibilityTraversalAfter="@+id/textView16"
+                android:accessibilityTraversalAfter="@+id/textView15"
                 android:accessibilityTraversalBefore="@+id/textView18"
                 android:text="영상 시청하기" />
 
@@ -88,9 +88,9 @@
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:nextFocusDown="@+id/textView14"
-                android:nextFocusUp="@+id/textView16"
+                android:nextFocusUp="@+id/textView17"
                 android:accessibilityTraversalAfter="@+id/textView14"
-                android:accessibilityTraversalBefore="@+id/textView16"
+                android:accessibilityTraversalBefore="@+id/textView17"
                 android:text="좋아요 표시한 동영상" />
 
             <TextView
