@@ -84,6 +84,9 @@ public class aAccessibilityService extends AccessibilityService {
             TextView temp;
             int focusposition;
 
+            if(rowtemp == null || rowaftertemp == null || rowtemp.size() == 1)
+                return;
+
             temp = rowtemp.get(0);
             for(int j = 0 ; j < rowaftertemp.size() ; j++) {
                 if(temp.getContentDescription().equals(rowaftertemp.get(j).getContentDescription())) {
@@ -107,6 +110,9 @@ public class aAccessibilityService extends AccessibilityService {
             ListView listviewtemp = ((aSelectPartActivity)aSelectPartActivity.context).listView;
             TextView temp;
             int focusposition;
+
+            if(sectiontemp == null || sectionaftertemp == null || sectiontemp.size() == 1)
+                return;
 
             temp = sectiontemp.get(0);
             for(int j = 0 ; j < sectionaftertemp.size() ; j++) {
@@ -132,6 +138,9 @@ public class aAccessibilityService extends AccessibilityService {
             TextView temp;
             int focusposition;
 
+            if(liketemp == null || likeaftertemp == null || liketemp.size() == 1)
+                return;
+
             temp = liketemp.get(0);
             for(int j = 0 ; j < likeaftertemp.size() ; j++) {
                 if(temp.getContentDescription().equals(likeaftertemp.get(j).getContentDescription())) {
@@ -156,6 +165,9 @@ public class aAccessibilityService extends AccessibilityService {
             TextView temp;
             int focusposition;
 
+            if(noticetemp == null || noticeaftertemp == null || noticetemp.size() == 1)
+                return;
+
             temp = noticetemp.get(0);
             for(int j = 0 ; j < noticeaftertemp.size() ; j++) {
                 if(temp.getContentDescription().equals(noticeaftertemp.get(j).getContentDescription())) {
@@ -179,6 +191,9 @@ public class aAccessibilityService extends AccessibilityService {
             ListView listviewtemp = ((aSearchVideoActivity)aSearchVideoActivity.context).listView;
             TextView temp;
             int focusposition;
+
+            if(searchtemp == null || searchaftertemp == null || searchtemp.size() == 1)
+                return;
 
             temp = searchtemp.get(0);
             for(int j = 0 ; j < searchaftertemp.size() ; j++) {
@@ -206,6 +221,9 @@ public class aAccessibilityService extends AccessibilityService {
             TextView temp;
             int focusposition;
 
+            if(rowtemp == null || rowbeforetemp == null || rowtemp.size() == 1)
+                return;
+
             temp = rowtemp.get(rowtemp.size()-1);
             for(int j = 0 ; j < rowbeforetemp.size() ; j++) {
                 if(temp.getContentDescription().equals(rowbeforetemp.get(j).getContentDescription())) {
@@ -229,6 +247,9 @@ public class aAccessibilityService extends AccessibilityService {
             ListView listviewtemp = ((aSelectPartActivity)aSelectPartActivity.context).listView;
             TextView temp;
             int focusposition;
+
+            if(sectiontemp == null || sectionbeforetemp == null || sectiontemp.size() == 1)
+                return;
 
             temp = sectiontemp.get(sectiontemp.size()-1);
             for(int j = 0 ; j < sectionbeforetemp.size() ; j++) {
@@ -254,6 +275,9 @@ public class aAccessibilityService extends AccessibilityService {
             TextView temp;
             int focusposition;
 
+            if(liketemp == null || likebeforetemp == null || liketemp.size() == 1)
+                return;
+
             temp = liketemp.get(liketemp.size()-1);
             for(int j = 0 ; j < likebeforetemp.size() ; j++) {
                 if(temp.getContentDescription().equals(likebeforetemp.get(j).getContentDescription())) {
@@ -278,6 +302,9 @@ public class aAccessibilityService extends AccessibilityService {
             TextView temp;
             int focusposition;
 
+            if(noticetemp == null || noticebeforetemp == null || noticetemp.size() == 1)
+                return;
+
             temp = noticetemp.get(noticetemp.size()-1);
             for(int j = 0 ; j < noticebeforetemp.size() ; j++) {
                 if(temp.getContentDescription().equals(noticebeforetemp.get(j).getContentDescription())) {
@@ -301,6 +328,9 @@ public class aAccessibilityService extends AccessibilityService {
             ListView listviewtemp = ((aSearchVideoActivity)aSearchVideoActivity.context).listView;
             TextView temp;
             int focusposition;
+
+            if(searchtemp == null || searchbeforetemp == null || searchtemp.size() == 1)
+                return;
 
             temp = searchtemp.get(searchtemp.size()-1);
             for(int j = 0 ; j < searchbeforetemp.size() ; j++) {
@@ -331,7 +361,7 @@ public class aAccessibilityService extends AccessibilityService {
             TextView tempafter;
             int focusposition;
 
-            if(rowtemp == null || rowaftertemp == null)
+            if(rowtemp == null || rowaftertemp == null || rowtemp.size() == 1)
                 return;
 
             for(int i = 0 ; i < rowtemp.size() ; i++) {
@@ -389,7 +419,7 @@ public class aAccessibilityService extends AccessibilityService {
             TextView tempafter;
             int focusposition;
 
-            if(sectiontemp == null || sectionaftertemp == null)
+            if(sectiontemp == null || sectionaftertemp == null || sectiontemp.size() == 1)
                 return;
 
             for(int i = 0 ; i < sectiontemp.size() ; i++) {
@@ -447,7 +477,7 @@ public class aAccessibilityService extends AccessibilityService {
             TextView tempafter;
             int focusposition;
 
-            if(liketemp == null || likeaftertemp == null)
+            if(liketemp == null || likeaftertemp == null || liketemp.size() == 1)
                 return;
 
             for(int i = 0 ; i < liketemp.size() ; i++) {
@@ -505,7 +535,7 @@ public class aAccessibilityService extends AccessibilityService {
             TextView tempafter;
             int focusposition;
 
-            if(noticetemp == null || noticeaftertemp == null)
+            if(noticetemp == null || noticeaftertemp == null || noticetemp.size() == 1)
                 return;
 
             for(int i = 0 ; i < noticetemp.size() ; i++) {
@@ -563,7 +593,7 @@ public class aAccessibilityService extends AccessibilityService {
             TextView tempafter;
             int focusposition;
 
-            if(searchtemp == null || searchaftertemp == null)
+            if(searchtemp == null || searchaftertemp == null || searchtemp.size() == 1)
                 return;
 
             for(int i = 0 ; i < searchtemp.size() ; i++) {
@@ -626,7 +656,7 @@ public class aAccessibilityService extends AccessibilityService {
             TextView tempbefore;
             int focusposition;
 
-            if(rowtemp == null || rowbeforetemp == null)
+            if(rowtemp == null || rowbeforetemp == null || rowtemp.size() == 1)
                 return;
 
             for(int i = 0 ; i < rowtemp.size() ; i++) {
@@ -681,7 +711,7 @@ public class aAccessibilityService extends AccessibilityService {
             TextView tempbefore;
             int focusposition;
 
-            if(sectiontemp == null || sectionbeforetemp == null)
+            if(sectiontemp == null || sectionbeforetemp == null || sectiontemp.size() == 1)
                 return;
 
             for(int i = 0 ; i < sectiontemp.size() ; i++) {
@@ -736,7 +766,7 @@ public class aAccessibilityService extends AccessibilityService {
             TextView tempbefore;
             int focusposition;
 
-            if(liketemp == null || likebeforetemp == null)
+            if(liketemp == null || likebeforetemp == null || liketemp.size() == 1)
                 return;
 
             for(int i = 0 ; i < liketemp.size() ; i++) {
@@ -791,7 +821,7 @@ public class aAccessibilityService extends AccessibilityService {
             TextView tempbefore;
             int focusposition;
 
-            if(noticetemp == null || noticebeforetemp == null)
+            if(noticetemp == null || noticebeforetemp == null || noticetemp.size() == 1)
                 return;
 
             for(int i = 0 ; i < noticetemp.size() ; i++) {
@@ -846,7 +876,7 @@ public class aAccessibilityService extends AccessibilityService {
             TextView tempbefore;
             int focusposition;
 
-            if(searchtemp == null || searchbeforetemp == null)
+            if(searchtemp == null || searchbeforetemp == null || searchtemp.size() == 1)
                 return;
 
             for(int i = 0 ; i < searchtemp.size() ; i++) {

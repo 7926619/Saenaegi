@@ -112,8 +112,12 @@ public class aLikeVideoActivity extends AppCompatActivity {
                 for (int i = 0; i < childRowCount; i++) {
                     constraintLayout = (ConstraintLayout) listView.getAdapter().getView(i - firstpos, null, listView);
                     linearLayout1 = (LinearLayout)constraintLayout.findViewById(R.id.linear1);
-                    if(childRowCount == 1)
+                    if(childRowCount == 1) {
+                        row = (TextView) linearLayout1.findViewWithTag(i - firstpos);
+                        row.setId(i - firstpos);
+                        likeList.add(row);
                         break;
+                    }
                     else if(childRowCount >= 2 && i - firstpos == 0) {
                         row = (TextView) linearLayout1.findViewWithTag(i - firstpos);
                         row.setId(i - firstpos);
