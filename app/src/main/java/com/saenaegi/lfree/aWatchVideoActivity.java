@@ -12,6 +12,8 @@ import android.widget.TextView;
 import android.content.Intent;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
@@ -21,14 +23,19 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
 import com.saenaegi.lfree.Data.Subtitle;
 import com.saenaegi.lfree.Data.Video;
 import com.saenaegi.lfree.SubtitleController.SubtitleAndKey;
 import com.saenaegi.lfree.SubtitleController.SubtitleData;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -53,9 +60,8 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
     private DatabaseReference databaseReference = firebaseDatabase.getReference().child( "LFREE" ).child( "VIDEO" );
     private DatabaseReference databaseReference2=firebaseDatabase.getReference().child( "LFREE" ).child( "LIKEVIDEO" ).child( userid );
     private DatabaseReference databaseReference3=firebaseDatabase.getReference().child( "LFREE" );
-    private FirebaseStorage firebaseStorage=FirebaseStorage.getInstance();
-    private StorageReference LookReference=firebaseStorage.getReference().child( "LookSubtitle");
-    private StorageReference ListorageReference=firebaseStorage.getReference().child( "ListenSubtitle");
+    private FirebaseStorage storage=FirebaseStorage.getInstance();
+    private StorageReference look=storage.getReference().child( "LookSubtitle" );
     private ArrayList<String> likesubtitleKey=new ArrayList<>();
     private TextToSpeech tts;
 
@@ -81,7 +87,7 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
         videoID = data.getExtras().getString( "link" );
         sectionCount = data.getExtras().getInt( "count" );
         nowSection = data.getExtras().getInt( "nowSection" );   //nowSection이 잘 넘어오는 지 확인
-        madesection=new String[sectionCount];
+        madesection=new String[sectionCount+1];
 
         /* 동영상 로드 및 초기화 */
         listener = new YouTubePlayer.OnInitializedListener() {
@@ -183,6 +189,7 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
         tv1.setOnClickListener( new View.OnClickListener() {
             public void onClick(View v) {
                 if(sectionSubtitles.size()!=0) {
+                    tts.shutdown();
                     Intent intent = new Intent( aWatchVideoActivity.this, aSelectPartActivity.class );
                     intent.putExtra( "link", videoID );
                     intent.putExtra( "count", sectionCount );
@@ -209,7 +216,7 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
                         position = 0;
                     }
                     Log.e( "position",String.valueOf(position) );
-                    readingSubtitle();
+                    getLookSubtitleData();
                 }else {
                     String eventText = "같은 파트에 다른 것 선택 버튼 클릭 : 파트를 먼저 선택하여 주세요";
                     Toast.makeText(getApplication(), eventText, Toast.LENGTH_SHORT).show();
@@ -312,7 +319,7 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
                                 }
                             }
                             String index = subtitleSnap.getKey();
-                            if(subtitles.size()!=0) {
+                            if(subtitles.size()!=0&&Integer.parseInt( index )!=0) {
                                 Collections.sort( subtitles );
                                 sectionSubtitles.put( index, subtitles );
                             }
@@ -329,7 +336,7 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
                 }
                 if(nowSection!=0){
                     Toast.makeText(getApplication(), "자막읽자읽자읽자!!!!!!!!!!!!!!!!!!", Toast.LENGTH_LONG).show();
-                    readingSubtitle();
+                    getLookSubtitleData();
                 }
 
             }
@@ -341,15 +348,58 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
         } );
     }
 
-    public void readingSubtitle(){
-
-        getLookSubtitleData();
-    }
 
     public void getLookSubtitleData() {
+        subtitleDatas.clear();
+        String key=sectionSubtitles.get(String.valueOf(nowSection)).get(position).getKey();
+        String filename=key+".txt";
+        StorageReference islandRef=look.child(idvideo).child(String.valueOf( nowSection)).child(filename);
+        try {
+            final File localFile = File.createTempFile( key, "txt" );
+            StorageTask<FileDownloadTask.TaskSnapshot> taskSnapshotStorageTask = islandRef.getFile( localFile );
+            taskSnapshotStorageTask.addOnSuccessListener( new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    // Local temp file has been created
+                    //Log.e( "chedkFileReader"," read file success" );
+                    try {
+                        FileReader fileReader = new FileReader( localFile );
+                        BufferedReader bufferedReader = new BufferedReader( fileReader );
+                        String onLine = null;
+                        while ((onLine = bufferedReader.readLine()) != null) {
+                            //Log.e( "chedkFileReader", "in of while" );
+                            String[] arr = onLine.split( "\t" );
+                            SubtitleData subtitleData = new SubtitleData( arr[0].trim(), arr[1].trim(), arr[2].trim() );
+                            subtitleDatas.add( subtitleData );
+                        }
+                        //Log.e( "chedkFileReader", String.valueOf( subtitleDatas.size() ) );
+                        fileReader.close();
+                        bufferedReader.close();
+                    } catch (IOException e) {
+                        //Log.e( "chedkFileReader"," success file not exist" );
+                        e.printStackTrace();
+                    }
 
-        ArrayList<SubtitleAndKey> temp=sectionSubtitles.get( String.valueOf( nowSection));
-        String key=temp.get( position ).getKey();
+                    //여기에 자막 읽어주기
+                    String eventText = subtitleDatas.get( 0 ).getSubString();
+                    Toast.makeText(getApplication(), eventText, Toast.LENGTH_SHORT).show();
+                    tts.setSpeechRate((float)0.87);
+                    tts.speak(eventText, TextToSpeech.QUEUE_FLUSH, null);
+
+                        //자막 재생 하는 부분
+                }
+
+            } ).addOnFailureListener( new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle any errors
+                    //Log.e( "chedkFileReader"," read file false" );
+                }
+            } );
+        } catch (IOException e){
+            //Log.e( "chedkFileReader"," not make file" );
+        }
+
 
     }
 }

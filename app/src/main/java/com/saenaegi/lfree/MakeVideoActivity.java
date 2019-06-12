@@ -267,7 +267,7 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
     public void modifyDataView() {
         Intent data = getIntent();
         // section의 처음과 끝 시간-> 유투브 시간을 불러와서 넣어 주어야 한다. 미리 넣어 줘야 하는 것들
-        sectionNum = data.getExtras().getInt("part");
+        sectionNum = Integer.parseInt(data.getExtras().getString("part"));
         if(min < 10) {
             subtitle.setSectionS((sectionNum-1)+"0:00");
             if(sec < 10)
@@ -481,7 +481,7 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
         Intent data = getIntent();
         // section의 처음과 끝 시간-> 유투브 시간을 불러와서 넣어 주어야 한다. 미리 넣어 줘야 하는 것들
         if(modify == true) {
-            sectionNum = data.getExtras().getInt("part");
+            sectionNum = Integer.parseInt(data.getExtras().getString("part"));
         } else {
             sectionNum = Integer.parseInt(data.getExtras().getString("part"));
         }
