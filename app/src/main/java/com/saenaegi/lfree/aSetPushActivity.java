@@ -24,13 +24,5 @@ public class aSetPushActivity extends AppCompatActivity {
         {
             public void onClick(View v) { }
         });
-        TextView tv3 = (TextView) findViewById(R.id.back);
-        tv3.setOnClickListener(new View.OnClickListener()
-        {
-            public void onClick(View v) {
-                Intent intent = new Intent(aSetPushActivity.this, aSettingsActivity.class);
-                startActivity(intent);
-            }
-        });
     }
 }
