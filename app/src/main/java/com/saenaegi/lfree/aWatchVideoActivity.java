@@ -218,7 +218,7 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
                     Log.e( "position",String.valueOf(position) );
                     getLookSubtitleData();
                 }else {
-                    String eventText = "같은 파트에 다른 것 선택 버튼 클릭 : 파트를 먼저 선택하여 주세요";
+                    String eventText = "다른 해설 재생 버튼 클릭 : 파트를 먼저 선택하여 주세요";
                     Toast.makeText(getApplication(), eventText, Toast.LENGTH_SHORT).show();
                     tts.setSpeechRate((float)0.87);
                     tts.speak(eventText, TextToSpeech.QUEUE_FLUSH, null);
