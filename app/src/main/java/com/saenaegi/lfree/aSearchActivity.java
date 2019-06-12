@@ -87,7 +87,9 @@ public class aSearchActivity extends AppCompatActivity implements View.OnClickLi
             ArrayList<String> mResult = results.getStringArrayList(key);
             String[] rs = new String[mResult.size()];
             mResult.toArray(rs);
-            Toast.makeText(getApplicationContext(),""+rs[0],Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(aSearchActivity.this, aSearchVideoActivity.class);
+            intent.putExtra( "search" , rs[0]);
+            startActivity(intent);
         }
         //음성 인식 준비가 되었으면
         @Override public void onReadyForSpeech(Bundle params) {
