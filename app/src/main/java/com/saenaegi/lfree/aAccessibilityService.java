@@ -84,8 +84,21 @@ public class aAccessibilityService extends AccessibilityService {
             TextView temp;
             int focusposition;
 
-            if(rowtemp == null || rowaftertemp == null || rowtemp.size() == 1)
+            if(rowtemp == null || rowaftertemp == null)
                 return;
+
+            else if(rowtemp.size() == 1) {
+                temp = rowtemp.get(0);
+                listviewtemp.findViewsWithText(arr2, "constraint_" + temp.getContentDescription(), ViewStub.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
+                arr2.get(0).setFocusable(true);
+                arr2.get(0).setFocusableInTouchMode(true);
+                arr2.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
+                arr2.remove(0);
+                arr.remove(0);
+                focusposition = 0;
+                listviewitemposition = focusposition;
+                return;
+            }
 
             temp = rowtemp.get(0);
             for(int j = 0 ; j < rowaftertemp.size() ; j++) {
@@ -111,8 +124,21 @@ public class aAccessibilityService extends AccessibilityService {
             TextView temp;
             int focusposition;
 
-            if(sectiontemp == null || sectionaftertemp == null || sectiontemp.size() == 1)
+            if(sectiontemp == null || sectionaftertemp == null)
                 return;
+
+            else if(sectiontemp.size() == 1) {
+                temp = sectiontemp.get(0);
+                listviewtemp.findViewsWithText(arr2, "constraint_" + temp.getContentDescription(), ViewStub.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
+                arr2.get(0).setFocusable(true);
+                arr2.get(0).setFocusableInTouchMode(true);
+                arr2.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
+                arr2.remove(0);
+                arr.remove(0);
+                focusposition = 0;
+                listviewitemposition2 = focusposition;
+                return;
+            }
 
             temp = sectiontemp.get(0);
             for(int j = 0 ; j < sectionaftertemp.size() ; j++) {
@@ -138,8 +164,21 @@ public class aAccessibilityService extends AccessibilityService {
             TextView temp;
             int focusposition;
 
-            if(liketemp == null || likeaftertemp == null || liketemp.size() == 1)
+            if(liketemp == null || likeaftertemp == null)
                 return;
+
+            else if(liketemp.size() == 1) {
+                temp = liketemp.get(0);
+                listviewtemp.findViewsWithText(arr2, "constraint_" + temp.getContentDescription(), ViewStub.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
+                arr2.get(0).setFocusable(true);
+                arr2.get(0).setFocusableInTouchMode(true);
+                arr2.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
+                arr2.remove(0);
+                arr.remove(0);
+                focusposition = 0;
+                listviewitemposition3 = focusposition;
+                return;
+            }
 
             temp = liketemp.get(0);
             for(int j = 0 ; j < likeaftertemp.size() ; j++) {
@@ -165,8 +204,21 @@ public class aAccessibilityService extends AccessibilityService {
             TextView temp;
             int focusposition;
 
-            if(noticetemp == null || noticeaftertemp == null || noticetemp.size() == 1)
+            if(noticetemp == null || noticeaftertemp == null)
                 return;
+
+            else if(noticetemp.size() == 1) {
+                temp = noticetemp.get(0);
+                listviewtemp.findViewsWithText(arr2, "constraint_" + temp.getContentDescription(), ViewStub.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
+                arr2.get(0).setFocusable(true);
+                arr2.get(0).setFocusableInTouchMode(true);
+                arr2.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
+                arr2.remove(0);
+                arr.remove(0);
+                focusposition = 0;
+                listviewitemposition4 = focusposition;
+                return;
+            }
 
             temp = noticetemp.get(0);
             for(int j = 0 ; j < noticeaftertemp.size() ; j++) {
@@ -192,8 +244,21 @@ public class aAccessibilityService extends AccessibilityService {
             TextView temp;
             int focusposition;
 
-            if(searchtemp == null || searchaftertemp == null || searchtemp.size() == 1)
+            if(searchtemp == null || searchaftertemp == null)
                 return;
+
+            else if(searchtemp.size() == 1) {
+                temp = searchtemp.get(0);
+                listviewtemp.findViewsWithText(arr2, "constraint_" + temp.getContentDescription(), ViewStub.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
+                arr2.get(0).setFocusable(true);
+                arr2.get(0).setFocusableInTouchMode(true);
+                arr2.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
+                arr2.remove(0);
+                arr.remove(0);
+                focusposition = 0;
+                listviewitemposition5 = focusposition;
+                return;
+            }
 
             temp = searchtemp.get(0);
             for(int j = 0 ; j < searchaftertemp.size() ; j++) {
@@ -221,8 +286,21 @@ public class aAccessibilityService extends AccessibilityService {
             TextView temp;
             int focusposition;
 
-            if(rowtemp == null || rowbeforetemp == null || rowtemp.size() == 1)
+            if(rowtemp == null || rowbeforetemp == null)
                 return;
+
+            else if(rowtemp.size() == 1) {
+                temp = rowtemp.get(rowtemp.size()-1);
+                listviewtemp.findViewsWithText(arr2, "constraint_" + temp.getContentDescription(), ViewStub.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
+                arr2.get(0).setFocusable(true);
+                arr2.get(0).setFocusableInTouchMode(true);
+                arr2.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
+                arr2.remove(0);
+                arr.remove(0);
+                focusposition = 0;
+                listviewitemposition = focusposition;
+                return;
+            }
 
             temp = rowtemp.get(rowtemp.size()-1);
             for(int j = 0 ; j < rowbeforetemp.size() ; j++) {
@@ -248,8 +326,21 @@ public class aAccessibilityService extends AccessibilityService {
             TextView temp;
             int focusposition;
 
-            if(sectiontemp == null || sectionbeforetemp == null || sectiontemp.size() == 1)
+            if(sectiontemp == null || sectionbeforetemp == null)
                 return;
+
+            else if(sectiontemp.size() == 1) {
+                temp = sectiontemp.get(sectiontemp.size()-1);
+                listviewtemp.findViewsWithText(arr2, "constraint_" + temp.getContentDescription(), ViewStub.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
+                arr2.get(0).setFocusable(true);
+                arr2.get(0).setFocusableInTouchMode(true);
+                arr2.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
+                arr2.remove(0);
+                arr.remove(0);
+                focusposition = 0;
+                listviewitemposition2 = focusposition;
+                return;
+            }
 
             temp = sectiontemp.get(sectiontemp.size()-1);
             for(int j = 0 ; j < sectionbeforetemp.size() ; j++) {
@@ -275,8 +366,21 @@ public class aAccessibilityService extends AccessibilityService {
             TextView temp;
             int focusposition;
 
-            if(liketemp == null || likebeforetemp == null || liketemp.size() == 1)
+            if(liketemp == null || likebeforetemp == null)
                 return;
+
+            else if(liketemp.size() == 1) {
+                temp = liketemp.get(liketemp.size()-1);
+                listviewtemp.findViewsWithText(arr2, "constraint_" + temp.getContentDescription(), ViewStub.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
+                arr2.get(0).setFocusable(true);
+                arr2.get(0).setFocusableInTouchMode(true);
+                arr2.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
+                arr2.remove(0);
+                arr.remove(0);
+                focusposition = 0;
+                listviewitemposition3 = focusposition;
+                return;
+            }
 
             temp = liketemp.get(liketemp.size()-1);
             for(int j = 0 ; j < likebeforetemp.size() ; j++) {
@@ -302,8 +406,21 @@ public class aAccessibilityService extends AccessibilityService {
             TextView temp;
             int focusposition;
 
-            if(noticetemp == null || noticebeforetemp == null || noticetemp.size() == 1)
+            if(noticetemp == null || noticebeforetemp == null)
                 return;
+
+            else if(noticetemp.size() == 1) {
+                temp = noticetemp.get(noticetemp.size()-1);
+                listviewtemp.findViewsWithText(arr2, "constraint_" + temp.getContentDescription(), ViewStub.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
+                arr2.get(0).setFocusable(true);
+                arr2.get(0).setFocusableInTouchMode(true);
+                arr2.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
+                arr2.remove(0);
+                arr.remove(0);
+                focusposition = 0;
+                listviewitemposition4 = focusposition;
+                return;
+            }
 
             temp = noticetemp.get(noticetemp.size()-1);
             for(int j = 0 ; j < noticebeforetemp.size() ; j++) {
@@ -329,8 +446,21 @@ public class aAccessibilityService extends AccessibilityService {
             TextView temp;
             int focusposition;
 
-            if(searchtemp == null || searchbeforetemp == null || searchtemp.size() == 1)
+            if(searchtemp == null || searchbeforetemp == null)
                 return;
+
+            else if(searchtemp.size() == 1) {
+                temp = searchtemp.get(searchtemp.size()-1);
+                listviewtemp.findViewsWithText(arr2, "constraint_" + temp.getContentDescription(), ViewStub.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
+                arr2.get(0).setFocusable(true);
+                arr2.get(0).setFocusableInTouchMode(true);
+                arr2.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
+                arr2.remove(0);
+                arr.remove(0);
+                focusposition = 0;
+                listviewitemposition5 = focusposition;
+                return;
+            }
 
             temp = searchtemp.get(searchtemp.size()-1);
             for(int j = 0 ; j < searchbeforetemp.size() ; j++) {
@@ -361,8 +491,21 @@ public class aAccessibilityService extends AccessibilityService {
             TextView tempafter;
             int focusposition;
 
-            if(rowtemp == null || rowaftertemp == null || rowtemp.size() == 1)
+            if(rowtemp == null || rowaftertemp == null)
                 return;
+
+            else if(rowtemp.size() == 1) {
+                temp = rowtemp.get(0);
+                listviewtemp.findViewsWithText(arr2, "constraint_" + temp.getContentDescription(), ViewStub.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
+                arr2.get(0).setFocusable(true);
+                arr2.get(0).setFocusableInTouchMode(true);
+                arr2.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
+                arr2.remove(0);
+                arr.remove(0);
+                focusposition = 0;
+                listviewitemposition = focusposition;
+                return;
+            }
 
             for(int i = 0 ; i < rowtemp.size() ; i++) {
                 temp = rowtemp.get(i);
@@ -419,8 +562,21 @@ public class aAccessibilityService extends AccessibilityService {
             TextView tempafter;
             int focusposition;
 
-            if(sectiontemp == null || sectionaftertemp == null || sectiontemp.size() == 1)
+            if(sectiontemp == null || sectionaftertemp == null)
                 return;
+
+            else if(sectiontemp.size() == 1) {
+                temp = sectiontemp.get(0);
+                listviewtemp.findViewsWithText(arr2, "constraint_" + temp.getContentDescription(), ViewStub.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
+                arr2.get(0).setFocusable(true);
+                arr2.get(0).setFocusableInTouchMode(true);
+                arr2.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
+                arr2.remove(0);
+                arr.remove(0);
+                focusposition = 0;
+                listviewitemposition2 = focusposition;
+                return;
+            }
 
             for(int i = 0 ; i < sectiontemp.size() ; i++) {
                 temp = sectiontemp.get(i);
@@ -477,8 +633,21 @@ public class aAccessibilityService extends AccessibilityService {
             TextView tempafter;
             int focusposition;
 
-            if(liketemp == null || likeaftertemp == null || liketemp.size() == 1)
+            if(liketemp == null || likeaftertemp == null)
                 return;
+
+            else if(liketemp.size() == 1) {
+                temp = liketemp.get(0);
+                listviewtemp.findViewsWithText(arr2, "constraint_" + temp.getContentDescription(), ViewStub.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
+                arr2.get(0).setFocusable(true);
+                arr2.get(0).setFocusableInTouchMode(true);
+                arr2.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
+                arr2.remove(0);
+                arr.remove(0);
+                focusposition = 0;
+                listviewitemposition3 = focusposition;
+                return;
+            }
 
             for(int i = 0 ; i < liketemp.size() ; i++) {
                 temp = liketemp.get(i);
@@ -535,8 +704,21 @@ public class aAccessibilityService extends AccessibilityService {
             TextView tempafter;
             int focusposition;
 
-            if(noticetemp == null || noticeaftertemp == null || noticetemp.size() == 1)
+            if(noticetemp == null || noticeaftertemp == null)
                 return;
+
+            else if(noticetemp.size() == 1) {
+                temp = noticetemp.get(0);
+                listviewtemp.findViewsWithText(arr2, "constraint_" + temp.getContentDescription(), ViewStub.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
+                arr2.get(0).setFocusable(true);
+                arr2.get(0).setFocusableInTouchMode(true);
+                arr2.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
+                arr2.remove(0);
+                arr.remove(0);
+                focusposition = 0;
+                listviewitemposition4 = focusposition;
+                return;
+            }
 
             for(int i = 0 ; i < noticetemp.size() ; i++) {
                 temp = noticetemp.get(i);
@@ -593,8 +775,21 @@ public class aAccessibilityService extends AccessibilityService {
             TextView tempafter;
             int focusposition;
 
-            if(searchtemp == null || searchaftertemp == null || searchtemp.size() == 1)
+            if(searchtemp == null || searchaftertemp == null)
                 return;
+
+            else if(searchtemp.size() == 1) {
+                temp = searchtemp.get(0);
+                listviewtemp.findViewsWithText(arr2, "constraint_" + temp.getContentDescription(), ViewStub.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
+                arr2.get(0).setFocusable(true);
+                arr2.get(0).setFocusableInTouchMode(true);
+                arr2.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
+                arr2.remove(0);
+                arr.remove(0);
+                focusposition = 0;
+                listviewitemposition5 = focusposition;
+                return;
+            }
 
             for(int i = 0 ; i < searchtemp.size() ; i++) {
                 temp = searchtemp.get(i);
@@ -656,8 +851,21 @@ public class aAccessibilityService extends AccessibilityService {
             TextView tempbefore;
             int focusposition;
 
-            if(rowtemp == null || rowbeforetemp == null || rowtemp.size() == 1)
+            if(rowtemp == null || rowbeforetemp == null)
                 return;
+
+            else if(rowtemp.size() == 1) {
+                temp = rowtemp.get(0);
+                listviewtemp.findViewsWithText(arr2, "constraint_" + temp.getContentDescription(), ViewStub.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
+                arr2.get(0).setFocusable(true);
+                arr2.get(0).setFocusableInTouchMode(true);
+                arr2.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
+                arr2.remove(0);
+                arr.remove(0);
+                focusposition = 0;
+                listviewitemposition = focusposition;
+                return;
+            }
 
             for(int i = 0 ; i < rowtemp.size() ; i++) {
                 temp = rowtemp.get(i);
@@ -711,8 +919,21 @@ public class aAccessibilityService extends AccessibilityService {
             TextView tempbefore;
             int focusposition;
 
-            if(sectiontemp == null || sectionbeforetemp == null || sectiontemp.size() == 1)
+            if(sectiontemp == null || sectionbeforetemp == null)
                 return;
+
+            else if(sectiontemp.size() == 1) {
+                temp = sectiontemp.get(0);
+                listviewtemp.findViewsWithText(arr2, "constraint_" + temp.getContentDescription(), ViewStub.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
+                arr2.get(0).setFocusable(true);
+                arr2.get(0).setFocusableInTouchMode(true);
+                arr2.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
+                arr2.remove(0);
+                arr.remove(0);
+                focusposition = 0;
+                listviewitemposition2 = focusposition;
+                return;
+            }
 
             for(int i = 0 ; i < sectiontemp.size() ; i++) {
                 temp = sectiontemp.get(i);
@@ -766,8 +987,21 @@ public class aAccessibilityService extends AccessibilityService {
             TextView tempbefore;
             int focusposition;
 
-            if(liketemp == null || likebeforetemp == null || liketemp.size() == 1)
+            if(liketemp == null || likebeforetemp == null)
                 return;
+
+            else if(liketemp.size() == 1) {
+                temp = liketemp.get(0);
+                listviewtemp.findViewsWithText(arr2, "constraint_" + temp.getContentDescription(), ViewStub.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
+                arr2.get(0).setFocusable(true);
+                arr2.get(0).setFocusableInTouchMode(true);
+                arr2.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
+                arr2.remove(0);
+                arr.remove(0);
+                focusposition = 0;
+                listviewitemposition3 = focusposition;
+                return;
+            }
 
             for(int i = 0 ; i < liketemp.size() ; i++) {
                 temp = liketemp.get(i);
@@ -821,8 +1055,21 @@ public class aAccessibilityService extends AccessibilityService {
             TextView tempbefore;
             int focusposition;
 
-            if(noticetemp == null || noticebeforetemp == null || noticetemp.size() == 1)
+            if(noticetemp == null || noticebeforetemp == null)
                 return;
+
+            else if(noticetemp.size() == 1) {
+                temp = noticetemp.get(0);
+                listviewtemp.findViewsWithText(arr2, "constraint_" + temp.getContentDescription(), ViewStub.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
+                arr2.get(0).setFocusable(true);
+                arr2.get(0).setFocusableInTouchMode(true);
+                arr2.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
+                arr2.remove(0);
+                arr.remove(0);
+                focusposition = 0;
+                listviewitemposition4 = focusposition;
+                return;
+            }
 
             for(int i = 0 ; i < noticetemp.size() ; i++) {
                 temp = noticetemp.get(i);
@@ -876,8 +1123,21 @@ public class aAccessibilityService extends AccessibilityService {
             TextView tempbefore;
             int focusposition;
 
-            if(searchtemp == null || searchbeforetemp == null || searchtemp.size() == 1)
+            if(searchtemp == null || searchbeforetemp == null)
                 return;
+
+            else if(searchtemp.size() == 1) {
+                temp = searchtemp.get(0);
+                listviewtemp.findViewsWithText(arr2, "constraint_" + temp.getContentDescription(), ViewStub.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
+                arr2.get(0).setFocusable(true);
+                arr2.get(0).setFocusableInTouchMode(true);
+                arr2.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
+                arr2.remove(0);
+                arr.remove(0);
+                focusposition = 0;
+                listviewitemposition5 = focusposition;
+                return;
+            }
 
             for(int i = 0 ; i < searchtemp.size() ; i++) {
                 temp = searchtemp.get(i);
