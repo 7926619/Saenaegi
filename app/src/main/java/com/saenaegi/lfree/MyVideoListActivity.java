@@ -26,8 +26,11 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -60,6 +63,8 @@ public class MyVideoListActivity extends AppCompatActivity implements Navigation
     boolean makevideo=false;
     private ArrayList<ListviewItem> data = new ArrayList<>();
     private ArrayList<Video> videos =new ArrayList<>( );
+    private FirebaseAuth firebaseAuth;
+    private TextView LoginUserName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +99,13 @@ public class MyVideoListActivity extends AppCompatActivity implements Navigation
 
         navigationView = (NavigationView) findViewById(R.id.navigationView);
         navigationView.setNavigationItemSelectedListener(this);
+
+        /* 구글 정보 불러오기 */
+        firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser g_user = firebaseAuth.getCurrentUser();
+        View headerView = navigationView.getHeaderView(0);
+        LoginUserName = (TextView)headerView.findViewById(R.id.textView10);
+        LoginUserName.setText(g_user.getDisplayName() + "님");
 
         /* list view */
         listView = (ListView) findViewById(R.id.listview);
@@ -137,7 +149,7 @@ public class MyVideoListActivity extends AppCompatActivity implements Navigation
                     for(DataSnapshot temp:snapshot.child( "SUBTITLE" ).getChildren()) {
                         for(DataSnapshot tmp:temp.getChildren()) {
                             Subtitle subtitle = tmp.getValue( Subtitle.class );
-                            if (subtitle.getIdgoogle().equals( "userid" )) {
+                            if (subtitle.getName().equals( FirebaseAuth.getInstance().getCurrentUser().getDisplayName() )) {
                                 videos.add( video );
                                 ListviewItem item = new ListviewItem( StringToBitMap( video.getBitt() ), video.getTitle(), "조회수 : "+video.getView() );
                                 data.add( item );

@@ -19,8 +19,11 @@ import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.saenaegi.lfree.ListviewController.ListviewAdapter;
 import com.saenaegi.lfree.ListviewController.ListviewItem;
 
@@ -31,6 +34,8 @@ public class SettingsActivity extends AppCompatActivity implements NavigationVie
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private boolean push_state = false;
+    private FirebaseAuth firebaseAuth;
+    private TextView LoginUserName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +70,13 @@ public class SettingsActivity extends AppCompatActivity implements NavigationVie
 
         navigationView = (NavigationView) findViewById(R.id.navigationView);
         navigationView.setNavigationItemSelectedListener(this);
+
+        /* 구글 정보 불러오기 */
+        firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser googleUser = firebaseAuth.getCurrentUser();
+        View headerView = navigationView.getHeaderView(0);
+        LoginUserName = (TextView)headerView.findViewById(R.id.textView10);
+        LoginUserName.setText(googleUser.getDisplayName() + "님");
 
         /* list view */
         ListView listView = (ListView) findViewById(R.id.listview);

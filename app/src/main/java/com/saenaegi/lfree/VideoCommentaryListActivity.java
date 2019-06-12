@@ -30,9 +30,12 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.youtube.player.YouTubePlayer;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -64,6 +67,8 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
     private Bitmap thumb;
     private String url;
     private ProgressBar progressBar;
+    private FirebaseAuth firebaseAuth;
+    private TextView LoginUserName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +103,13 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
 
         navigationView = (NavigationView) findViewById(R.id.navigationView);
         navigationView.setNavigationItemSelectedListener(this);
+
+        /* 구글 정보 불러오기 */
+        firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser googleUser = firebaseAuth.getCurrentUser();
+        View headerView = navigationView.getHeaderView(0);
+        LoginUserName = (TextView)headerView.findViewById(R.id.textView10);
+        LoginUserName.setText(googleUser.getDisplayName() + "님");
 
         listView = (ListView) findViewById(R.id.listview);
         adapter = new ListviewAdapter(this, R.layout.listview_item, data);

@@ -43,6 +43,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -87,7 +89,7 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
     private YouTubePlayer player;
     private String videoID;
     private String idvideo;
-    private String userid="userid";
+    private String userid;
     private int sectionCount;
     private ArrayList<Boolean> listState=new ArrayList<>();
     private HashMap<String, ArrayList<SubtitleAndKey>> sectionSubtitles=new HashMap<>();
@@ -96,7 +98,7 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
     private SubtitleAndKey choicesubtitleAndKey;
     private FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference=firebaseDatabase.getReference().child( "LFREE" ).child( "VIDEO" );
-    private DatabaseReference databaseReference2=firebaseDatabase.getReference().child( "LFREE" ).child( "LIKEVIDEO" ).child( userid );
+    private DatabaseReference databaseReference2=firebaseDatabase.getReference().child( "LFREE" ).child( "LIKEVIDEO" );
     private FirebaseStorage storage=FirebaseStorage.getInstance();
     private StorageReference look=storage.getReference().child( "LookSubtitle" );
     private StorageReference listen=storage.getReference().child( "ListenSubtitle" );
@@ -107,6 +109,8 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
     private int flag = 1;
     private int flag2 = 1;
     private TextToSpeech tts;
+    private FirebaseAuth firebaseAuth;
+    private TextView LoginUserName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,6 +146,15 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
 
         navigationView = findViewById(R.id.navigationView);
         navigationView.setNavigationItemSelectedListener(this);
+
+        /* 구글 정보 불러오기 */
+        firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser googleUser = firebaseAuth.getCurrentUser();
+        View headerView = navigationView.getHeaderView(0);
+        LoginUserName = (TextView)headerView.findViewById(R.id.textView10);
+        LoginUserName.setText(googleUser.getDisplayName() + "님");
+        userid = googleUser.getDisplayName();
+        databaseReference2 = databaseReference2.child(userid);
 
         /* youtube_screen */
         Display display = getWindowManager().getDefaultDisplay();
@@ -651,7 +664,7 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
                 public boolean onMenuItemClick(MenuItem item) {
                     final String key=subtitleAndKey.getKey();
                     final int recommend=subtitleAndKey.getRecommend();
-                    final String makeUserid=temp.getIdgoogle();
+                    final String makeUserid=temp.getName();
                     final boolean type=temp.isType();
                     switch (item.getItemId()) {
                         case R.id.opt1:
@@ -687,6 +700,9 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
                             break;
                         case R.id.opt4:
                             if(userid.equals( makeUserid )){
+                                flag = -1;
+                                while(flag2==0) {
+                                }
                                 DeleteDataController dataController=new DeleteDataController(idvideo,key,posi,type);
                                 sectionSubtitles.get( String.valueOf( posi ) ).remove( position );
                                 dataController.deleteData(sectionCount, sectionSubtitles);

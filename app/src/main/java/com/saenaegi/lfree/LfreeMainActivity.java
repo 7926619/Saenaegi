@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -22,12 +24,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -38,7 +42,9 @@ import com.saenaegi.lfree.RecycleviewController.RecyclerAdapter;
 import com.saenaegi.lfree.RecycleviewController.Data;
 import com.squareup.picasso.Picasso;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -56,10 +62,8 @@ public class LfreeMainActivity extends AppCompatActivity implements NavigationVi
 
     private ArrayList<Video> pvideos=new ArrayList<>(  );
     private ArrayList<Video> mvideos=new ArrayList<>(  );
-    public FirebaseAuth firebaseAuth;
-    TextView LoginUserProfile;
-    private Bitmap thumb;
-    private String url;
+    private FirebaseAuth firebaseAuth;
+    private TextView LoginUserName;
 
     private ProgressBar progressBar1, progressBar2;
 
@@ -119,13 +123,13 @@ public class LfreeMainActivity extends AppCompatActivity implements NavigationVi
             }
         });
 
-        /*
-        View headerView = navigationView.getHeaderView(0);
-        LoginUserProfile = (TextView)headerView.findViewById(R.id.textView10);
+        /* 구글 정보 불러오기 */
         firebaseAuth = FirebaseAuth.getInstance();
-        FirebaseUser user = firebaseAuth.getCurrentUser();
-        LoginUserProfile.setText(user.getDisplayName() + "님\n" + user.getEmail());
-        */
+        FirebaseUser googleUser = firebaseAuth.getCurrentUser();
+        View headerView = navigationView.getHeaderView(0);
+        LoginUserName = (TextView)headerView.findViewById(R.id.textView10);
+        LoginUserName.setText(googleUser.getDisplayName() + "님");
+
 
         /* recycle view */
         recyclerView1 = findViewById(R.id.complete_list);
