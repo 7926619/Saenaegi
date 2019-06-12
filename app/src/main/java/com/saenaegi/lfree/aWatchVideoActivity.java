@@ -1,6 +1,5 @@
 package com.saenaegi.lfree;
 
-import android.content.Context;
 import android.graphics.Point;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
@@ -9,7 +8,6 @@ import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.content.Intent;
 import android.widget.Toast;
@@ -23,11 +21,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.saenaegi.lfree.Data.Subtitle;
 import com.saenaegi.lfree.Data.Video;
 import com.saenaegi.lfree.SubtitleController.SubtitleAndKey;
 import com.saenaegi.lfree.SubtitleController.SubtitleData;
-import com.saenaegi.lfree.SubtitleController.outputDataController;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -41,7 +40,6 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
     private TextView play, pause, next, pre;
     private YouTubePlayer.OnInitializedListener listener;
     private YouTubePlayer player;
-    private File filedirectory;
     private String videoID;
     private String idvideo;
     private int sectionCount;
@@ -55,8 +53,10 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
     private DatabaseReference databaseReference = firebaseDatabase.getReference().child( "LFREE" ).child( "VIDEO" );
     private DatabaseReference databaseReference2=firebaseDatabase.getReference().child( "LFREE" ).child( "LIKEVIDEO" ).child( userid );
     private DatabaseReference databaseReference3=firebaseDatabase.getReference().child( "LFREE" );
+    private FirebaseStorage firebaseStorage=FirebaseStorage.getInstance();
+    private StorageReference LookReference=firebaseStorage.getReference().child( "LookSubtitle");
+    private StorageReference ListorageReference=firebaseStorage.getReference().child( "ListenSubtitle");
     private ArrayList<String> likesubtitleKey=new ArrayList<>();
-    private outputDataController output;
     private TextToSpeech tts;
 
 
@@ -69,7 +69,6 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
         //TextView gesturetext = (TextView)findViewById(R.id.gesture);
         //gesturetext.setLayoutParams(new RelativeLayout.LayoutParams(50,50));
 
-        filedirectory=this.getCacheDir();
 
         /* youtube용 변수 */
         play = (TextView) findViewById( R.id.textView22 );
@@ -343,14 +342,13 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
 
     public void readingSubtitle(){
 
-        output=new outputDataController();
-        ArrayList<SubtitleAndKey> temp=sectionSubtitles.get( String.valueOf( nowSection));
-        String key=temp.get( position ).getKey();
-        subtitleDatas = output.getLookSubtitleData( filedirectory, nowSection, idvideo, key );
-        // cash error로 인하여
-        subtitleDatas = output.getLookSubtitleData( filedirectory, nowSection, idvideo, key); //삭제 하면 은영이 울어요.
-        //이제 데이터를 TTS로 유투브 시간에 맞게 뽑아줘용
-
+        getLookSubtitleData();
     }
 
+    public void getLookSubtitleData() {
+
+        ArrayList<SubtitleAndKey> temp=sectionSubtitles.get( String.valueOf( nowSection));
+        String key=temp.get( position ).getKey();
+
+    }
 }

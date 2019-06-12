@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.net.Uri;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -35,9 +36,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCanceledListener;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
@@ -46,6 +48,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
 import com.saenaegi.lfree.Data.Subtitle;
 import com.saenaegi.lfree.Data.Video;
 import com.saenaegi.lfree.RecycleviewController_p.Data;
@@ -55,11 +61,13 @@ import com.saenaegi.lfree.RecycleviewController_s.RecyclerAdapterS;
 import com.saenaegi.lfree.SubtitleController.DeleteDataController;
 import com.saenaegi.lfree.SubtitleController.SubtitleAndKey;
 import com.saenaegi.lfree.SubtitleController.SubtitleData;
-import com.saenaegi.lfree.SubtitleController.outputDataController;
 
-import org.w3c.dom.Text;
-
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -81,8 +89,6 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
     private String idvideo;
     private String userid="userid";
     private int sectionCount;
-    private File filedirectory;
-    private outputDataController output;
     private ArrayList<Boolean> listState=new ArrayList<>();
     private HashMap<String, ArrayList<SubtitleAndKey>> sectionSubtitles=new HashMap<>();
     private ArrayList<SubtitleData> subtitleDatas=new ArrayList<>();
@@ -90,7 +96,11 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
     private FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference=firebaseDatabase.getReference().child( "LFREE" ).child( "VIDEO" );
     private DatabaseReference databaseReference2=firebaseDatabase.getReference().child( "LFREE" ).child( "LIKEVIDEO" ).child( userid );
+    private FirebaseStorage storage=FirebaseStorage.getInstance();
+    private StorageReference look=storage.getReference().child( "LookSubtitle" );
+    private StorageReference listen=storage.getReference().child( "ListenSubtitle" );
     private ArrayList<String> likesubtitleKey=new ArrayList<>();
+    private boolean kind=true;
     private CustomDialog customDialog;
     private TextView subtitlebox;
     private int flag = 1;
@@ -103,7 +113,6 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
         super.onCreate(savedInstanceState);
         this.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_watch_video);
-        filedirectory = this.getCacheDir();
 
         /* scroll on top */
         final ScrollView scroll_view = findViewById(R.id.scroll_view);
@@ -260,6 +269,7 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
 
             }
         } );
+
     }
     private void getData() {
         // 데이터 초기화
@@ -352,51 +362,127 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
         adapter1.notifyDataSetChanged();
     }
     public void setSubtitleDatas(int position, boolean type){
-        output=new outputDataController();
         if(type) {
-            while (subtitleDatas.size() == 0) {
-                subtitleDatas = output.getListenSubtitleData(filedirectory, posi, idvideo, sectionSubtitles.get(String.valueOf(posi)).get(position).getKey());
-            }
+                kind=false;
+               getListenSubtitleData(position);
         }
         else{
-            while (subtitleDatas.size() == 0) {
-                subtitleDatas = output.getLookSubtitleData(filedirectory, posi, idvideo, sectionSubtitles.get(String.valueOf(posi)).get(position).getKey());
+                 kind=false;
+              getLookSubtitleData(position);
+        }
+    }
+
+    public void getListenSubtitleData(final int position) {
+        subtitleDatas.clear();
+        String key=sectionSubtitles.get(String.valueOf(posi)).get(position).getKey();
+        String filename=key+".txt";
+        StorageReference islandRef=listen.child(idvideo).child(String.valueOf( posi)).child(filename);
+        try {
+            final File localFile = File.createTempFile( key, "txt" );
+            StorageTask<FileDownloadTask.TaskSnapshot> taskSnapshotStorageTask = islandRef.getFile( localFile ).addOnSuccessListener( new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    // Local temp file has been created
+                    Log.e( "chedkFileReader"," read file success" );
+                    try {
+                        FileReader fileReader = new FileReader( localFile );
+                        BufferedReader bufferedReader = new BufferedReader( fileReader );
+                        String onLine = null;
+                        while ((onLine = bufferedReader.readLine()) != null) {
+                            Log.e( "chedkFileReader", "in of while" );
+                            String[] arr = onLine.split( "\t" );
+                            SubtitleData subtitleData = new SubtitleData( arr[0].trim(), arr[1].trim(), arr[2].trim() );
+                            subtitleDatas.add( subtitleData );
+                        }
+                        Log.e( "chedkFileReader", String.valueOf( subtitleDatas.size()));
+                        fileReader.close();
+                        bufferedReader.close();
+                    }catch (IOException e){
+                        Log.e( "chedkFileReader", "not reading listener" );
+                    }
+
+                    if(kind) {
+                        String min = sectionSubtitles.get( String.valueOf( posi ) ).get( position ).getSubtitle().getSectionS().split( ":" )[0];
+                        String sec = sectionSubtitles.get( String.valueOf( posi ) ).get( position ).getSubtitle().getSectionS().split( ":" )[1];
+                        int compare = ((Integer.parseInt( min ) * 60) + Integer.parseInt( sec )) * 1000;
+
+                        player.seekToMillis( compare );
+                        flag = 0;
+                        flag2 = 0;
+                        Thread th = new Thread( r );
+                        th.start();
+                    }
+
+                }
+            } ).addOnFailureListener( new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle any errors
+                    Log.e( "chedkFileReader"," read file false" );
+                }
             }
+            );
+        }catch (IOException e){
+            Log.e( "chedkFileReader"," not make file" );
         }
     }
 
-    public void getListenSubtitle(int position) {
-        output=new outputDataController();
-        while (subtitleDatas.size() == 0) {
-            subtitleDatas = output.getListenSubtitleData(filedirectory, posi, idvideo, sectionSubtitles.get(String.valueOf(posi)).get(position).getKey());
+
+    public void getLookSubtitleData(final int position) {
+        subtitleDatas.clear();
+        String key=sectionSubtitles.get(String.valueOf(posi)).get(position).getKey();
+        String filename=key+".txt";
+        StorageReference islandRef=look.child(idvideo).child(String.valueOf( posi)).child(filename);
+        try {
+            final File localFile = File.createTempFile( key, "txt" );
+            StorageTask<FileDownloadTask.TaskSnapshot> taskSnapshotStorageTask = islandRef.getFile( localFile );
+            taskSnapshotStorageTask.addOnSuccessListener( new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    // Local temp file has been created
+                    Log.e( "chedkFileReader"," read file success" );
+                    try {
+                        FileReader fileReader = new FileReader( localFile );
+                        BufferedReader bufferedReader = new BufferedReader( fileReader );
+                        String onLine = null;
+                        while ((onLine = bufferedReader.readLine()) != null) {
+                            Log.e( "chedkFileReader", "in of while" );
+                            String[] arr = onLine.split( "\t" );
+                            SubtitleData subtitleData = new SubtitleData( arr[0].trim(), arr[1].trim(), arr[2].trim() );
+                            subtitleDatas.add( subtitleData );
+                        }
+                        Log.e( "chedkFileReader", String.valueOf( subtitleDatas.size() ) );
+                        fileReader.close();
+                        bufferedReader.close();
+                    }catch (IOException e){
+                        Log.e( "chedkFileReader"," success file not exist" );
+                        e.printStackTrace();
+                    }
+                    if(kind) {
+                        String min = sectionSubtitles.get( String.valueOf( posi ) ).get( position ).getSubtitle().getSectionS().split( ":" )[0];
+                        String sec = sectionSubtitles.get( String.valueOf( posi ) ).get( position ).getSubtitle().getSectionS().split( ":" )[1];
+                        int compare = ((Integer.parseInt( min ) * 60) + Integer.parseInt( sec )) * 1000;
+
+                        player.seekToMillis( compare );
+                        flag = 0;
+                        flag2 = 0;
+                        Thread th2 = new Thread( r2 );
+                        th2.start();
+                    }
+                }
+
+            } ).addOnFailureListener( new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle any errors
+                    Log.e( "chedkFileReader"," read file false" );
+                }
+            } );
+        } catch (IOException e){
+            Log.e( "chedkFileReader"," not make file" );
         }
 
-        String min = sectionSubtitles.get(String.valueOf(posi)).get(position).getSubtitle().getSectionS().split(":")[0];
-        String sec = sectionSubtitles.get(String.valueOf(posi)).get(position).getSubtitle().getSectionS().split(":")[1];
-        int compare = ((Integer.parseInt(min)*60) + Integer.parseInt(sec))*1000;
 
-        player.seekToMillis(compare);
-        flag = 0;
-        flag2 = 0;
-        Thread th = new Thread(r);
-        th.start();
-    }
-
-    public void getLookSubtitle(int position) {
-        output=new outputDataController();
-        while (subtitleDatas.size() == 0) {
-            subtitleDatas = output.getLookSubtitleData(filedirectory, posi, idvideo, sectionSubtitles.get(String.valueOf(posi)).get(position).getKey());
-        }
-
-        String min = sectionSubtitles.get(String.valueOf(posi)).get(position).getSubtitle().getSectionS().split(":")[0];
-        String sec = sectionSubtitles.get(String.valueOf(posi)).get(position).getSubtitle().getSectionS().split(":")[1];
-        int compare = ((Integer.parseInt(min)*60) + Integer.parseInt(sec))*1000;
-
-        player.seekToMillis(compare);
-        flag = 0;
-        flag2 = 0;
-        Thread th2 = new Thread(r2);
-        th2.start();
     }
 
     void type_choice() {
@@ -502,11 +588,11 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
                     Log.e("2","2");
                 }
                 Log.e("3","3");
-                getListenSubtitle(position);
+                getListenSubtitleData(position);
             }
             else {
                 Log.e("4","4");
-                getListenSubtitle(position);
+                getListenSubtitleData(position);
             }
         } else if(v.equals(viewHolder.soundButton)) {
             subtitlebox.setText("");
@@ -518,11 +604,11 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
                     Log.e("6","6");
                 }
                 Log.e("7","7");
-                getLookSubtitle(position);
+                getLookSubtitleData(position);
             }
             else {
                 Log.e("8","8");
-                getLookSubtitle(position);
+                getLookSubtitleData(position);
             }
         } else if(v.equals( viewHolder.moreButton )){
             final SubtitleAndKey subtitleAndKey=temp.get( position );
