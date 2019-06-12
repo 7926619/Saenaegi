@@ -29,9 +29,9 @@ public class aSearchVideoActivity extends AppCompatActivity {
     private ArrayList<aListviewItem> data = new ArrayList<>();
     private ArrayList<Video> videos=new ArrayList<>();
 
-    public ArrayList<TextView> rowList = new ArrayList<>();
-    public ArrayList<TextView> rowbeforeList = new ArrayList<>();
-    public ArrayList<TextView> rowafterList = new ArrayList<>();
+    public ArrayList<TextView> searchList = new ArrayList<>();
+    public ArrayList<TextView> searchbeforeList = new ArrayList<>();
+    public ArrayList<TextView> searchafterList = new ArrayList<>();
     public ListView listView;
     public aListviewAdapter adapter;
     public int focusposition = 0;
@@ -129,9 +129,9 @@ public class aSearchVideoActivity extends AppCompatActivity {
                         row.setAccessibilityTraversalBefore(rowbefore.getId());
                         row.setAccessibilityTraversalAfter(rowafter.getId());
 
-                        rowList.add(row);
-                        rowbeforeList.add(rowbefore);
-                        rowafterList.add(rowafter);
+                        searchList.add(row);
+                        searchbeforeList.add(rowbefore);
+                        searchafterList.add(rowafter);
                     }
                     else if(childRowCount >= 2 && (i + 1 - firstpos) < childRowCount && i - firstpos >= 1) {
                         row = (TextView) linearLayout1.findViewWithTag(i - firstpos);
@@ -150,9 +150,9 @@ public class aSearchVideoActivity extends AppCompatActivity {
                         row.setAccessibilityTraversalBefore(rowbefore.getId());
                         row.setAccessibilityTraversalAfter(rowafter.getId());
 
-                        rowList.add(row);
-                        rowbeforeList.add(rowbefore);
-                        rowafterList.add(rowafter);
+                        searchList.add(row);
+                        searchbeforeList.add(rowbefore);
+                        searchafterList.add(rowafter);
                     }
                     else if(childRowCount-1 == i - firstpos) {
                         row = (TextView) linearLayout1.findViewWithTag(i - firstpos);
@@ -171,9 +171,9 @@ public class aSearchVideoActivity extends AppCompatActivity {
                         row.setAccessibilityTraversalBefore(rowbefore.getId());
                         row.setAccessibilityTraversalAfter(rowafter.getId());
 
-                        rowList.add(row);
-                        rowbeforeList.add(rowbefore);
-                        rowafterList.add(rowafter);
+                        searchList.add(row);
+                        searchbeforeList.add(rowbefore);
+                        searchafterList.add(rowafter);
                     }
                 }
 

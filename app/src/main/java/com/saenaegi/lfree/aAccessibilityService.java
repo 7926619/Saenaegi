@@ -38,11 +38,13 @@ public class aAccessibilityService extends AccessibilityService {
     int listviewitemposition2 = 0;
     int listviewitemposition3 = 0;
     int listviewitemposition4 = 0;
+    int listviewitemposition5 = 0;
 
     int timercount = 0;
     int timercount2 = 0;
     int timercount3 = 0;
     int timercount4 = 0;
+    int timercount5 = 0;
 
     //TimerTask mTask = null;
     //Timer mTimer = null;
@@ -50,6 +52,7 @@ public class aAccessibilityService extends AccessibilityService {
     Handler mHandler2 = null;
     Handler mHandler3 = null;
     Handler mHandler4 = null;
+    Handler mHandler5 = null;
     //int tempGestureId;
 
     ArrayList<View> arr = new ArrayList<>();
@@ -169,6 +172,30 @@ public class aAccessibilityService extends AccessibilityService {
                 }
             }
         }
+
+        else if(source.getContentDescription().equals("검색 목록")) {
+            ArrayList<TextView> searchtemp = ((aSearchVideoActivity)aSearchVideoActivity.context).searchList;
+            ArrayList<TextView> searchaftertemp = ((aSearchVideoActivity)aSearchVideoActivity.context).searchafterList;
+            ListView listviewtemp = ((aSearchVideoActivity)aSearchVideoActivity.context).listView;
+            TextView temp;
+            int focusposition;
+
+            temp = searchtemp.get(0);
+            for(int j = 0 ; j < searchaftertemp.size() ; j++) {
+                if(temp.getContentDescription().equals(searchaftertemp.get(j).getContentDescription())) {
+                    listviewtemp.findViewsWithText(arr, temp.getContentDescription(), ViewStub.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
+                    listviewtemp.findViewsWithText(arr2, "constraint_" + temp.getContentDescription(), ViewStub.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
+                    arr2.get(0).setFocusable(true);
+                    arr2.get(0).setFocusableInTouchMode(true);
+                    arr2.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
+                    arr2.remove(0);
+                    arr.remove(0);
+                    focusposition = 0;
+                    listviewitemposition5 = focusposition;
+                    return;
+                }
+            }
+        }
     }
 
     public void listViewAutoFocusUp() {
@@ -263,6 +290,30 @@ public class aAccessibilityService extends AccessibilityService {
                     arr.remove(0);
                     focusposition = (noticetemp.size()-1);
                     listviewitemposition4 = focusposition;
+                    return;
+                }
+            }
+        }
+
+        else if(source.getContentDescription().equals("검색 목록")) {
+            ArrayList<TextView> searchtemp = ((aSearchVideoActivity)aSearchVideoActivity.context).searchList;
+            ArrayList<TextView> searchbeforetemp = ((aSearchVideoActivity)aSearchVideoActivity.context).searchbeforeList;
+            ListView listviewtemp = ((aSearchVideoActivity)aSearchVideoActivity.context).listView;
+            TextView temp;
+            int focusposition;
+
+            temp = searchtemp.get(searchtemp.size()-1);
+            for(int j = 0 ; j < searchbeforetemp.size() ; j++) {
+                if(temp.getContentDescription().equals(searchbeforetemp.get(j).getContentDescription())) {
+                    listviewtemp.findViewsWithText(arr, temp.getContentDescription(), ViewStub.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
+                    listviewtemp.findViewsWithText(arr2, "constraint_" + temp.getContentDescription(), ViewStub.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
+                    arr2.get(0).setFocusable(true);
+                    arr2.get(0).setFocusableInTouchMode(true);
+                    arr2.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
+                    arr2.remove(0);
+                    arr.remove(0);
+                    focusposition = (searchtemp.size()-1);
+                    listviewitemposition5 = focusposition;
                     return;
                 }
             }
@@ -503,6 +554,64 @@ public class aAccessibilityService extends AccessibilityService {
                 }
             }
         }
+
+        else if((rti3.get(0).topActivity.getClassName()).contains("aSearchVideoActivity")) {
+            ArrayList<TextView> searchtemp = ((aSearchVideoActivity)aSearchVideoActivity.context).searchList;
+            ArrayList<TextView> searchaftertemp = ((aSearchVideoActivity)aSearchVideoActivity.context).searchafterList;
+            ListView listviewtemp = ((aSearchVideoActivity)aSearchVideoActivity.context).listView;
+            TextView temp;
+            TextView tempafter;
+            int focusposition;
+
+            if(searchtemp == null || searchaftertemp == null)
+                return;
+
+            for(int i = 0 ; i < searchtemp.size() ; i++) {
+                temp = searchtemp.get(i);
+                temp.setFocusable(true);
+                temp.setFocusableInTouchMode(true);
+                if ((source.getContentDescription()).equals("constraint_"+temp.getContentDescription())) {
+                    if (temp.getId() == searchtemp.size() - 1) {
+                        tempafter = searchtemp.get(0);
+                        for(int j = 0 ; j < searchaftertemp.size() ; j++) {
+                            if((tempafter.getContentDescription()).equals((searchaftertemp.get(j)).getContentDescription())) {
+                                listviewtemp.findViewsWithText(arr, tempafter.getContentDescription(), ViewStub.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
+                                listviewtemp.findViewsWithText(arr2, "constraint_" + tempafter.getContentDescription(), ViewStub.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
+                                Log.e(TAG, "arr2 : " + arr2.get(0));
+                                arr2.get(0).setFocusable(true);
+                                arr2.get(0).setFocusableInTouchMode(true);
+                                arr2.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
+                                arr2.remove(0);
+                                arr.remove(0);
+                                focusposition = 0;
+                                listviewitemposition5 = focusposition;
+                                return;
+                            }
+                        }
+                    }
+
+                    else {
+                        if(i + 1 == searchtemp.size())
+                            break;
+                        tempafter = searchtemp.get(i+1);
+                        for(int j = 0 ; j < searchaftertemp.size() ; j++) {
+                            if((tempafter.getContentDescription()).equals((searchaftertemp.get(j)).getContentDescription())) {
+                                listviewtemp.findViewsWithText(arr, tempafter.getContentDescription(), ViewStub.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
+                                listviewtemp.findViewsWithText(arr2, "constraint_" + tempafter.getContentDescription(), ViewStub.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
+                                arr2.get(0).setFocusable(true);
+                                arr2.get(0).setFocusableInTouchMode(true);
+                                arr2.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
+                                arr2.remove(0);
+                                arr.remove(0);
+                                focusposition = i + 1;
+                                listviewitemposition5 = focusposition;
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public void listViewGestureRight() {
@@ -728,6 +837,61 @@ public class aAccessibilityService extends AccessibilityService {
                 }
             }
         }
+
+        else if((rti3.get(0).topActivity.getClassName()).contains("aSearchVideoActivity")) {
+            ArrayList<TextView> searchtemp = ((aSearchVideoActivity)aSearchVideoActivity.context).searchList;
+            ArrayList<TextView> searchbeforetemp = ((aSearchVideoActivity)aSearchVideoActivity.context).searchbeforeList;
+            ListView listviewtemp = ((aSearchVideoActivity)aSearchVideoActivity.context).listView;
+            TextView temp;
+            TextView tempbefore;
+            int focusposition;
+
+            if(searchtemp == null || searchbeforetemp == null)
+                return;
+
+            for(int i = 0 ; i < searchtemp.size() ; i++) {
+                temp = searchtemp.get(i);
+                if ((source.getContentDescription()).equals("constraint_"+temp.getContentDescription())) {
+                    if(temp.getId() == 0) {
+                        tempbefore = searchtemp.get(searchtemp.size() - 1);
+                        for(int j = 0 ; j < searchbeforetemp.size() ; j++) {
+                            if((tempbefore.getContentDescription()).equals(searchbeforetemp.get(j).getContentDescription())) {
+                                listviewtemp.findViewsWithText(arr, tempbefore.getContentDescription(), ViewStub.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
+                                listviewtemp.findViewsWithText(arr2, "constraint_" + tempbefore.getContentDescription(), ViewStub.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
+                                arr2.get(0).setFocusable(true);
+                                arr2.get(0).setFocusableInTouchMode(true);
+                                arr2.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
+                                arr2.remove(0);
+                                arr.remove(0);
+                                focusposition = (searchtemp.size() - 1);
+                                listviewitemposition5 = focusposition;
+                                return;
+                            }
+                        }
+                    }
+
+                    else {
+                        if(i -1 < 0)
+                            break;
+                        tempbefore = searchtemp.get(i - 1);
+                        for(int j = 0 ; j < searchbeforetemp.size() ; j++) {
+                            if((tempbefore.getContentDescription()).equals(searchbeforetemp.get(j).getContentDescription())) {
+                                listviewtemp.findViewsWithText(arr, tempbefore.getContentDescription(), ViewStub.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
+                                listviewtemp.findViewsWithText(arr2, "constraint_" + tempbefore.getContentDescription(), ViewStub.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
+                                arr2.get(0).setFocusable(true);
+                                arr2.get(0).setFocusableInTouchMode(true);
+                                arr2.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
+                                arr2.remove(0);
+                                arr.remove(0);
+                                focusposition = i - 1;
+                                listviewitemposition5 = focusposition;
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -745,7 +909,7 @@ public class aAccessibilityService extends AccessibilityService {
             case GESTURE_SWIPE_LEFT:
                 Toast.makeText(getApplication(), "SWIPE_LEFT", Toast.LENGTH_LONG).show();
                 if(source.getViewIdResourceName() != null) {
-                    if((source.getContentDescription().equals("영상 목록") && source.getViewIdResourceName().contains("textView9")) || (source.getContentDescription().equals("파트 선택") && source.getViewIdResourceName().contains("textView9")) || (source.getContentDescription().equals("좋아요 표시한 동영상") && source.getViewIdResourceName().contains("textView9")) || (source.getContentDescription().equals("공지사항") && source.getViewIdResourceName().contains("textView9"))) {
+                    if((source.getContentDescription().equals("영상 목록") && source.getViewIdResourceName().contains("textView9")) || (source.getContentDescription().equals("파트 선택") && source.getViewIdResourceName().contains("textView9")) || (source.getContentDescription().equals("좋아요 표시한 동영상") && source.getViewIdResourceName().contains("textView9")) || (source.getContentDescription().equals("공지사항") && source.getViewIdResourceName().contains("textView9")) || (source.getContentDescription().equals("검색 목록") && source.getViewIdResourceName().contains("textView9"))) {
                         listViewAutoFocusDown();
                         return true;
                     }
@@ -772,7 +936,7 @@ public class aAccessibilityService extends AccessibilityService {
             case GESTURE_SWIPE_RIGHT:
                 Toast.makeText(getApplication(), "SWIPE_RIGHT", Toast.LENGTH_LONG).show();
                 if(source.getViewIdResourceName() != null) {
-                    if((source.getContentDescription().equals("영상 목록") && source.getViewIdResourceName().contains("textView9")) || (source.getContentDescription().equals("파트 선택") && source.getViewIdResourceName().contains("textView9")) || (source.getContentDescription().equals("좋아요 표시한 동영상") && source.getViewIdResourceName().contains("textView9")) || (source.getContentDescription().equals("공지사항") && source.getViewIdResourceName().contains("textView9"))) {
+                    if((source.getContentDescription().equals("영상 목록") && source.getViewIdResourceName().contains("textView9")) || (source.getContentDescription().equals("파트 선택") && source.getViewIdResourceName().contains("textView9")) || (source.getContentDescription().equals("좋아요 표시한 동영상") && source.getViewIdResourceName().contains("textView9")) || (source.getContentDescription().equals("공지사항") && source.getViewIdResourceName().contains("textView9")) || (source.getContentDescription().equals("검색 목록") && source.getViewIdResourceName().contains("textView9"))) {
                         listViewAutoFocusUp();
                         return true;
                     }
@@ -873,6 +1037,8 @@ public class aAccessibilityService extends AccessibilityService {
             timercount3 = 0;
         else if(!((rti2.get(0).topActivity.getClassName()).contains("aNoticeActivity")))
             timercount4 = 0;
+        else if(!((rti2.get(0).topActivity.getClassName()).contains("aSearchVideoActivity")))
+            timercount5 = 0;
 
         //if(eventType == AccessibilityEvent.TYPE_VIEW_CLICKED || eventType == AccessibilityEvent.TYPE_VIEW_HOVER_ENTER)
         if(eventType == AccessibilityEvent.TYPE_VIEW_HOVER_ENTER) {
@@ -929,6 +1095,10 @@ public class aAccessibilityService extends AccessibilityService {
                 }
                 else if(source.getViewIdResourceName().equalsIgnoreCase("com.saenaegi.lfree:id/constraint1") && (rti3.get(0).topActivity.getClassName()).contains("aNoticeActivity"))
                     eventText = eventText.replace("constraint_", "");
+                else if(source.getViewIdResourceName().equalsIgnoreCase("com.saenaegi.lfree:id/constraint1") && (rti3.get(0).topActivity.getClassName()).contains("aSearchVideoActivity")) {
+                    eventText = eventText.replace("constraint_", "");
+                    eventText = eventText + " 제스처를 수행하지 않을 시, 13초 이후로 실행됩니다.";
+                }
 
                 Toast.makeText(getApplication(), eventText, Toast.LENGTH_SHORT).show();
 
@@ -996,6 +1166,23 @@ public class aAccessibilityService extends AccessibilityService {
                     }, 12000);
 
                     timercount3++;
+                }
+
+                else if(eventText.contains("13초 이후로")) {
+                    if(timercount5 != 0 && mHandler5 != null){
+                        mHandler5.removeMessages(0);
+                        mHandler5 = null;
+                    }
+                    mHandler5 = new Handler();
+                    mHandler5.postDelayed(new Runnable(){
+                        @Override
+                        public void run() {
+                            ListView listviewtemp = ((aSearchVideoActivity)aSearchVideoActivity.context).listView;
+                            listviewtemp.performItemClick(listviewtemp.getAdapter().getView(listviewitemposition5, null, null), listviewitemposition5, listviewtemp.getItemIdAtPosition(listviewitemposition5));
+                        }
+                    }, 13000);
+
+                    timercount5++;
                 }
             }
 

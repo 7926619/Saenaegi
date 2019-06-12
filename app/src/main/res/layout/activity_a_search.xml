@@ -30,6 +30,10 @@
                 android:contentDescription="검색"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                android:nextFocusDown="@id/imageView4"
+                android:nextFocusUp="@id/imageView4"
+                android:accessibilityTraversalAfter="@id/imageView4"
+                android:accessibilityTraversalBefore="@id/imageView4"
                 android:text="검색" />
 
             <View
@@ -52,6 +56,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="70dp"
+                android:contentDescription="음성 인식"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:importantForAccessibility="yes"
+                android:nextFocusDown="@id/textView9"
+                android:nextFocusUp="@id/textView9"
+                android:accessibilityTraversalAfter="@id/textView9"
+                android:accessibilityTraversalBefore="@id/textView9"
                 app:srcCompat="@drawable/mic" />
 
             <View
