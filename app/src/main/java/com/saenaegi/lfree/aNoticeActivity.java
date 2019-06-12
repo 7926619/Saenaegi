@@ -68,7 +68,7 @@ public class aNoticeActivity extends AppCompatActivity {
                 for (DataSnapshot snapshot:dataSnapshot.getChildren()){
                     Notice notice=snapshot.getValue(Notice.class);
                     notices.add( notice );
-                    String read=notice.getSubtitle()+"  내용 : "+notice.getText();
+                    String read=notice.getSubtitle()+"\n내용 : "+notice.getText();
                     aListviewItem aListviewItem=new aListviewItem( read);
                     data.add( aListviewItem );
                 }

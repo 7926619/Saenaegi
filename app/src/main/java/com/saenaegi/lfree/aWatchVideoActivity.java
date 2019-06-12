@@ -188,6 +188,7 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
                     intent.putExtra( "count", sectionCount );
                     intent.putExtra( "madesection", madesection );
                     startActivity( intent );
+                    finish();
                 }
                 else{
                     String eventText = "파트 선택 버튼 클릭 : 이 영상은 아직 미제작 되었습니다.";

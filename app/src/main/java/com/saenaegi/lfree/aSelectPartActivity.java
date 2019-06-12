@@ -160,6 +160,7 @@ public class aSelectPartActivity extends AppCompatActivity {
                 intent.putExtra("count",sectionCount);
                 intent.putExtra( "nowSection", Integer.parseInt(madesection[position]));
                 startActivity(intent);
+                finish();
             }
         } );
 

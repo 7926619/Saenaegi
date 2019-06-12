@@ -38,13 +38,5 @@ public class aSettingsActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        TextView tv5 = (TextView) findViewById(R.id.back);
-        tv5.setOnClickListener(new View.OnClickListener()
-        {
-            public void onClick(View v) {
-                Intent intent = new Intent(aSettingsActivity.this, aLfreeMainActivity.class);
-                startActivity(intent);
-            }
-        });
     }
 }

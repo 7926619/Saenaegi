@@ -31,14 +31,5 @@ public class aWatchVideoMenuActivitiy extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-        TextView tv3 = (TextView) findViewById(R.id.back);
-        tv3.setOnClickListener(new View.OnClickListener()
-        {
-            public void onClick(View v) {
-                Intent intent = new Intent(aWatchVideoMenuActivitiy.this, aLfreeMainActivity.class);
-                startActivity(intent);
-            }
-        });
     }
 }

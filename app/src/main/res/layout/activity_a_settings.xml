@@ -30,9 +30,9 @@
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:nextFocusDown="@+id/textView18"
-                android:nextFocusUp="@+id/back"
+                android:nextFocusUp="@+id/textView15"
                 android:accessibilityTraversalAfter="@+id/textView18"
-                android:accessibilityTraversalBefore="@+id/back"
+                android:accessibilityTraversalBefore="@+id/textView15"
                 android:text="설정" />
 
             <View
@@ -63,9 +63,9 @@
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:nextFocusDown="@+id/textView17"
-                android:nextFocusUp="@+id/back"
+                android:nextFocusUp="@+id/textView15"
                 android:accessibilityTraversalAfter="@+id/textView17"
-                android:accessibilityTraversalBefore="@+id/back"
+                android:accessibilityTraversalBefore="@+id/textView15"
                 android:text="Push 알림 설정" />
 
             <TextView
@@ -110,27 +110,11 @@
                 android:contentDescription="오픈소스 라이선스"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
-                android:nextFocusDown="@+id/textView14"
+                android:nextFocusDown="@+id/textView18"
                 android:nextFocusUp="@+id/textView16"
-                android:accessibilityTraversalAfter="@+id/back"
+                android:accessibilityTraversalAfter="@+id/textView18"
                 android:accessibilityTraversalBefore="@+id/textView16"
                 android:text="오픈소스 라이선스" />
-
-            <TextView
-                android:id="@+id/back"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:layout_marginBottom="10dp"
-                android:textColor="#363636"
-                android:contentDescription="뒤로가기"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:nextFocusDown="@+id/textView18"
-                android:nextFocusUp="@+id/textView15"
-                android:accessibilityTraversalAfter="@+id/textView18"
-                android:accessibilityTraversalBefore="@+id/textView15"
-                android:text="뒤로가기" />
 
         </LinearLayout>
     </LinearLayout>
