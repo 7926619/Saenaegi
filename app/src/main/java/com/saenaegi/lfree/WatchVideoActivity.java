@@ -93,6 +93,7 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
     private HashMap<String, ArrayList<SubtitleAndKey>> sectionSubtitles=new HashMap<>();
     private ArrayList<SubtitleData> subtitleDatas=new ArrayList<>();
     private ArrayList<SubtitleAndKey> temp=new ArrayList<>();
+    private SubtitleAndKey choicesubtitleAndKey;
     private FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference=firebaseDatabase.getReference().child( "LFREE" ).child( "VIDEO" );
     private DatabaseReference databaseReference2=firebaseDatabase.getReference().child( "LFREE" ).child( "LIKEVIDEO" ).child( userid );
@@ -361,8 +362,8 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
         // adapter의 값이 변경되었다는 것을 알려줍니다.
         adapter1.notifyDataSetChanged();
     }
-    public void setSubtitleDatas(int position, boolean type){
-        if(type) {
+    public void setSubtitleDatas(int position){
+        if(choicesubtitleAndKey.type) {
                 kind=false;
                getListenSubtitleData(position);
         }
@@ -383,22 +384,22 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
                 @Override
                 public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                     // Local temp file has been created
-                    Log.e( "chedkFileReader"," read file success" );
+                   // Log.e( "chedkFileReader"," read file success" );
                     try {
                         FileReader fileReader = new FileReader( localFile );
                         BufferedReader bufferedReader = new BufferedReader( fileReader );
                         String onLine = null;
                         while ((onLine = bufferedReader.readLine()) != null) {
-                            Log.e( "chedkFileReader", "in of while" );
+                            //Log.e( "chedkFileReader", "in of while" );
                             String[] arr = onLine.split( "\t" );
                             SubtitleData subtitleData = new SubtitleData( arr[0].trim(), arr[1].trim(), arr[2].trim() );
                             subtitleDatas.add( subtitleData );
                         }
-                        Log.e( "chedkFileReader", String.valueOf( subtitleDatas.size()));
+                        //Log.e( "chedkFileReader", String.valueOf( subtitleDatas.size()));
                         fileReader.close();
                         bufferedReader.close();
                     }catch (IOException e){
-                        Log.e( "chedkFileReader", "not reading listener" );
+                        //Log.e( "chedkFileReader", "not reading listener" );
                     }
 
                     if(kind) {
@@ -411,6 +412,18 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
                         flag2 = 0;
                         Thread th = new Thread( r );
                         th.start();
+                    }else{
+                        tts.shutdown();
+                        Intent intent = new Intent(WatchVideoActivity.this, MakeVideoActivity.class);
+                        intent.putExtra("link", videoID);
+                        intent.putExtra("count", sectionCount);
+                        intent.putExtra("type", choicesubtitleAndKey.type);
+                        intent.putExtra("part", String.valueOf(posi));
+                        intent.putExtra( "modify",true );
+                        intent.putExtra( "idsubtitle",choicesubtitleAndKey.getKey());
+                        intent.putParcelableArrayListExtra( "subtitles",subtitleDatas);
+                        startActivityForResult(intent, 2);
+
                     }
 
                 }
@@ -418,12 +431,12 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
                 @Override
                 public void onFailure(@NonNull Exception exception) {
                     // Handle any errors
-                    Log.e( "chedkFileReader"," read file false" );
+                    //Log.e( "chedkFileReader"," read file false" );
                 }
             }
             );
         }catch (IOException e){
-            Log.e( "chedkFileReader"," not make file" );
+            //Log.e( "chedkFileReader"," not make file" );
         }
     }
 
@@ -440,22 +453,22 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
                 @Override
                 public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                     // Local temp file has been created
-                    Log.e( "chedkFileReader"," read file success" );
+                    //Log.e( "chedkFileReader"," read file success" );
                     try {
                         FileReader fileReader = new FileReader( localFile );
                         BufferedReader bufferedReader = new BufferedReader( fileReader );
                         String onLine = null;
                         while ((onLine = bufferedReader.readLine()) != null) {
-                            Log.e( "chedkFileReader", "in of while" );
+                            //Log.e( "chedkFileReader", "in of while" );
                             String[] arr = onLine.split( "\t" );
                             SubtitleData subtitleData = new SubtitleData( arr[0].trim(), arr[1].trim(), arr[2].trim() );
                             subtitleDatas.add( subtitleData );
                         }
-                        Log.e( "chedkFileReader", String.valueOf( subtitleDatas.size() ) );
+                        //Log.e( "chedkFileReader", String.valueOf( subtitleDatas.size() ) );
                         fileReader.close();
                         bufferedReader.close();
                     }catch (IOException e){
-                        Log.e( "chedkFileReader"," success file not exist" );
+                        //Log.e( "chedkFileReader"," success file not exist" );
                         e.printStackTrace();
                     }
                     if(kind) {
@@ -469,17 +482,29 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
                         Thread th2 = new Thread( r2 );
                         th2.start();
                     }
+                    else{
+                        tts.shutdown();
+                        Intent intent = new Intent(WatchVideoActivity.this, MakeVideoActivity.class);
+                        intent.putExtra("link", videoID);
+                        intent.putExtra("count", sectionCount);
+                        intent.putExtra("type", choicesubtitleAndKey.type);
+                        intent.putExtra("part", String.valueOf(posi));
+                        intent.putExtra( "modify",true );
+                        intent.putExtra( "idsubtitle",choicesubtitleAndKey.getKey());
+                        intent.putParcelableArrayListExtra( "subtitles",subtitleDatas);
+                        startActivityForResult(intent, 2);
+                    }
                 }
 
             } ).addOnFailureListener( new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception exception) {
                     // Handle any errors
-                    Log.e( "chedkFileReader"," read file false" );
+                    //Log.e( "chedkFileReader"," read file false" );
                 }
             } );
         } catch (IOException e){
-            Log.e( "chedkFileReader"," not make file" );
+            //Log.e( "chedkFileReader"," not make file" );
         }
 
 
@@ -555,20 +580,24 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
                     Toast.makeText(getApplicationContext(), "선택하지 않은 항목이 있는지 확인해주세요.", Toast.LENGTH_LONG).show();
                 }
                 else {
-                    wantToCloseDialog = true;
-                    Intent intent = new Intent(WatchVideoActivity.this, MakeVideoActivity.class);
-                    intent.putExtra("link", videoID);
-                    intent.putExtra("count", sectionCount);
-                    if(type[0].equals( "자막" ))
-                        intent.putExtra("type", true);
-                    else
-                        intent.putExtra( "type",false );
-                    intent.putExtra("part", dropdown.getSelectedItem().toString());
-                    startActivityForResult(intent, 2);
+                    if (Integer.parseInt(dropdown.getSelectedItem().toString())==0) {
+                        Toast.makeText(getApplicationContext(), "파트를 다시 선택하여 주세요.", Toast.LENGTH_LONG).show();
+                    } else {
+                        wantToCloseDialog = true;
+                        Intent intent = new Intent( WatchVideoActivity.this, MakeVideoActivity.class );
+                        intent.putExtra( "link", videoID );
+                        intent.putExtra( "count", sectionCount );
+                        if (type[0].equals( "자막" ))
+                            intent.putExtra( "type", true );
+                        else
+                            intent.putExtra( "type", false );
+                        intent.putExtra( "part", dropdown.getSelectedItem().toString());
+                        startActivityForResult( intent, 2 );
+                    }
+                    //Do stuff, possibly set wantToCloseDialog to true then...
+                    if (wantToCloseDialog)
+                        dialog.dismiss();
                 }
-                //Do stuff, possibly set wantToCloseDialog to true then...
-                if(wantToCloseDialog)
-                    dialog.dismiss();
                 //else dialog stays open. Make sure you have an obvious way to close the dialog especially if you set cancellable to false.
             }
         });
@@ -646,17 +675,9 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
                             break;
                         case R.id.opt3:
                             if(userid.equals( makeUserid )){
-                                SubtitleAndKey temp=sectionSubtitles.get(String.valueOf( posi )).get(position);
-                                setSubtitleDatas( position,temp.type);
-                                Intent intent = new Intent(WatchVideoActivity.this, MakeVideoActivity.class);
-                                intent.putExtra("link", videoID);
-                                intent.putExtra("count", sectionCount);
-                                intent.putExtra("type", temp.type);
-                                intent.putExtra("part", posi);
-                                intent.putExtra( "modify",true );
-                                intent.putExtra( "idsubtitle",temp.getKey() );
-                                intent.putParcelableArrayListExtra( "subtitles",subtitleDatas);
-                                startActivityForResult(intent, 2);
+                                kind=false;
+                                choicesubtitleAndKey=sectionSubtitles.get(String.valueOf( posi )).get(position);
+                                setSubtitleDatas( position);
                             }
                             else{
                                 Toast.makeText(getApplicationContext(), "제작자가 아니면, 수정할 수 없습니다.", Toast.LENGTH_SHORT).show();
