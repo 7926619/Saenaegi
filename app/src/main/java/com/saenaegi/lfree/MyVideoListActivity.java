@@ -55,6 +55,7 @@ public class MyVideoListActivity extends AppCompatActivity implements Navigation
     private NavigationView navigationView;
     private FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference=firebaseDatabase.getReference().child( "LFREE" ).child( "VIDEO" );
+    private DatabaseReference dataRef=firebaseDatabase.getReference().child( "LFREE" ).child( "TEMP" );
 
     private ProgressBar progressBar;
     private ScrollView scroll_view;
@@ -65,6 +66,7 @@ public class MyVideoListActivity extends AppCompatActivity implements Navigation
     private ArrayList<Video> videos =new ArrayList<>( );
     private FirebaseAuth firebaseAuth;
     private TextView LoginUserName;
+    private TextView Recommend;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,6 +168,28 @@ public class MyVideoListActivity extends AppCompatActivity implements Navigation
                 setListViewHeightBasedOnChildren( listView );
                 progressBar.setVisibility(View.GONE);
             }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        } );
+        dataRef.addValueEventListener( new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                firebaseAuth = FirebaseAuth.getInstance();
+                FirebaseUser googleIUser=firebaseAuth.getCurrentUser();
+                String recommend=null;
+                for(DataSnapshot snapshot:dataSnapshot.getChildren()){
+                    if(snapshot.getKey().equals( googleIUser.getDisplayName() )){
+                        recommend=snapshot.getValue(String.class);
+                    }
+                }
+
+                View headerView = navigationView.getHeaderView(0);
+                Recommend = (TextView)headerView.findViewById(R.id.textView11);
+                Recommend.setText(recommend);
+            }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 

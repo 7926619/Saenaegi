@@ -37,6 +37,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.saenaegi.lfree.Data.Subtitle;
 import com.saenaegi.lfree.Data.Video;
 import com.saenaegi.lfree.RecycleviewController.RecyclerAdapter;
 import com.saenaegi.lfree.RecycleviewController.Data;
@@ -59,11 +60,13 @@ public class LfreeMainActivity extends AppCompatActivity implements NavigationVi
 
     private FirebaseDatabase firebaseDatabase= FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference=firebaseDatabase.getReference().child( "LFREE" ).child( "VIDEO" );
+    private DatabaseReference dataRef=firebaseDatabase.getReference().child( "LFREE" ).child( "TEMP" );
 
     private ArrayList<Video> pvideos=new ArrayList<>(  );
     private ArrayList<Video> mvideos=new ArrayList<>(  );
     private FirebaseAuth firebaseAuth;
     private TextView LoginUserName;
+    private TextView Recommend;
 
     private ProgressBar progressBar1, progressBar2;
 
@@ -193,6 +196,9 @@ public class LfreeMainActivity extends AppCompatActivity implements NavigationVi
                 adapter2.delItem();
                 pvideos.clear();
                 mvideos.clear();
+                int recommend=0;
+                firebaseAuth = FirebaseAuth.getInstance();
+                FirebaseUser googleIUser=firebaseAuth.getCurrentUser();
                 for(DataSnapshot snapshot:dataSnapshot.getChildren()){
                     Video video=snapshot.getValue(Video.class);
 
@@ -210,7 +216,20 @@ public class LfreeMainActivity extends AppCompatActivity implements NavigationVi
                         data.setBit( StringToBitMap(video.getBitt()) );
                         adapter2.addItem( data );
                     }
+
+                    for(DataSnapshot snapshot1:snapshot.child( "SUBTITLE" ).getChildren()){
+                        for(DataSnapshot snapshot2:snapshot1.getChildren()){
+                            Subtitle temp=snapshot2.getValue(Subtitle.class);
+                            if(temp.getName().equals( googleIUser.getDisplayName()))
+                                recommend=temp.getRecommend()+recommend;
+                        }
+                    }
                 }
+                dataRef.child( googleIUser.getDisplayName() ).setValue( String.valueOf( recommend ));
+                View headerView = navigationView.getHeaderView(0);
+                Recommend = (TextView)headerView.findViewById(R.id.textView11);
+                Recommend.setText(String.valueOf(recommend));
+
                 adapter1.notifyDataSetChanged();
                 adapter2.notifyDataSetChanged();
                 progressBar1.setVisibility(View.GONE);

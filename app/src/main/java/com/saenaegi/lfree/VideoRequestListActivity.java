@@ -67,6 +67,7 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
 
     private FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference =firebaseDatabase.getReference().child("LFREE").child("VIDEO");
+    private DatabaseReference dataRef=firebaseDatabase.getReference().child( "LFREE" ).child( "TEMP" );
 
     private ScrollView scroll_view;
     private DrawerLayout drawerLayout;
@@ -85,6 +86,7 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
     private String time;
     private FirebaseAuth firebaseAuth;
     private TextView LoginUserName;
+    private TextView Recommend;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -274,6 +276,28 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
                 setListViewHeightBasedOnChildren(listView);
                 progressBar.setVisibility(View.GONE);
             }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        } );
+        dataRef.addValueEventListener( new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                firebaseAuth = FirebaseAuth.getInstance();
+                FirebaseUser googleIUser=firebaseAuth.getCurrentUser();
+                String recommend=null;
+                for(DataSnapshot snapshot:dataSnapshot.getChildren()){
+                    if(snapshot.getKey().equals( googleIUser.getDisplayName() )){
+                        recommend=snapshot.getValue(String.class);
+                    }
+                }
+
+                View headerView = navigationView.getHeaderView(0);
+                Recommend = (TextView)headerView.findViewById(R.id.textView11);
+                Recommend.setText(recommend);
+            }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 

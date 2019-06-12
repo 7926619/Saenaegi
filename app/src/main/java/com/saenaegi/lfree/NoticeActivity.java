@@ -47,8 +47,10 @@ public class NoticeActivity extends AppCompatActivity implements NavigationView.
     private ArrayList<Notice> notices=new ArrayList<>(  );
     private FirebaseDatabase firebase=FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference=firebase.getReference().child( "LFREE" ).child( "NOTICE" );
+    private DatabaseReference dataRef=firebase.getReference().child( "LFREE" ).child( "TEMP" );
     private FirebaseAuth firebaseAuth;
     private TextView LoginUserName;
+    private TextView Recommend;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,6 +133,28 @@ public class NoticeActivity extends AppCompatActivity implements NavigationView.
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        } );
+        dataRef.addValueEventListener( new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                firebaseAuth = FirebaseAuth.getInstance();
+                FirebaseUser googleIUser=firebaseAuth.getCurrentUser();
+                String recommend=null;
+                for(DataSnapshot snapshot:dataSnapshot.getChildren()){
+                    if(snapshot.getKey().equals( googleIUser.getDisplayName() )){
+                        recommend=snapshot.getValue(String.class);
+                    }
+                }
+
+                View headerView = navigationView.getHeaderView(0);
+                Recommend = (TextView)headerView.findViewById(R.id.textView11);
+                Recommend.setText(recommend);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         } );
 

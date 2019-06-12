@@ -49,6 +49,7 @@ public class LikeVideoListActivity extends AppCompatActivity implements Navigati
     private NavigationView navigationView;
     private FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference=firebaseDatabase.getReference().child( "LFREE" );
+    private DatabaseReference dataRef=firebaseDatabase.getReference().child( "LFREE" ).child( "TEMP" );
     private ArrayList<Video> videos=new ArrayList<>();
     private ArrayList<String> lvideos=new ArrayList<>();
     private ListView listView;
@@ -56,6 +57,7 @@ public class LikeVideoListActivity extends AppCompatActivity implements Navigati
     private ArrayList<ListviewItem> data=new ArrayList<>(  );
     private FirebaseAuth firebaseAuth;
     private TextView LoginUserName;
+    private TextView Recommend;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,6 +125,7 @@ public class LikeVideoListActivity extends AppCompatActivity implements Navigati
                 lvideos.clear();
                 videos.clear();
                 data.clear();
+
                 for(DataSnapshot snapshot:dataSnapshot.child( "LIKEVIDEO" ).getChildren()){
                     if(snapshot.getKey().equals( FirebaseAuth.getInstance().getCurrentUser().getDisplayName() )){
                         for(DataSnapshot snapshot1:snapshot.getChildren()){
@@ -143,7 +146,31 @@ public class LikeVideoListActivity extends AppCompatActivity implements Navigati
                 adapter.notifyDataSetChanged();
                 setListViewHeightBasedOnChildren( listView );
                 progressBar.setVisibility(View.GONE);
+
+
             }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        } );
+        dataRef.addValueEventListener( new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                firebaseAuth = FirebaseAuth.getInstance();
+                FirebaseUser googleIUser=firebaseAuth.getCurrentUser();
+                String recommend=null;
+                for(DataSnapshot snapshot:dataSnapshot.getChildren()){
+                    if(snapshot.getKey().equals( googleIUser.getDisplayName() )){
+                        recommend=snapshot.getValue(String.class);
+                    }
+                }
+
+                View headerView = navigationView.getHeaderView(0);
+                Recommend = (TextView)headerView.findViewById(R.id.textView11);
+                Recommend.setText(recommend);
+            }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 

@@ -180,6 +180,7 @@ public class MakeVideoActivity extends AppCompatActivity implements NavigationVi
                 else{
                     inputDataController.modifyData( idsubtitle, subtitles, idvideo, filedirectory, sectionNum ,ty);
                 }
+                tts.shutdown();
                 Intent intent = new Intent(MakeVideoActivity.this, WatchVideoActivity.class);
                 intent.putExtra("link", videoID);
                 intent.putExtra("count", sectionCount);
