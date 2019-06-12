@@ -94,7 +94,6 @@ public class aAccessibilityService extends AccessibilityService {
                 arr2.get(0).setFocusableInTouchMode(true);
                 arr2.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
                 arr2.remove(0);
-                arr.remove(0);
                 focusposition = 0;
                 listviewitemposition = focusposition;
                 return;
@@ -134,7 +133,6 @@ public class aAccessibilityService extends AccessibilityService {
                 arr2.get(0).setFocusableInTouchMode(true);
                 arr2.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
                 arr2.remove(0);
-                arr.remove(0);
                 focusposition = 0;
                 listviewitemposition2 = focusposition;
                 return;
@@ -174,7 +172,6 @@ public class aAccessibilityService extends AccessibilityService {
                 arr2.get(0).setFocusableInTouchMode(true);
                 arr2.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
                 arr2.remove(0);
-                arr.remove(0);
                 focusposition = 0;
                 listviewitemposition3 = focusposition;
                 return;
@@ -214,7 +211,6 @@ public class aAccessibilityService extends AccessibilityService {
                 arr2.get(0).setFocusableInTouchMode(true);
                 arr2.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
                 arr2.remove(0);
-                arr.remove(0);
                 focusposition = 0;
                 listviewitemposition4 = focusposition;
                 return;
@@ -254,7 +250,6 @@ public class aAccessibilityService extends AccessibilityService {
                 arr2.get(0).setFocusableInTouchMode(true);
                 arr2.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
                 arr2.remove(0);
-                arr.remove(0);
                 focusposition = 0;
                 listviewitemposition5 = focusposition;
                 return;
@@ -296,7 +291,6 @@ public class aAccessibilityService extends AccessibilityService {
                 arr2.get(0).setFocusableInTouchMode(true);
                 arr2.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
                 arr2.remove(0);
-                arr.remove(0);
                 focusposition = 0;
                 listviewitemposition = focusposition;
                 return;
@@ -336,7 +330,6 @@ public class aAccessibilityService extends AccessibilityService {
                 arr2.get(0).setFocusableInTouchMode(true);
                 arr2.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
                 arr2.remove(0);
-                arr.remove(0);
                 focusposition = 0;
                 listviewitemposition2 = focusposition;
                 return;
@@ -376,7 +369,6 @@ public class aAccessibilityService extends AccessibilityService {
                 arr2.get(0).setFocusableInTouchMode(true);
                 arr2.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
                 arr2.remove(0);
-                arr.remove(0);
                 focusposition = 0;
                 listviewitemposition3 = focusposition;
                 return;
@@ -416,7 +408,6 @@ public class aAccessibilityService extends AccessibilityService {
                 arr2.get(0).setFocusableInTouchMode(true);
                 arr2.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
                 arr2.remove(0);
-                arr.remove(0);
                 focusposition = 0;
                 listviewitemposition4 = focusposition;
                 return;
@@ -456,7 +447,6 @@ public class aAccessibilityService extends AccessibilityService {
                 arr2.get(0).setFocusableInTouchMode(true);
                 arr2.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
                 arr2.remove(0);
-                arr.remove(0);
                 focusposition = 0;
                 listviewitemposition5 = focusposition;
                 return;
@@ -501,7 +491,6 @@ public class aAccessibilityService extends AccessibilityService {
                 arr2.get(0).setFocusableInTouchMode(true);
                 arr2.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
                 arr2.remove(0);
-                arr.remove(0);
                 focusposition = 0;
                 listviewitemposition = focusposition;
                 return;
@@ -572,7 +561,6 @@ public class aAccessibilityService extends AccessibilityService {
                 arr2.get(0).setFocusableInTouchMode(true);
                 arr2.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
                 arr2.remove(0);
-                arr.remove(0);
                 focusposition = 0;
                 listviewitemposition2 = focusposition;
                 return;
@@ -643,7 +631,6 @@ public class aAccessibilityService extends AccessibilityService {
                 arr2.get(0).setFocusableInTouchMode(true);
                 arr2.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
                 arr2.remove(0);
-                arr.remove(0);
                 focusposition = 0;
                 listviewitemposition3 = focusposition;
                 return;
@@ -714,7 +701,6 @@ public class aAccessibilityService extends AccessibilityService {
                 arr2.get(0).setFocusableInTouchMode(true);
                 arr2.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
                 arr2.remove(0);
-                arr.remove(0);
                 focusposition = 0;
                 listviewitemposition4 = focusposition;
                 return;
@@ -785,7 +771,6 @@ public class aAccessibilityService extends AccessibilityService {
                 arr2.get(0).setFocusableInTouchMode(true);
                 arr2.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
                 arr2.remove(0);
-                arr.remove(0);
                 focusposition = 0;
                 listviewitemposition5 = focusposition;
                 return;
@@ -861,7 +846,6 @@ public class aAccessibilityService extends AccessibilityService {
                 arr2.get(0).setFocusableInTouchMode(true);
                 arr2.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
                 arr2.remove(0);
-                arr.remove(0);
                 focusposition = 0;
                 listviewitemposition = focusposition;
                 return;
@@ -929,7 +913,6 @@ public class aAccessibilityService extends AccessibilityService {
                 arr2.get(0).setFocusableInTouchMode(true);
                 arr2.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
                 arr2.remove(0);
-                arr.remove(0);
                 focusposition = 0;
                 listviewitemposition2 = focusposition;
                 return;
@@ -997,7 +980,6 @@ public class aAccessibilityService extends AccessibilityService {
                 arr2.get(0).setFocusableInTouchMode(true);
                 arr2.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
                 arr2.remove(0);
-                arr.remove(0);
                 focusposition = 0;
                 listviewitemposition3 = focusposition;
                 return;
@@ -1065,7 +1047,6 @@ public class aAccessibilityService extends AccessibilityService {
                 arr2.get(0).setFocusableInTouchMode(true);
                 arr2.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
                 arr2.remove(0);
-                arr.remove(0);
                 focusposition = 0;
                 listviewitemposition4 = focusposition;
                 return;
@@ -1133,7 +1114,6 @@ public class aAccessibilityService extends AccessibilityService {
                 arr2.get(0).setFocusableInTouchMode(true);
                 arr2.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
                 arr2.remove(0);
-                arr.remove(0);
                 focusposition = 0;
                 listviewitemposition5 = focusposition;
                 return;
