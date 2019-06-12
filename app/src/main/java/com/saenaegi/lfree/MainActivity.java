@@ -6,6 +6,7 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -92,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
                 .enableAutoManage(MainActivity.this , new GoogleApiClient.OnConnectionFailedListener() {
                     @Override
                     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
+                       //Log.e("TAG",""+"12345");
                     }
                 })
                 .addApi(Auth.GOOGLE_SIGN_IN_API, googleSignInOptions)
@@ -111,15 +112,19 @@ public class MainActivity extends AppCompatActivity {
     public void UserSignInMethod(){
         // Passing Google Api Client into Intent.
         Intent AuthIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
+        //Log.e("TAG",""+"1");
         startActivityForResult(AuthIntent, RequestSignInCode);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        //Log.e("TAG",""+"9");
         if (requestCode == RequestSignInCode){
+            //Log.e("TAG",""+"10");
             GoogleSignInResult googleSignInResult = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (googleSignInResult.isSuccess()){
+                //Log.e("TAG",""+"2");
                 GoogleSignInAccount googleSignInAccount = googleSignInResult.getSignInAccount();
                 FirebaseUserAuth(googleSignInAccount);
             }
@@ -128,11 +133,13 @@ public class MainActivity extends AppCompatActivity {
 
     public void FirebaseUserAuth(GoogleSignInAccount googleSignInAccount) {
         AuthCredential authCredential = GoogleAuthProvider.getCredential(googleSignInAccount.getIdToken(), null);
+        Log.e("TAG",""+"3");
         firebaseAuth.signInWithCredential(authCredential)
                 .addOnCompleteListener(MainActivity.this, new OnCompleteListener() {
                     @Override
                     public void onComplete(@NonNull Task AuthResultTask) {
                         if (AuthResultTask.isSuccessful()){
+                            Log.e("TAG",""+"4");
                             // Getting Current Login user details.
                             FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 

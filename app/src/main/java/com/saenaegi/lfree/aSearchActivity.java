@@ -6,13 +6,12 @@ import android.os.Build;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
+import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 import com.saenaegi.lfree.Data.Video;
 
@@ -23,6 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class aSearchActivity extends AppCompatActivity implements View.OnClickListener {
     private Intent i;
@@ -32,6 +32,8 @@ public class aSearchActivity extends AppCompatActivity implements View.OnClickLi
     private DatabaseReference databaseReference=firebaseDatabase.getReference().child( "LFREE" ).child( "VIDEO" );
     private ArrayList<Video> videos=new ArrayList<>();
 
+    private TextToSpeech tts;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -40,6 +42,17 @@ public class aSearchActivity extends AppCompatActivity implements View.OnClickLi
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET,
                     Manifest.permission.RECORD_AUDIO},1);
         }
+
+        tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS) {
+                    int result = tts.setLanguage( Locale.KOREAN);
+                }
+                else
+                    Toast.makeText(getApplication(), "TTS : TTS's Initialization is Failed!", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         super.onCreate(savedInstanceState);
         this.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
@@ -89,6 +102,9 @@ public class aSearchActivity extends AppCompatActivity implements View.OnClickLi
             mResult.toArray(rs);
             Intent intent = new Intent(aSearchActivity.this, aSearchVideoActivity.class);
             intent.putExtra( "search" , rs[0]);
+            String eventText = "음성 인식된 단어 : " + rs[0];
+            Toast.makeText(getApplication(), eventText, Toast.LENGTH_SHORT).show();
+            tts.speak(eventText, TextToSpeech.QUEUE_FLUSH, null);
             startActivity(intent);
         }
         //음성 인식 준비가 되었으면
@@ -112,7 +128,7 @@ public class aSearchActivity extends AppCompatActivity implements View.OnClickLi
                     message = "클라이언트 에러";
                     break;
                 case SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS:
-                    message = "퍼미션 없음";
+                    message = "관련 퍼미션 적용 필요";
                     break;
                 case SpeechRecognizer.ERROR_NETWORK:
                     message = "네트워크 에러";
@@ -121,23 +137,27 @@ public class aSearchActivity extends AppCompatActivity implements View.OnClickLi
                     message = "네트웍 타임아웃";
                     break;
                 case SpeechRecognizer.ERROR_NO_MATCH:
-                    message = "찾을 수 없음";
+                    message = "관련 단어 탐색 불가";
                     break;
                 case SpeechRecognizer.ERROR_RECOGNIZER_BUSY:
-                    message = "RECOGNIZER가 바쁨";
+                    message = "Busy RECOGNIZER";
                     break;
                 case SpeechRecognizer.ERROR_SERVER:
-                    message = "서버가 이상함";
+                    message = "서버 문제";
                     break;
                 case SpeechRecognizer.ERROR_SPEECH_TIMEOUT:
-                    message = "말하는 시간초과";
+                    message = "음성인식 시간초과";
                     break;
                 default:
-                    message = "알 수 없는 오류임";
+                    message = "알 수 없는 오류";
                     break;
             }
 
-            Toast.makeText(getApplicationContext(), "에러가 발생하였습니다. : " + message,Toast.LENGTH_SHORT).show();
+            String mes = "음성 인식 오류 발생 : " + message;
+
+            Toast.makeText(getApplicationContext(), mes ,Toast.LENGTH_SHORT).show();
+            tts.speak(mes, TextToSpeech.QUEUE_FLUSH, null);
+
         }
 
         @Override public void onBeginningOfSpeech() {}							//입력이 시작되면

@@ -3,6 +3,7 @@ package com.saenaegi.lfree;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -23,6 +25,7 @@ import com.saenaegi.lfree.ListviewController.aListviewAdapter;
 import com.saenaegi.lfree.ListviewController.aListviewItem;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class aSearchVideoActivity extends AppCompatActivity {
     //private aListviewAdapter adapter;
@@ -40,7 +43,8 @@ public class aSearchVideoActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private String search;
 
-    private int count = 0;
+    public int count = 0;
+    private TextToSpeech tts;
 
     private static final String TAG = "aRecentVideo";
 
@@ -52,6 +56,17 @@ public class aSearchVideoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_a_search_video);
+
+        tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS) {
+                    int result = tts.setLanguage( Locale.KOREAN);
+                }
+                else
+                    Toast.makeText(getApplication(), "TTS : TTS's Initialization is Failed!", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         listView = (ListView) findViewById(R.id.listview);
         adapter = new aListviewAdapter(this, R.layout.a_list_item, data);
@@ -77,6 +92,7 @@ public class aSearchVideoActivity extends AppCompatActivity {
         search = data.getExtras().getString( "search" );
         getData();
         context = this;
+        count = 0;
     }
 
     public void getData(){
@@ -95,17 +111,24 @@ public class aSearchVideoActivity extends AppCompatActivity {
                     }
                 }
 
+                if(count == 0) {
+                    String eventText = search + ". 라는 문구를 가진 영상은 현재 목록에서 존재하지 않습니다.";
+                    Toast.makeText(getApplication(), eventText, Toast.LENGTH_SHORT).show();
+                    tts.speak(eventText, TextToSpeech.QUEUE_FLUSH, null);
+                    progressBar.setVisibility(View.GONE);
+                    return;
+                }
+
                 adapter.notifyDataSetChanged();
 
                 int childRowCount = listView.getCount();
 
                 constraintLayout = (ConstraintLayout) listView.getAdapter().getView(0, null, listView);
-                LinearLayout linearLayout1 = (LinearLayout)constraintLayout.findViewById(R.id.linear1);
-                TextView row = (TextView) linearLayout1.findViewWithTag(count);
-                int firstpos = (int)listView.getAdapter().getItemId(0);
-                int lastpos = listView.getAdapter().getCount()-1;
+                LinearLayout linearLayout1;
+                TextView row;
 
-                count++;
+                int firstpos = (int)listView.getAdapter().getItemId(0);
+                int lastpos = listView.getAdapter().getCount()-1;;
 
                 for (int i = 0; i < childRowCount; i++) {
                     constraintLayout = (ConstraintLayout) listView.getAdapter().getView(i - firstpos, null, listView);
