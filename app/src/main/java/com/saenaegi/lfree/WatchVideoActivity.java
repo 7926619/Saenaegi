@@ -331,10 +331,12 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
                                     subtitles.add( subtitleAndKey );
                                 }
                                 String index = subtitleSnap.getKey();
-                                sectionSubtitles.put( index, subtitles );
-                                int index2 = Integer.parseInt( index );
-                                if (index2 != 0)
-                                    listState.set( index2 - 1, true );
+                                if(Integer.parseInt(index)!=0) {
+                                    sectionSubtitles.put( index, subtitles );
+                                    int index2 = Integer.parseInt( index );
+                                    if (index2 != 0)
+                                        listState.set( index2 - 1, true );
+                                }
                             }
                             break;
                         }

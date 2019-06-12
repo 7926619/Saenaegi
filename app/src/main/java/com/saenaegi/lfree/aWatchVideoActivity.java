@@ -87,7 +87,7 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
         videoID = data.getExtras().getString( "link" );
         sectionCount = data.getExtras().getInt( "count" );
         nowSection = data.getExtras().getInt( "nowSection" );   //nowSection이 잘 넘어오는 지 확인
-        madesection=new String[sectionCount];
+        madesection=new String[sectionCount+1];
 
         /* 동영상 로드 및 초기화 */
         listener = new YouTubePlayer.OnInitializedListener() {
@@ -189,6 +189,7 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
         tv1.setOnClickListener( new View.OnClickListener() {
             public void onClick(View v) {
                 if(sectionSubtitles.size()!=0) {
+                    tts.shutdown();
                     Intent intent = new Intent( aWatchVideoActivity.this, aSelectPartActivity.class );
                     intent.putExtra( "link", videoID );
                     intent.putExtra( "count", sectionCount );
@@ -214,7 +215,7 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
                         position = 0;
                     }
                     Log.e( "position",String.valueOf(position) );
-                    readingSubtitle();
+                    getLookSubtitleData();
                 }else {
                     String eventText = "같은 파트에 다른 것 선택 버튼 클릭 : 파트를 먼저 선택하여 주세요";
                     Toast.makeText(getApplication(), eventText, Toast.LENGTH_SHORT).show();
@@ -317,7 +318,7 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
                                 }
                             }
                             String index = subtitleSnap.getKey();
-                            if(subtitles.size()!=0) {
+                            if(subtitles.size()!=0&&Integer.parseInt( index )!=0) {
                                 Collections.sort( subtitles );
                                 sectionSubtitles.put( index, subtitles );
                             }
@@ -334,7 +335,7 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
                 }
                 if(nowSection!=0){
                     Toast.makeText(getApplication(), "자막읽자읽자읽자!!!!!!!!!!!!!!!!!!", Toast.LENGTH_LONG).show();
-                    readingSubtitle();
+                    getLookSubtitleData();
                 }
 
             }
@@ -346,10 +347,6 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
         } );
     }
 
-    public void readingSubtitle(){
-
-        getLookSubtitleData();
-    }
 
     public void getLookSubtitleData() {
         subtitleDatas.clear();
@@ -381,6 +378,12 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
                         //Log.e( "chedkFileReader"," success file not exist" );
                         e.printStackTrace();
                     }
+
+                    //여기에 자막 읽어주기
+                    String eventText = subtitleDatas.get( 0 ).getSubString();
+                    Toast.makeText(getApplication(), eventText, Toast.LENGTH_SHORT).show();
+                    tts.setSpeechRate((float)0.87);
+                    tts.speak(eventText, TextToSpeech.QUEUE_FLUSH, null);
 
                         //자막 재생 하는 부분
                 }
