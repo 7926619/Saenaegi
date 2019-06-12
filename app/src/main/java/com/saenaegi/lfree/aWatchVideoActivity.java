@@ -64,7 +64,7 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
     private StorageReference look=storage.getReference().child( "LookSubtitle" );
     private ArrayList<String> likesubtitleKey=new ArrayList<>();
     private TextToSpeech tts;
-
+    private int flag=1,flag2=1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -194,6 +194,9 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
                     intent.putExtra( "link", videoID );
                     intent.putExtra( "count", sectionCount );
                     intent.putExtra( "madesection", madesection );
+                    flag = -1;
+                    while(flag2==0) {
+                    }
                     startActivity( intent );
                     finish();
                 }
@@ -216,7 +219,20 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
                         position = 0;
                     }
                     Log.e( "position",String.valueOf(position) );
-                    getLookSubtitleData();
+                    if(flag == 0) {
+                        Log.e("1","1");
+                        flag = -1;
+                        while(flag2==0) {
+                            Log.e("flag",""+flag);
+                            Log.e("2","2");
+                        }
+                        Log.e("3","3");
+                        getLookSubtitleData();
+                    }
+                    else {
+                        Log.e("4","4");
+                        getLookSubtitleData();
+                    }
                 }else {
                     String eventText = "다른 해설 재생 버튼 클릭 : 파트를 먼저 선택하여 주세요";
                     Toast.makeText(getApplication(), eventText, Toast.LENGTH_SHORT).show();
@@ -336,7 +352,20 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
                 }
                 if(nowSection!=0){
                     Toast.makeText(getApplication(), "자막읽자읽자읽자!!!!!!!!!!!!!!!!!!", Toast.LENGTH_LONG).show();
-                    getLookSubtitleData();
+                    if(flag == 0) {
+                        Log.e("1","1");
+                        flag = -1;
+                        while(flag2==0) {
+                            Log.e("flag",""+flag);
+                            Log.e("2","2");
+                        }
+                        Log.e("3","3");
+                        getLookSubtitleData();
+                    }
+                    else {
+                        Log.e("4","4");
+                        getLookSubtitleData();
+                    }
                 }
 
             }
@@ -380,11 +409,15 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
                         e.printStackTrace();
                     }
 
-                    //여기에 자막 읽어주기
-                    String eventText = subtitleDatas.get( 0 ).getSubString();
-                    Toast.makeText(getApplication(), eventText, Toast.LENGTH_SHORT).show();
-                    tts.setSpeechRate((float)0.87);
-                    tts.speak(eventText, TextToSpeech.QUEUE_FLUSH, null);
+                    String min = sectionSubtitles.get( String.valueOf( nowSection ) ).get( position ).getSubtitle().getSectionS().split( ":" )[0];
+                    String sec = sectionSubtitles.get( String.valueOf( nowSection ) ).get( position ).getSubtitle().getSectionS().split( ":" )[1];
+                    int compare = ((Integer.parseInt( min ) * 60) + Integer.parseInt( sec )) * 1000;
+                    if(flag == 1)
+                        player.seekToMillis( compare );
+                    flag = 0;
+                    flag2 = 0;
+                    Thread th2 = new Thread( r2 );
+                    th2.start();
 
                         //자막 재생 하는 부분
                 }
@@ -402,4 +435,48 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
 
 
     }
+
+    Runnable r2 = new Runnable() {
+        @Override
+        public void run() {
+            int[] compare_s = new int[subtitleDatas.size()];
+            int[] compare_f = new int[subtitleDatas.size()];
+            for(int i = 0 ; i < subtitleDatas.size(); i++){
+                String min1 = subtitleDatas.get(i).getSectionS().split(":")[0];
+                String sec1 = subtitleDatas.get(i).getSectionS().split(":")[1];
+                compare_s[i] = (Integer.parseInt(min1)*60) + Integer.parseInt(sec1);
+                String min2 = subtitleDatas.get(i).getSectionE().split(":")[0];
+                String sec2 = subtitleDatas.get(i).getSectionE().split(":")[1];
+                compare_f[i] = (Integer.parseInt(min2)*60) + Integer.parseInt(sec2);
+            }
+            breakpoint:
+            while(true) {
+                for(int i=0; i < subtitleDatas.size(); i++) {
+                    if(flag == -1) {
+                        tts.stop();
+                        flag2 = -1;
+                        break breakpoint;
+                    }
+                    if((player.getCurrentTimeMillis()/1000) >= compare_s[i] && (player.getCurrentTimeMillis()/1000) < compare_f[i]) {
+                        tts.setSpeechRate((float)0.87);
+                        tts.speak(subtitleDatas.get(i).getSubString(), TextToSpeech.QUEUE_FLUSH, null);
+                        while((player.getCurrentTimeMillis()/1000) >= compare_s[i] && (player.getCurrentTimeMillis()/1000) < compare_f[i]) {
+                            if(flag == -1) {
+                                tts.stop();
+                                flag2 = -1;
+                                break breakpoint;
+                            }
+                        }
+                    }
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            tts.stop();
+            flag2 = -1;
+        }
+    };
 }

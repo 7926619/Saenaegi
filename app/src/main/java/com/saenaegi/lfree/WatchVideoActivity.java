@@ -408,8 +408,8 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
                         String min = sectionSubtitles.get( String.valueOf( posi ) ).get( position ).getSubtitle().getSectionS().split( ":" )[0];
                         String sec = sectionSubtitles.get( String.valueOf( posi ) ).get( position ).getSubtitle().getSectionS().split( ":" )[1];
                         int compare = ((Integer.parseInt( min ) * 60) + Integer.parseInt( sec )) * 1000;
-
-                        player.seekToMillis( compare );
+                        if(flag == 1)
+                            player.seekToMillis( compare );
                         flag = 0;
                         flag2 = 0;
                         Thread th = new Thread( r );
@@ -477,8 +477,8 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
                         String min = sectionSubtitles.get( String.valueOf( posi ) ).get( position ).getSubtitle().getSectionS().split( ":" )[0];
                         String sec = sectionSubtitles.get( String.valueOf( posi ) ).get( position ).getSubtitle().getSectionS().split( ":" )[1];
                         int compare = ((Integer.parseInt( min ) * 60) + Integer.parseInt( sec )) * 1000;
-
-                        player.seekToMillis( compare );
+                        if(flag == 1)
+                            player.seekToMillis( compare );
                         flag = 0;
                         flag2 = 0;
                         Thread th2 = new Thread( r2 );
