@@ -87,8 +87,8 @@ public class aSearchVideoActivity extends AppCompatActivity {
                 videos.clear();
                 for(DataSnapshot snapshot:dataSnapshot.getChildren()){
                     Video video=snapshot.getValue(Video.class);
-                    videos.add( video );
                     if(video.getTitle().contains(search)){
+                        videos.add( video );
                         aListviewItem aListviewItem=new aListviewItem( video.getTitle());
                         data.add( aListviewItem );
                         count++;
