@@ -19,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
@@ -106,6 +107,16 @@ public class LikeVideoListActivity extends AppCompatActivity implements Navigati
         listView.setAdapter(adapter);
 
         changeView();
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(LikeVideoListActivity.this, WatchVideoActivity.class);
+                intent.putExtra("link",videos.get(position).getLink());
+                intent.putExtra("count",videos.get(position).getSectionCount());
+                startActivity(intent);
+            }
+        });
 
         /* progress bar */
         progressBar = findViewById(R.id.progressBar);
