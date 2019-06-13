@@ -15,18 +15,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.annotations.Nullable;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -43,22 +47,48 @@ public class MainActivity extends AppCompatActivity {
     // Google API Client object.
     public GoogleApiClient googleApiClient;
 
+    private boolean disabled;
+
     @Override
     public void onStart() {
         super.onStart();
         // 활동을 초기화 할 때 사용자가 현재 로그인되어 있는지 확인
-        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+        final FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
 
-        if(currentUser != null){
+        if(currentUser != null) {
+            Log.e("[*] TEST // ", "account.getIdToken(): "+account.getIdToken());
+            AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
+            currentUser.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull final Task<Void> task) {
+                    String alertMessage;
+                    if (false == task.isSuccessful()) {
+                        alertMessage = "failed.";
+                        alertMessage += "\r\n"+task.getException().toString();
+                        Log.i("[*] TEST // ", "alertMessage: "+alertMessage);
+                        disabled = true;
+                    }else{
+                        alertMessage = "success." ;
+                        Log.i("[*] TEST // ", "alertMessage: "+alertMessage);
+                    }
+                }
+            });
             signInButton.setVisibility(View.GONE);
             Handler handler = new Handler() {
-                public void handleMessage(Message msg) {
-                    super.handleMessage(msg);
-                    Toast.makeText(MainActivity.this,"자동로그인!",Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(MainActivity.this, ChoiceActivity.class));
-                    finish();
-                }
-            };
+                    public void handleMessage(Message msg) {
+                        super.handleMessage(msg);
+                        if(!disabled) {
+                            Toast.makeText(MainActivity.this, "자동로그인!", Toast.LENGTH_LONG).show();
+                            startActivity(new Intent(MainActivity.this, ChoiceActivity.class));
+                            finish();
+                        } else {
+                            signOut();
+                            Toast.makeText(MainActivity.this,"사용 중지된 회원입니다! 자동 로그아웃 됨.",Toast.LENGTH_LONG).show();
+                            finish();
+                        }
+                    }
+                };
             handler.sendEmptyMessageDelayed(0, 3000); //3초후 화면전환
         }
     }
@@ -148,9 +178,52 @@ public class MainActivity extends AppCompatActivity {
                             startActivity(intent);
                             finish();
                         }else {
-                            Toast.makeText(MainActivity.this,"Something Went Wrong",Toast.LENGTH_LONG).show();
+                            Toast.makeText(MainActivity.this,"사용 중지된 회원입니다!",Toast.LENGTH_LONG).show();
                         }
                     }
                 });
+    }
+
+    public void signOut() {
+
+        googleApiClient.connect();
+        googleApiClient.registerConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+
+            @Override
+            public void onConnected(@Nullable Bundle bundle) {
+
+                firebaseAuth.signOut();
+                if (googleApiClient.isConnected()) {
+
+                    Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(new ResultCallback<Status>() {
+
+                        @Override
+                        public void onResult(@NonNull Status status) {
+
+                            if (status.isSuccess()) {
+
+                                Log.d("TAG", "User Logged out");
+
+                            } else {
+
+                            }
+
+                            //hideProgressDialog();
+                            finish();
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onConnectionSuspended(int i) {
+
+                Log.d("TAG", "Google API Client Connection Suspended");
+
+                //hideProgressDialog();
+
+                finish();
+            }
+        });
     }
 }
