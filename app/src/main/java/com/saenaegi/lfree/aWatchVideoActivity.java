@@ -188,6 +188,10 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
         TextView tv1 = (TextView) findViewById( R.id.textView16 );
         tv1.setOnClickListener( new View.OnClickListener() {
             public void onClick(View v) {
+                if (player != null) {
+                    if (player.isPlaying())
+                        player.pause();
+                }
                 if(sectionSubtitles.size()!=0) {
                     tts.shutdown();
                     Intent intent = new Intent( aWatchVideoActivity.this, aSelectPartActivity.class );
@@ -213,6 +217,10 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
         tv2.setOnClickListener( new View.OnClickListener() {
             //조회수가 가장 높은 영상부터 차례차례 읽다가 더이상 읽을 영상이 없으면 다시 조회수가 가장 높은 영상으로 돌아간다.
             public void onClick(View v) {
+                if (player != null) {
+                    if (player.isPlaying())
+                        player.pause();
+                }
                 if(nowSection!=0&&sectionSubtitles.size()!=0) {
                     position = position + 1;
                     if (position >= sectionSubtitles.get( String.valueOf( nowSection ) ).size()) {
@@ -261,6 +269,12 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
                         likesubtitleKey.add( key );
                         databaseReference2.child( idvideo ).child( key ).setValue( "idsubtitle" );
                         databaseReference.child( idvideo ).child( "SUBTITLE" ).child( String.valueOf( nowSection ) ).child( key ).child( "recommend" ).setValue( recommend + 1 );
+                    }
+                    else{
+                        String eventText = "이미 추천한 영상입니다.";
+                        Toast.makeText(getApplication(), eventText, Toast.LENGTH_SHORT).show();
+                        tts.setSpeechRate((float)0.87);
+                        tts.speak(eventText, TextToSpeech.QUEUE_FLUSH, null);
                     }
                 }
                 else{
