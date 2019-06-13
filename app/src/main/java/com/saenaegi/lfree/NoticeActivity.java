@@ -1,6 +1,8 @@
 package com.saenaegi.lfree;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -31,6 +33,11 @@ import com.saenaegi.lfree.Data.Notice;
 import com.saenaegi.lfree.RecycleviewController_n.Data;
 import com.saenaegi.lfree.RecycleviewController_n.RecyclerAdapter;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -51,6 +58,7 @@ public class NoticeActivity extends AppCompatActivity implements NavigationView.
     private FirebaseAuth firebaseAuth;
     private TextView LoginUserName;
     private TextView Recommend;
+    private Bitmap bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,10 +96,39 @@ public class NoticeActivity extends AppCompatActivity implements NavigationView.
 
         /* 구글 정보 불러오기 */
         firebaseAuth = FirebaseAuth.getInstance();
-        FirebaseUser googleUser = firebaseAuth.getCurrentUser();
+        final FirebaseUser googleUser = firebaseAuth.getCurrentUser();
         View headerView = navigationView.getHeaderView(0);
         LoginUserName = (TextView)headerView.findViewById(R.id.textView10);
         LoginUserName.setText(googleUser.getDisplayName() + "님");
+        Recommend = (TextView)headerView.findViewById(R.id.textView11);
+        Recommend.setText("로딩중...");
+
+        CircularImageView user_profile = headerView.findViewById(R.id.imageView);
+        Thread mThread= new Thread(){
+            @Override
+            public void run() {
+                try{
+                    URL url = new URL(googleUser.getPhotoUrl().toString());
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setDoInput(true);
+                    conn.connect();
+
+                    InputStream is = conn.getInputStream();
+                    bitmap = BitmapFactory.decodeStream(is);
+                } catch (MalformedURLException ee) {
+                    ee.printStackTrace();
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+        };
+        mThread.start();
+        try{
+            mThread.join();
+            user_profile.setImageBitmap(bitmap);
+        }catch (InterruptedException e){
+            e.printStackTrace();
+        }
 
         /* recycle view */
         recyclerView = findViewById(R.id.recyclerView);
@@ -148,7 +185,6 @@ public class NoticeActivity extends AppCompatActivity implements NavigationView.
                 }
 
                 View headerView = navigationView.getHeaderView(0);
-                Recommend = (TextView)headerView.findViewById(R.id.textView11);
                 Recommend.setText(recommend);
             }
 

@@ -45,7 +45,11 @@ import com.squareup.picasso.Picasso;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -69,6 +73,7 @@ public class LfreeMainActivity extends AppCompatActivity implements NavigationVi
     private TextView Recommend;
 
     private ProgressBar progressBar1, progressBar2;
+    private Bitmap bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,11 +133,39 @@ public class LfreeMainActivity extends AppCompatActivity implements NavigationVi
 
         /* 구글 정보 불러오기 */
         firebaseAuth = FirebaseAuth.getInstance();
-        FirebaseUser googleUser = firebaseAuth.getCurrentUser();
+        final FirebaseUser googleUser = firebaseAuth.getCurrentUser();
         View headerView = navigationView.getHeaderView(0);
         LoginUserName = (TextView)headerView.findViewById(R.id.textView10);
         LoginUserName.setText(googleUser.getDisplayName() + "님");
+        Recommend = (TextView)headerView.findViewById(R.id.textView11);
+        Recommend.setText("로딩중...");
 
+        CircularImageView user_profile = headerView.findViewById(R.id.imageView);
+        Thread mThread= new Thread(){
+            @Override
+            public void run() {
+                try{
+                    URL url = new URL(googleUser.getPhotoUrl().toString());
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setDoInput(true);
+                    conn.connect();
+
+                    InputStream is = conn.getInputStream();
+                    bitmap = BitmapFactory.decodeStream(is);
+                } catch (MalformedURLException ee) {
+                    ee.printStackTrace();
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+        };
+        mThread.start();
+        try{
+            mThread.join();
+            user_profile.setImageBitmap(bitmap);
+        }catch (InterruptedException e){
+            e.printStackTrace();
+        }
 
         /* recycle view */
         recyclerView1 = findViewById(R.id.complete_list);
@@ -227,7 +260,6 @@ public class LfreeMainActivity extends AppCompatActivity implements NavigationVi
                 }
                 dataRef.child( googleIUser.getDisplayName() ).setValue( String.valueOf( recommend ));
                 View headerView = navigationView.getHeaderView(0);
-                Recommend = (TextView)headerView.findViewById(R.id.textView11);
                 Recommend.setText(String.valueOf(recommend));
 
                 adapter1.notifyDataSetChanged();

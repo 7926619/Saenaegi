@@ -2,6 +2,7 @@ package com.saenaegi.lfree;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.speech.tts.TextToSpeech;
@@ -54,6 +55,11 @@ import com.saenaegi.lfree.Data.Video;
 import com.saenaegi.lfree.SubtitleController.InputDataController;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Locale;
 

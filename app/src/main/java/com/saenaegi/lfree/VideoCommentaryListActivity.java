@@ -44,6 +44,11 @@ import com.google.firebase.database.ValueEventListener;
 import com.saenaegi.lfree.ListviewController.ListviewAdapter;
 import com.saenaegi.lfree.ListviewController.ListviewItem;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import com.saenaegi.lfree.Data.Video;
@@ -71,6 +76,7 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
     private FirebaseAuth firebaseAuth;
     private TextView LoginUserName;
     private TextView Recommend;
+    private Bitmap bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,10 +114,39 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
 
         /* 구글 정보 불러오기 */
         firebaseAuth = FirebaseAuth.getInstance();
-        FirebaseUser googleUser = firebaseAuth.getCurrentUser();
+        final FirebaseUser googleUser = firebaseAuth.getCurrentUser();
         View headerView = navigationView.getHeaderView(0);
         LoginUserName = (TextView)headerView.findViewById(R.id.textView10);
         LoginUserName.setText(googleUser.getDisplayName() + "님");
+        Recommend = (TextView)headerView.findViewById(R.id.textView11);
+        Recommend.setText("로딩중...");
+
+        CircularImageView user_profile = headerView.findViewById(R.id.imageView);
+        Thread mThread= new Thread(){
+            @Override
+            public void run() {
+                try{
+                    URL url = new URL(googleUser.getPhotoUrl().toString());
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setDoInput(true);
+                    conn.connect();
+
+                    InputStream is = conn.getInputStream();
+                    bitmap = BitmapFactory.decodeStream(is);
+                } catch (MalformedURLException ee) {
+                    ee.printStackTrace();
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+        };
+        mThread.start();
+        try{
+            mThread.join();
+            user_profile.setImageBitmap(bitmap);
+        }catch (InterruptedException e){
+            e.printStackTrace();
+        }
 
         listView = (ListView) findViewById(R.id.listview);
         adapter = new ListviewAdapter(this, R.layout.listview_item, data);
@@ -188,7 +223,6 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
                 }
 
                 View headerView = navigationView.getHeaderView(0);
-                Recommend = (TextView)headerView.findViewById(R.id.textView11);
                 Recommend.setText(recommend);
             }
 

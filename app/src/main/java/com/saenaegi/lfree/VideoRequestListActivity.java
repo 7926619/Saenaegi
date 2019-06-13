@@ -51,6 +51,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -87,6 +88,7 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
     private FirebaseAuth firebaseAuth;
     private TextView LoginUserName;
     private TextView Recommend;
+    private Bitmap bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,10 +127,39 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
 
         /* 구글 정보 불러오기 */
         firebaseAuth = FirebaseAuth.getInstance();
-        FirebaseUser googleUser = firebaseAuth.getCurrentUser();
+        final FirebaseUser googleUser = firebaseAuth.getCurrentUser();
         View headerView = navigationView.getHeaderView(0);
         LoginUserName = (TextView)headerView.findViewById(R.id.textView10);
         LoginUserName.setText(googleUser.getDisplayName() + "님");
+        Recommend = (TextView)headerView.findViewById(R.id.textView11);
+        Recommend.setText("로딩중...");
+
+        CircularImageView user_profile = headerView.findViewById(R.id.imageView);
+        Thread mThread= new Thread(){
+            @Override
+            public void run() {
+                try{
+                    URL url = new URL(googleUser.getPhotoUrl().toString());
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setDoInput(true);
+                    conn.connect();
+
+                    InputStream is = conn.getInputStream();
+                    bitmap = BitmapFactory.decodeStream(is);
+                } catch (MalformedURLException ee) {
+                    ee.printStackTrace();
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+        };
+        mThread.start();
+        try{
+            mThread.join();
+            user_profile.setImageBitmap(bitmap);
+        }catch (InterruptedException e){
+            e.printStackTrace();
+        }
 
         /* link button */
         ImageButton link_button = (ImageButton) findViewById(R.id.link_button) ;
@@ -294,7 +325,6 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
                 }
 
                 View headerView = navigationView.getHeaderView(0);
-                Recommend = (TextView)headerView.findViewById(R.id.textView11);
                 Recommend.setText(recommend);
             }
 
