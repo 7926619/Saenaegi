@@ -46,14 +46,11 @@ public class aAccessibilityService extends AccessibilityService {
     int timercount4 = 0;
     int timercount5 = 0;
 
-    //TimerTask mTask = null;
-    //Timer mTimer = null;
     Handler mHandler = null;
     Handler mHandler2 = null;
     Handler mHandler3 = null;
     Handler mHandler4 = null;
     Handler mHandler5 = null;
-    //int tempGestureId;
 
     ArrayList<View> arr = new ArrayList<>();
     ArrayList<View> arr2 = new ArrayList<>();
@@ -1174,7 +1171,6 @@ public class aAccessibilityService extends AccessibilityService {
             //GESTURE_SWIPE_RIGHT = 4
             //GESTURE_SWIPE_UP = 1
             //GESTURE_SWIPE_DOWN = 2
-
             // 오른쪽에서 왼쪽으로 스와이프를 진행하는 경우, 해당 레이아웃 내에서 선택되어 있던 UI 컴포넌트의 다음 컴포넌트를 포커싱 및 선택
             case GESTURE_SWIPE_LEFT:
                 Toast.makeText(getApplication(), "SWIPE_LEFT", Toast.LENGTH_LONG).show();
@@ -1184,17 +1180,16 @@ public class aAccessibilityService extends AccessibilityService {
                         return true;
                     }
 
-                    //if(source.getViewIdResourceName().contains("title")){
                     if(source.getViewIdResourceName().contains("constraint1")){
                         listViewGestureLeft();
                         return true;
                     }
-                    //if((source.getViewIdResourceName()).contains("com.saenaegi.lfree:id/textView18"))
+
                     temp = source.getTraversalAfter();
+
                     if(temp == null)
                         return false;
                     temp.performAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS);
-                    //source = temp;
                 }
 
                 else {
@@ -1210,17 +1205,15 @@ public class aAccessibilityService extends AccessibilityService {
                         listViewAutoFocusUp();
                         return true;
                     }
-                    //if(source.getViewIdResourceName().contains("title")) {
                     if(source.getViewIdResourceName().contains("constraint1")){
                         listViewGestureRight();
                         return true;
                     }
-                    //if((source.getViewIdResourceName()).contains("com.saenaegi.lfree:id/textView18"))
+
                     temp = source.getTraversalBefore();
                     if(temp == null)
                         return false;
                     temp.performAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS);
-                    //source = temp;
                 }
 
                 else {
@@ -1244,7 +1237,6 @@ public class aAccessibilityService extends AccessibilityService {
                     performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
                     tts.speak("뒤로 가기", TextToSpeech.QUEUE_FLUSH, null, "TextToSpeech_ID");
                 }
-                //source = findFocus(AccessibilityNodeInfo.FOCUS_ACCESSIBILITY);
                 return true;
 
             // 위쪽에서 아래쪽으로 스와이프를 진행하는 경우, 해당 레이아웃 UI에서 홈으로 이동
@@ -1255,7 +1247,6 @@ public class aAccessibilityService extends AccessibilityService {
                 disableSelf();
                 System.runFinalizersOnExit(true);
                 System.exit(0);
-                //source = findFocus(AccessibilityNodeInfo.FOCUS_ACCESSIBILITY);
                 return true;
             default:
                 Toast.makeText(getApplication(), "SWIPE_ETC", Toast.LENGTH_LONG).show();
@@ -1266,19 +1257,8 @@ public class aAccessibilityService extends AccessibilityService {
     // 이벤트가 발생할때마다 실행되는 부분
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
-
-        Log.e(TAG, "=========================================================================");
-        Log.e(TAG, "Catch Event : " + event.toString());
-        Log.e(TAG, "Catch Event Package Name : " + event.getPackageName());
-        Log.e(TAG, "Catch Event TEXT : " + event.getText());
-        Log.e(TAG, "Catch Event ContentDescription : " + event.getContentDescription());
-        Log.e(TAG, "Catch Event getSource : " + event.getSource());
-        Log.e(TAG, "=========================================================================");
         // 발생한 이벤트로부터 Source를 get
         source = event.getSource();
-        //Log.e(TAG, "Catch View ID : " + source.getViewIdResourceName() + " " + source.getWindowId());
-        //Log.e(TAG, "Catch before or after item by focusing : " + source.getTraversalBefore() + " " +  source.getTraversalAfter());
-        //Log.e(TAG, "=========================================================================");
         // 실현 시간 상수로서 접근성 서비스에 대한 이벤트 타입 변수 선언 및 생성
         final int eventType =  event.getEventType();
 
@@ -1288,7 +1268,6 @@ public class aAccessibilityService extends AccessibilityService {
 
         // 접근성 이벤트의 소스가 null이라면 예외가 발생한 것이므로 Side Effect가 발생하기 전에 바로 return
         if(source == null) {
-            //Toast.makeText(getApplicationContext(), "Accessibility Service Source is NULL!", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -1310,7 +1289,6 @@ public class aAccessibilityService extends AccessibilityService {
         else if(!((rti2.get(0).topActivity.getClassName()).contains("aSearchVideoActivity")))
             timercount5 = 0;
 
-        //if(eventType == AccessibilityEvent.TYPE_VIEW_CLICKED || eventType == AccessibilityEvent.TYPE_VIEW_HOVER_ENTER)
         if(eventType == AccessibilityEvent.TYPE_VIEW_HOVER_ENTER) {
             // 이벤트를 발생시킨 해당 소스에 대한 Action 실행. 이 때의 Action은 접근성 서비스를 위한 FOCUS
             eventText = "클릭됨 : ";
@@ -1477,16 +1455,13 @@ public class aAccessibilityService extends AccessibilityService {
                 | AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED | AccessibilityEvent.TYPE_VIEW_TEXT_SELECTION_CHANGED
                 | AccessibilityEvent.TYPE_VIEW_SELECTED | AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUSED | AccessibilityEvent.TYPE_VIEW_HOVER_ENTER;
 
-        //info.eventTypes = AccessibilityEvent.TYPES_ALL_MASK; // 전체 이벤트 가져오기
-
         // 이벤트 발생 시 음성 및 진동 피드백 제공
         info.feedbackType = AccessibilityServiceInfo.FEEDBACK_SPOKEN | AccessibilityServiceInfo.FEEDBACK_HAPTIC;
-        //info.feedbackType = AccessibilityServiceInfo.FEEDBACK_ALL_MASK;
 
         // 제스처 기능 수행을 위한 터치 모드 수행 플래그 설정
         info.flags = AccessibilityServiceInfo.FLAG_REQUEST_TOUCH_EXPLORATION_MODE | AccessibilityServiceInfo.FLAG_INCLUDE_NOT_IMPORTANT_VIEWS |
                 AccessibilityServiceInfo.FLAG_REPORT_VIEW_IDS | AccessibilityServiceInfo.FLAG_RETRIEVE_INTERACTIVE_WINDOWS;
-        //info.flags = AccessibilityServiceInfo.FLAG_REQUEST_FINGERPRINT_GESTURES;
+
         info.notificationTimeout = 100; // millisecond
         // 서비스 설정
         setServiceInfo(info);
