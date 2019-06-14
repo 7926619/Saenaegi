@@ -217,10 +217,6 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
         tv2.setOnClickListener( new View.OnClickListener() {
             //조회수가 가장 높은 영상부터 차례차례 읽다가 더이상 읽을 영상이 없으면 다시 조회수가 가장 높은 영상으로 돌아간다.
             public void onClick(View v) {
-                if (player != null) {
-                    if (player.isPlaying())
-                        player.pause();
-                }
                 if(nowSection!=0&&sectionSubtitles.size()!=0) {
                     position = position + 1;
                     if (position >= sectionSubtitles.get( String.valueOf( nowSection ) ).size()) {
