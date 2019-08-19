@@ -37,6 +37,7 @@
                 android:textSize="16sp"
                 android:visibility="visible"
                 android:importantForAccessibility="no"
+                android:contentDescription=""
                 android:focusable="true"
                 android:focusableInTouchMode="true"/>
 

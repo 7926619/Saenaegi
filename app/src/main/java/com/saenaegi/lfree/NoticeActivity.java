@@ -39,7 +39,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class NoticeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {

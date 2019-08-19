@@ -23,7 +23,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemVi
     // Item의 클릭 상태를 저장할 array 객체
     private SparseBooleanArray selectedItems = new SparseBooleanArray();
     // 직전에 클릭됐던 Item의 position
-    private int prePosition = -1;
+    //private int prePosition = -1;
+    public int prePosition = -1;
 
     @NonNull
     @Override

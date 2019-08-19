@@ -1,13 +1,10 @@
 package com.saenaegi.lfree;
 
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -17,11 +14,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatCallback;
-import android.support.v7.app.AppCompatDelegate;
-import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
 import android.text.InputFilter;
 import android.util.Log;
 import android.util.TypedValue;
@@ -49,30 +42,18 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
 import com.saenaegi.lfree.Data.Subtitle;
 import com.saenaegi.lfree.Data.Video;
 import com.saenaegi.lfree.SubtitleController.InputDataController;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
-import com.google.android.youtube.player.YouTubePlayerView;
 
-import static android.text.InputType.TYPE_CLASS_DATETIME;
-import static android.text.InputType.TYPE_DATETIME_VARIATION_TIME;
-import static android.text.InputType.TYPE_TEXT_FLAG_CAP_SENTENCES;
-import static android.text.InputType.TYPE_TEXT_FLAG_MULTI_LINE;
 import com.saenaegi.lfree.SubtitleController.SubtitleData;
 
 public class MakeVideoActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {

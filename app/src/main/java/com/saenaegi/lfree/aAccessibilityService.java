@@ -4,11 +4,8 @@ import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.AccessibilityServiceInfo;
 import android.app.ActivityManager;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
-import android.os.Message;
-import android.support.constraint.ConstraintLayout;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewStub;
@@ -21,11 +18,6 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import com.saenaegi.lfree.ListviewController.aListviewAdapter;
-import com.saenaegi.lfree.ListviewController.aListviewItem;
 
 public class aAccessibilityService extends AccessibilityService {
     private static final String TAG = "AccessibilityService";
@@ -500,11 +492,13 @@ public class aAccessibilityService extends AccessibilityService {
                 if ((source.getContentDescription()).equals("constraint_"+temp.getContentDescription())) {
                     if (temp.getId() == rowtemp.size() - 1) {
                         tempafter = rowtemp.get(0);
+                        //listviewtemp.setSelection(0);
+                        Log.e(TAG, "ID : " + temp.getId() + "i : " + i + "arr22222222222222222 : " + tempafter + "ENDENDEND");
                         for(int j = 0 ; j < rowaftertemp.size() ; j++) {
                             if((tempafter.getContentDescription()).equals((rowaftertemp.get(j)).getContentDescription())) {
                                 listviewtemp.findViewsWithText(arr, tempafter.getContentDescription(), ViewStub.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
                                 listviewtemp.findViewsWithText(arr2, "constraint_" + tempafter.getContentDescription(), ViewStub.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
-                                Log.e(TAG, "arr2 : " + arr2.get(0));
+                                //arr2.add(rowtemp.get(0));
                                 arr2.get(0).setFocusable(true);
                                 arr2.get(0).setFocusableInTouchMode(true);
                                 arr2.get(0).performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
@@ -521,6 +515,8 @@ public class aAccessibilityService extends AccessibilityService {
                         if(i + 1 == rowtemp.size())
                             break;
                         tempafter = rowtemp.get(i+1);
+                        //listviewtemp.setSelection(i+1);
+                        Log.e(TAG, "ID : " + temp.getId() + "i : " + i + "arr22222222222222222 : " + tempafter + "GOGOGO");
                         for(int j = 0 ; j < rowaftertemp.size() ; j++) {
                             if((tempafter.getContentDescription()).equals((rowaftertemp.get(j)).getContentDescription())) {
                                 listviewtemp.findViewsWithText(arr, tempafter.getContentDescription(), ViewStub.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
@@ -850,9 +846,10 @@ public class aAccessibilityService extends AccessibilityService {
 
             for(int i = 0 ; i < rowtemp.size() ; i++) {
                 temp = rowtemp.get(i);
-                if ((source.getContentDescription()).equals("constraint_"+temp.getContentDescription())) {
+                if ((source.getContentDescription()).equals("constraint_" + temp.getContentDescription())) {
                     if(temp.getId() == 0) {
                         tempbefore = rowtemp.get(rowtemp.size() - 1);
+                        Log.e(TAG, "ID : " + temp.getId() + "i : " + i + "arr22222222222222222 : " + tempbefore + "ENDENDEND");
                         for(int j = 0 ; j < rowbeforetemp.size() ; j++) {
                             if((tempbefore.getContentDescription()).equals(rowbeforetemp.get(j).getContentDescription())) {
                                 listviewtemp.findViewsWithText(arr, tempbefore.getContentDescription(), ViewStub.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
@@ -873,6 +870,7 @@ public class aAccessibilityService extends AccessibilityService {
                         if(i -1 < 0)
                             break;
                         tempbefore = rowtemp.get(i - 1);
+                        Log.e(TAG, "ID : " + temp.getId() + "i : " + i + "arr22222222222222222 : " + tempbefore + "GOGOGO");
                         for(int j = 0 ; j < rowbeforetemp.size() ; j++) {
                             if((tempbefore.getContentDescription()).equals(rowbeforetemp.get(j).getContentDescription())) {
                                 listviewtemp.findViewsWithText(arr, tempbefore.getContentDescription(), ViewStub.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
@@ -1174,13 +1172,13 @@ public class aAccessibilityService extends AccessibilityService {
             // 오른쪽에서 왼쪽으로 스와이프를 진행하는 경우, 해당 레이아웃 내에서 선택되어 있던 UI 컴포넌트의 다음 컴포넌트를 포커싱 및 선택
             case GESTURE_SWIPE_LEFT:
                 Toast.makeText(getApplication(), "SWIPE_LEFT", Toast.LENGTH_LONG).show();
-                if(source.getViewIdResourceName() != null) {
+                if((source.getViewIdResourceName() != null && source.getContentDescription() != null)) {
                     if((source.getContentDescription().equals("영상 목록") && source.getViewIdResourceName().contains("textView9")) || (source.getContentDescription().equals("파트 선택") && source.getViewIdResourceName().contains("textView9")) || (source.getContentDescription().equals("좋아요 표시한 동영상") && source.getViewIdResourceName().contains("textView9")) || (source.getContentDescription().equals("공지사항") && source.getViewIdResourceName().contains("textView9")) || (source.getContentDescription().equals("검색 목록") && source.getViewIdResourceName().contains("textView9"))) {
                         listViewAutoFocusDown();
                         return true;
                     }
 
-                    if(source.getViewIdResourceName().contains("constraint1")){
+                    else if(source.getViewIdResourceName().contains("constraint1")){
                         listViewGestureLeft();
                         return true;
                     }
@@ -1200,12 +1198,13 @@ public class aAccessibilityService extends AccessibilityService {
             // 왼쪽에서 오른쪽으로 스와이프를 진행하는 경우, 해당 레이아웃 내에서 선택되어 있던 UI 컴포넌트의 이전 컴포넌트를 포커싱 및 선택
             case GESTURE_SWIPE_RIGHT:
                 Toast.makeText(getApplication(), "SWIPE_RIGHT", Toast.LENGTH_LONG).show();
-                if(source.getViewIdResourceName() != null) {
+                if((source.getViewIdResourceName() != null && source.getContentDescription() != null)) {
                     if((source.getContentDescription().equals("영상 목록") && source.getViewIdResourceName().contains("textView9")) || (source.getContentDescription().equals("파트 선택") && source.getViewIdResourceName().contains("textView9")) || (source.getContentDescription().equals("좋아요 표시한 동영상") && source.getViewIdResourceName().contains("textView9")) || (source.getContentDescription().equals("공지사항") && source.getViewIdResourceName().contains("textView9")) || (source.getContentDescription().equals("검색 목록") && source.getViewIdResourceName().contains("textView9"))) {
                         listViewAutoFocusUp();
                         return true;
                     }
-                    if(source.getViewIdResourceName().contains("constraint1")){
+
+                    else if(source.getViewIdResourceName().contains("constraint1")){
                         listViewGestureRight();
                         return true;
                     }

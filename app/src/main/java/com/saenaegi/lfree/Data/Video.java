@@ -1,7 +1,5 @@
 package com.saenaegi.lfree.Data;
 
-import android.graphics.Bitmap;
-
 public class Video {
     private String link;
     private String title;

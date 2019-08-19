@@ -44,12 +44,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.security.Key;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 import com.saenaegi.lfree.Data.Subtitle;
 import com.saenaegi.lfree.Data.Video;
@@ -367,7 +362,8 @@ public class MyVideoListActivity extends AppCompatActivity implements Navigation
             byte [] encodeByte= Base64.decode(image,Base64.DEFAULT);
             Bitmap bitmap= BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
             return bitmap;
-        }catch(Exception e){
+        }catch(OutOfMemoryError e){
+            android.util.Log.d(null, "==================> " + e.toString());
             return null;
         }
     }

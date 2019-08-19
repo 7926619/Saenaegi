@@ -1,7 +1,6 @@
 package com.saenaegi.lfree;
 
 import android.os.Build;
-import android.os.Handler;
 import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

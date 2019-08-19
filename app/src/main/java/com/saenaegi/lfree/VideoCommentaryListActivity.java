@@ -16,13 +16,10 @@ import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -33,7 +30,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.youtube.player.YouTubePlayer;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -52,7 +48,6 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import com.saenaegi.lfree.Data.Video;
-import com.saenaegi.lfree.RecycleviewController.Data;
 
 public class VideoCommentaryListActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -419,8 +414,8 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
             byte [] encodeByte= Base64.decode(image,Base64.DEFAULT);
             Bitmap bitmap= BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
             return bitmap;
-        }catch(Exception e){
-            e.getMessage();
+        }catch(OutOfMemoryError e){
+            android.util.Log.d(null, "==================> " + e.toString());
             return null;
         }
     }

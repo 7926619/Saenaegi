@@ -359,7 +359,8 @@ public class LikeVideoListActivity extends AppCompatActivity implements Navigati
             byte [] encodeByte= Base64.decode(image,Base64.DEFAULT);
             Bitmap bitmap= BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
             return bitmap;
-        }catch(Exception e){
+        }catch(OutOfMemoryError e){
+            android.util.Log.d(null, "==================> " + e.toString());
             return null;
         }
     }

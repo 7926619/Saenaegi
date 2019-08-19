@@ -3,9 +3,6 @@ package com.saenaegi.lfree;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.net.Uri;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -19,12 +16,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -41,18 +35,13 @@ import com.saenaegi.lfree.Data.Subtitle;
 import com.saenaegi.lfree.Data.Video;
 import com.saenaegi.lfree.RecycleviewController.RecyclerAdapter;
 import com.saenaegi.lfree.RecycleviewController.Data;
-import com.squareup.picasso.Picasso;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class LfreeMainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, RecyclerAdapter.OnListItemSelectedInterface {
 
@@ -348,8 +337,8 @@ public class LfreeMainActivity extends AppCompatActivity implements NavigationVi
             byte [] encodeByte= Base64.decode(image,Base64.DEFAULT);
             Bitmap bitmap= BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
             return bitmap;
-        }catch(Exception e){
-            e.getMessage();
+        }catch(OutOfMemoryError e){
+            android.util.Log.d(null, "==================> " + e.toString());
             return null;
         }
     }

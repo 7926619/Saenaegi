@@ -10,9 +10,7 @@ import com.google.firebase.storage.UploadTask;
 import com.saenaegi.lfree.Data.Subtitle;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import android.content.Context;
 import java.io.File;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -128,16 +126,21 @@ public class InputDataController {
             filewrite.write( stringBuilder.toString() );
 
         } catch (IOException e) {
-            e.printStackTrace();
+            android.util.Log.d(null, "==================> " + e.toString());
         }
-        if(filewrite != null){
 
+        if(filewrite != null){
             try{
                 filewrite.close();
-            }catch (Exception e){
-                e.printStackTrace();
+            }catch (IOException e){
+                android.util.Log.d(null, "==================> " + e.toString());
             }
-
+            catch (NullPointerException e) {
+                android.util.Log.d(null, "==================> " + e.toString());
+            }
+            catch (IndexOutOfBoundsException e) {
+                android.util.Log.d(null, "==================> " + e.toString());
+            }
         }
 
         return file;

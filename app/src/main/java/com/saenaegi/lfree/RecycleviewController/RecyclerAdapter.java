@@ -18,8 +18,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemVi
     public interface OnListItemSelectedInterface {
         void onItemSelected(View v, int position);
     }
-    private RecyclerAdapter.OnListItemSelectedInterface mListener;
-    private Context context;
+
+    //private RecyclerAdapter.OnListItemSelectedInterface mListener;
+    //private Context context;
+    public RecyclerAdapter.OnListItemSelectedInterface mListener;
+    public Context context;
 
     public RecyclerAdapter(Context context
             , OnListItemSelectedInterface listener) {

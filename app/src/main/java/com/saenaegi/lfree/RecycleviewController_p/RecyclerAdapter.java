@@ -1,7 +1,6 @@
 package com.saenaegi.lfree.RecycleviewController_p;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseBooleanArray;
@@ -12,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.saenaegi.lfree.R;
-import com.saenaegi.lfree.WatchVideoActivity;
 
 import java.util.ArrayList;
 
@@ -29,8 +27,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemVi
     public interface OnListItemSelectedInterface {
         void onItemSelected(View v, int position);
     }
-    private OnListItemSelectedInterface mListener;
-    private Context context;
+
+    //private OnListItemSelectedInterface mListener;
+    //private Context context;
+    public OnListItemSelectedInterface mListener;
+    public Context context;
 
     public RecyclerAdapter(Context context
             , OnListItemSelectedInterface listener) {

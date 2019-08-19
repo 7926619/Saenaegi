@@ -3,14 +3,12 @@ package com.saenaegi.lfree.RecycleviewController_s;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -23,8 +21,11 @@ public class RecyclerAdapterS extends RecyclerView.Adapter<RecyclerAdapterS.Item
     public interface OnListItemSelectedInterface {
         void onItemSelectedS(View v, int position);
     }
-    private RecyclerAdapterS.OnListItemSelectedInterface mListener;
-    private Context context;
+
+    //private RecyclerAdapterS.OnListItemSelectedInterface mListener;
+    //private Context context;
+    public RecyclerAdapterS.OnListItemSelectedInterface mListener;
+    public Context context;
 
     public RecyclerAdapterS(Context context
             , OnListItemSelectedInterface listener) {

@@ -40,7 +40,7 @@ public class aNoticeActivity extends AppCompatActivity {
 
     private int count = 0;
 
-    public static Context context;
+    public static Context context = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

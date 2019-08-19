@@ -66,22 +66,24 @@ import org.json.JSONObject;
 
 public class VideoRequestListActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    private FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
-    private DatabaseReference databaseReference =firebaseDatabase.getReference().child("LFREE").child("VIDEO");
-    private DatabaseReference dataRef=firebaseDatabase.getReference().child( "LFREE" ).child( "TEMP" );
+    private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+    private DatabaseReference databaseReference = firebaseDatabase.getReference().child("LFREE").child("VIDEO");
+    private DatabaseReference dataRef = firebaseDatabase.getReference().child("LFREE").child("TEMP");
 
     private ScrollView scroll_view;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private ProgressBar progressBar;
 
-    private ArrayList<Video> videos=new ArrayList<>( );
+    private ArrayList<Video> videos = new ArrayList<>();
     private ArrayList<ListviewItem> data = new ArrayList<>();
     private ArrayList<Video> rvideos = new ArrayList<>();
     private ListView listView;
     private ListviewAdapter adapter;
-    private Bitmap thumb;
-    private String url;
+    //private Bitmap thumb;
+    public Bitmap thumb;
+    //private String url;
+    public String url;
     private String videoID;
     private int effective;
     private String time;
@@ -114,9 +116,8 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
         /* navigation */
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
 
-        final ImageButton drawerButton = (ImageButton)findViewById(R.id.drawer_icon);
-        drawerButton.setOnClickListener(new View.OnClickListener()
-        {
+        final ImageButton drawerButton = (ImageButton) findViewById(R.id.drawer_icon);
+        drawerButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 drawerLayout.openDrawer(GravityCompat.START);
             }
@@ -129,16 +130,16 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
         firebaseAuth = FirebaseAuth.getInstance();
         final FirebaseUser googleUser = firebaseAuth.getCurrentUser();
         View headerView = navigationView.getHeaderView(0);
-        LoginUserName = (TextView)headerView.findViewById(R.id.textView10);
+        LoginUserName = (TextView) headerView.findViewById(R.id.textView10);
         LoginUserName.setText(googleUser.getDisplayName() + "님");
-        Recommend = (TextView)headerView.findViewById(R.id.textView11);
+        Recommend = (TextView) headerView.findViewById(R.id.textView11);
         Recommend.setText("로딩중...");
 
         CircularImageView user_profile = headerView.findViewById(R.id.imageView);
-        Thread mThread= new Thread(){
+        Thread mThread = new Thread() {
             @Override
             public void run() {
-                try{
+                try {
                     URL url = new URL(googleUser.getPhotoUrl().toString());
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setDoInput(true);
@@ -148,21 +149,21 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
                     bitmap = BitmapFactory.decodeStream(is);
                 } catch (MalformedURLException ee) {
                     ee.printStackTrace();
-                }catch (IOException e){
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         };
         mThread.start();
-        try{
+        try {
             mThread.join();
             user_profile.setImageBitmap(bitmap);
-        }catch (InterruptedException e){
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
         /* link button */
-        ImageButton link_button = (ImageButton) findViewById(R.id.link_button) ;
+        ImageButton link_button = (ImageButton) findViewById(R.id.link_button);
         link_button.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -191,8 +192,7 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
     }
 
     @SuppressLint("RestrictedApi")
-    void input_link()
-    {
+    void input_link() {
         final EditText edittext = new EditText(this);
         edittext.setHint("link address");
 
@@ -204,29 +204,28 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
                     public void onClick(DialogInterface dialog, int which) {
                         String link = edittext.getText().toString();
                         /* 링크 형식 필터링 */
-                        if ((Pattern.matches("^(https://www.youtube.com/watch\\?v=)\\S+$", link)) || (Pattern.matches("^(https://youtu.be/)\\S+$", link))){
+                        if ((Pattern.matches("^(https://www.youtube.com/watch\\?v=)\\S+$", link)) || (Pattern.matches("^(https://youtu.be/)\\S+$", link))) {
                             /* 유튜브 영상 ID 추출 */
-                            if(Pattern.matches("^(https://www.youtube.com/watch\\?v=)\\S+$", link))
-                                videoID = link.substring(link.indexOf("=")+1);
+                            if (Pattern.matches("^(https://www.youtube.com/watch\\?v=)\\S+$", link))
+                                videoID = link.substring(link.indexOf("=") + 1);
                             else
-                                videoID = link.substring(link.indexOf("be/")+3);
-                            if(videoID.indexOf("&")!=-1)
-                                videoID = videoID.substring(0,videoID.indexOf("&"));
-                            else if(videoID.indexOf("?")!=-1)
-                                videoID = videoID.substring(0,videoID.indexOf("?"));
+                                videoID = link.substring(link.indexOf("be/") + 3);
+                            if (videoID.indexOf("&") != -1)
+                                videoID = videoID.substring(0, videoID.indexOf("&"));
+                            else if (videoID.indexOf("?") != -1)
+                                videoID = videoID.substring(0, videoID.indexOf("?"));
 
                             new Thread() {
                                 public void run() {
                                     String title = Title();
-                                    if(effective==0) {
+                                    if (effective == 0) {
                                         Looper.prepare();
                                         Toast.makeText(getApplicationContext(), "유효한 영상주소가 아닙니다.", Toast.LENGTH_LONG).show();
                                         Looper.loop();
-                                    }
-                                    else {
-                                        Log.e("time",""+ time +" "+effective);
+                                    } else {
+                                        Log.e("time", "" + time + " " + effective);
                                         /* 썸네일 주소 설정 */
-                                        url = "https://img.youtube.com/vi/"+videoID+"/maxresdefault.jpg";
+                                        url = "https://img.youtube.com/vi/" + videoID + "/maxresdefault.jpg";
 
                                         /* 썸네일 쓰레드 실행 */
                                         Runnable r = new BackgroundTask();
@@ -239,31 +238,29 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
                                         }
 
                                         /* 영상 시간 섹션 쪼개기 */
-                                        int hour=0, min=0, section;
-                                        if(time.indexOf("H") > -1 && time.indexOf("M") > -1) {
-                                            String tmp = time.substring(0,time.indexOf("H"));
+                                        int hour = 0, min = 0, section;
+                                        if (time.indexOf("H") > -1 && time.indexOf("M") > -1) {
+                                            String tmp = time.substring(0, time.indexOf("H"));
                                             hour = Integer.parseInt(tmp);
-                                            tmp = time.substring(time.indexOf("H")+1,time.indexOf("M"));
+                                            tmp = time.substring(time.indexOf("H") + 1, time.indexOf("M"));
                                             min = Integer.parseInt(tmp);
-                                        }
-                                        else if(time.indexOf("H") == -1 && time.indexOf("M") > -1){
-                                            String tmp = time.substring(0,time.indexOf("M"));
+                                        } else if (time.indexOf("H") == -1 && time.indexOf("M") > -1) {
+                                            String tmp = time.substring(0, time.indexOf("M"));
                                             min = Integer.parseInt(tmp);
-                                        }
-                                        else if(time.indexOf("H") > -1 && time.indexOf("M") == -1) {
-                                            String tmp = time.substring(0,time.indexOf("H"));
+                                        } else if (time.indexOf("H") > -1 && time.indexOf("M") == -1) {
+                                            String tmp = time.substring(0, time.indexOf("H"));
                                             hour = Integer.parseInt(tmp);
                                         }
 
                                         int tmp = (hour * 60) + min;
-                                        if(tmp < 10)
+                                        if (tmp < 10)
                                             section = 1;
-                                        else if((tmp % 10) < 4)
+                                        else if ((tmp % 10) < 4)
                                             section = (tmp / 10);
                                         else
                                             section = (tmp / 10) + 1;
 
-                                        if(!setVideoQuery(videoID, title, false, false,  section, 0,BitMapToString(thumb))){
+                                        if (!setVideoQuery(videoID, title, false, false, section, 0, BitMapToString(thumb))) {
                                             Looper.prepare();
                                             Toast.makeText(getApplicationContext(), "이미 요청된 영상입니다.", Toast.LENGTH_LONG).show();
                                             Looper.loop();
@@ -271,8 +268,7 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
                                     }
                                 }
                             }.start();
-                        }
-                        else {
+                        } else {
                             Toast.makeText(getApplicationContext(), "올바른 주소형식이 아닙니다.", Toast.LENGTH_LONG).show();
                             edittext.setText(null);
                         }
@@ -288,18 +284,18 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
     }
 
     private void changeView() {
-        databaseReference.addValueEventListener( new ValueEventListener() {
+        databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 data.clear();
                 videos.clear();
                 rvideos.clear();
-                for(DataSnapshot snapshot:dataSnapshot.getChildren()){
-                    Video video=snapshot.getValue(Video.class);
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Video video = snapshot.getValue(Video.class);
                     if (!(video.isLookstate() && video.isListenstate())) {
-                        ListviewItem temp = new ListviewItem( StringToBitMap(video.getBitt()), video.getTitle(), null );
+                        ListviewItem temp = new ListviewItem(StringToBitMap(video.getBitt()), video.getTitle(), null);
                         rvideos.add(video);
-                        data.add(0,temp);
+                        data.add(0, temp);
                     }
                     videos.add(video);
                 }
@@ -307,20 +303,21 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
                 setListViewHeightBasedOnChildren(listView);
                 progressBar.setVisibility(View.GONE);
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        } );
-        dataRef.addValueEventListener( new ValueEventListener() {
+        });
+        dataRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 firebaseAuth = FirebaseAuth.getInstance();
-                FirebaseUser googleIUser=firebaseAuth.getCurrentUser();
-                String recommend=null;
-                for(DataSnapshot snapshot:dataSnapshot.getChildren()){
-                    if(snapshot.getKey().equals( googleIUser.getDisplayName() )){
-                        recommend=snapshot.getValue(String.class);
+                FirebaseUser googleIUser = firebaseAuth.getCurrentUser();
+                String recommend = null;
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    if (snapshot.getKey().equals(googleIUser.getDisplayName())) {
+                        recommend = snapshot.getValue(String.class);
                     }
                 }
 
@@ -332,23 +329,22 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        } );
+        });
     }
 
-    public boolean setVideoQuery(String link, String title, boolean lookstate, boolean listenstate, int sectionCount,int view,String thumbnail) {
-        Video video=new Video(link,title,lookstate,listenstate,sectionCount,view,thumbnail);
-        boolean check=true;
-        for(Video temp:videos) {
-            if(temp.getLink().equals( video.getLink() )) {
+    public boolean setVideoQuery(String link, String title, boolean lookstate, boolean listenstate, int sectionCount, int view, String thumbnail) {
+        Video video = new Video(link, title, lookstate, listenstate, sectionCount, view, thumbnail);
+        boolean check = true;
+        for (Video temp : videos) {
+            if (temp.getLink().equals(video.getLink())) {
                 check = false;
                 break;
             }
         }
-        if(check) {
-            databaseReference.push().setValue( video );
+        if (check) {
+            databaseReference.push().setValue(video);
             return true;
-        }
-        else return false;
+        } else return false;
     }
 
     public void setListViewHeightBasedOnChildren(ListView listView) {
@@ -386,7 +382,7 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
         int searchImgId = android.support.v7.appcompat.R.id.search_button;
         ImageView v = (ImageView) mSearchView.findViewById(searchImgId);
         v.setImageResource(R.drawable.search);
-        v.setPadding(0,0,0,0);
+        v.setPadding(0, 0, 0, 0);
 
         mSearch.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
@@ -397,7 +393,7 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
             @Override
             public boolean onMenuItemActionCollapse(MenuItem menuItem) {
                 changeView();
-                scroll_view.scrollTo(0,0);
+                scroll_view.scrollTo(0, 0);
                 return true;
             }
         });
@@ -407,14 +403,14 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
             public boolean onQueryTextSubmit(String query) {
                 data.clear();
                 rvideos.clear();
-                for(Video video:rvideos){
-                    if(video.getTitle().toLowerCase().contains( query.toLowerCase() )){
-                        ListviewItem tmp = new ListviewItem( StringToBitMap(video.getBitt()), video.getTitle(), null );
-                        data.add( tmp );
+                for (Video video : rvideos) {
+                    if (video.getTitle().toLowerCase().contains(query.toLowerCase())) {
+                        ListviewItem tmp = new ListviewItem(StringToBitMap(video.getBitt()), video.getTitle(), null);
+                        data.add(tmp);
                     }
                 }
                 adapter.notifyDataSetChanged();
-                setListViewHeightBasedOnChildren( listView );
+                setListViewHeightBasedOnChildren(listView);
                 return true;
             }
 
@@ -429,7 +425,7 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         Intent intent;
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
             case R.id.it_home:
                 intent = new Intent(VideoRequestListActivity.this, LfreeMainActivity.class);
                 startActivity(intent);
@@ -468,15 +464,16 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
         return false;
     }
 
-    private long timeBack= 0;
+    private long timeBack = 0;
+
     @Override
     public void onBackPressed() {
-        if(drawerLayout.isDrawerOpen(GravityCompat.START)) {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
-            if(System.currentTimeMillis() - timeBack >= 2000) {
+            if (System.currentTimeMillis() - timeBack >= 2000) {
                 timeBack = System.currentTimeMillis();
-                Toast.makeText(getApplicationContext(),"\'뒤로\' 버튼을 한번 더 누르면 종료합니다.",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "\'뒤로\' 버튼을 한번 더 누르면 종료합니다.", Toast.LENGTH_SHORT).show();
             } else if (System.currentTimeMillis() - timeBack < 2000) {
                 ActivityCompat.finishAffinity(this);
             }
@@ -497,40 +494,57 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
 
     /* 제목&시간 파싱 쓰레드 */
     private String Title() {
-        String result ="";
-        String title ="";
+        String result = "";
+        String title = "";
+        InputStream is = null;
         try {
-            URL aURL = new URL("https://www.googleapis.com/youtube/v3/videos?id="+videoID+"&key=AIzaSyCxaTSJkqWjCLbh4UzPXb1jOHrVX5-gmxs&part=snippet,contentDetails");
+            URL aURL = new URL("https://www.googleapis.com/youtube/v3/videos?id=" + videoID + "&key=AIzaSyCxaTSJkqWjCLbh4UzPXb1jOHrVX5-gmxs&part=snippet,contentDetails");
             URLConnection con = aURL.openConnection();
-            InputStream is = con.getInputStream();
+            is = con.getInputStream();
             InputStreamReader isr = new InputStreamReader(is);
             BufferedReader reader = new BufferedReader(isr);
 
             while (true) {
                 String parsing = reader.readLine();
                 if (parsing == null) break;
-                result += parsing+"\n";
+                result += parsing + "\n";
             }
 
             JSONObject obj = new JSONObject(result);
 
             JSONObject item2 = (JSONObject) obj.get("pageInfo");
-            effective = ((Integer)item2.get("totalResults")).intValue();
+            effective = ((Integer) item2.get("totalResults")).intValue();
             JSONArray arr = (JSONArray) obj.get("items");
             JSONObject item = (JSONObject) arr.get(0);
             JSONObject snippet = (JSONObject) item.get("snippet");
             JSONObject content = (JSONObject) item.get("contentDetails");
             time = ((String) content.get("duration")).substring(2);
             title = (String) snippet.get("title");
-
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
-        return title;
+        catch (MalformedURLException e) {
+            android.util.Log.d(null, "==================> " + e.toString());
+            return null;
+        } catch (IOException e) {
+            android.util.Log.d(null, "==================> " + e.toString());
+            return null;
+        } catch (JSONException e) {
+            android.util.Log.d(null, "==================> " + e.toString());
+            return null;
+        } finally {
+            try {
+                if(is != null)
+                    is.close();
+                else
+                    android.util.Log.d(null, "==================> " + "InputStream is NULL!");
+            } catch (IOException e) {
+                android.util.Log.d(null, "==================> " + e.toString());
+            }
+        }
+
+        if(!(title.equals("")))
+            return title;
+        else
+            return null;
     }
 
     public String BitMapToString(Bitmap bitmap){
@@ -546,7 +560,8 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
             byte [] encodeByte=Base64.decode(image,Base64.DEFAULT);
             Bitmap bitmap=BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
             return bitmap;
-        }catch(Exception e){
+        }catch(OutOfMemoryError e){
+            android.util.Log.d(null, "==================> " + e.toString());
             return null;
         }
     }
