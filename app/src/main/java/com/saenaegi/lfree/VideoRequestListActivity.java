@@ -148,9 +148,9 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
                     InputStream is = conn.getInputStream();
                     bitmap = BitmapFactory.decodeStream(is);
                 } catch (MalformedURLException ee) {
-                    ee.printStackTrace();
+                    android.util.Log.d(null, "==================> " + ee.toString());
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    android.util.Log.d(null, "==================> " + e.toString());
                 }
             }
         };
@@ -159,7 +159,7 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
             mThread.join();
             user_profile.setImageBitmap(bitmap);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            android.util.Log.d(null, "==================> " + e.toString());
         }
 
         /* link button */
@@ -234,7 +234,7 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
                                         try {
                                             thread.join();
                                         } catch (InterruptedException e) {
-                                            e.printStackTrace();
+                                            android.util.Log.d(null, "==================> " + e.toString());
                                         }
 
                                         /* 영상 시간 섹션 쪼개기 */
@@ -487,7 +487,7 @@ public class VideoRequestListActivity extends AppCompatActivity implements Navig
             try {
                 thumb = Picasso.with(VideoRequestListActivity.this).load(url).get();
             } catch (IOException e) {
-                e.printStackTrace();
+                android.util.Log.d(null, "==================> " + e.toString());
             }
         }
     }

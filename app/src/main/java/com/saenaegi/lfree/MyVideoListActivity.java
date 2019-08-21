@@ -125,9 +125,9 @@ public class MyVideoListActivity extends AppCompatActivity implements Navigation
                     InputStream is = conn.getInputStream();
                     bitmap = BitmapFactory.decodeStream(is);
                 } catch (MalformedURLException ee) {
-                    ee.printStackTrace();
+                    android.util.Log.d(null, "==================> " + ee.toString());
                 }catch (IOException e){
-                    e.printStackTrace();
+                    android.util.Log.d(null, "==================> " + e.toString());
                 }
             }
         };
@@ -136,7 +136,7 @@ public class MyVideoListActivity extends AppCompatActivity implements Navigation
             mThread.join();
             user_profile.setImageBitmap(bitmap);
         }catch (InterruptedException e){
-            e.printStackTrace();
+            android.util.Log.d(null, "==================> " + e.toString());
         }
 
         /* list view */

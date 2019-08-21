@@ -411,12 +411,11 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
                             SubtitleData subtitleData = new SubtitleData( arr[0].trim(), arr[1].trim(), arr[2].trim() );
                             subtitleDatas.add( subtitleData );
                         }
-                        //Log.e( "chedkFileReader", String.valueOf( subtitleDatas.size() ) );
+                        Log.e( "chedkFileReader", String.valueOf( subtitleDatas.size() ) );
                         fileReader.close();
                         bufferedReader.close();
                     } catch (IOException e) {
-                        //Log.e( "chedkFileReader"," success file not exist" );
-                        e.printStackTrace();
+                        Log.e( "chedkFileReader"," success file not exist" );
                     }
 
                     String min = sectionSubtitles.get( String.valueOf( nowSection ) ).get( position ).getSubtitle().getSectionS().split( ":" )[0];
@@ -440,7 +439,7 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
                 }
             } );
         } catch (IOException e){
-            //Log.e( "chedkFileReader"," not make file" );
+            Log.e( "chedkFileReader"," not make file" );
         }
 
 
@@ -481,7 +480,7 @@ public class aWatchVideoActivity extends YouTubeBaseActivity {
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        android.util.Log.d(null, "==================> " + e.toString());
                     }
                 }
             }

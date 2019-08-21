@@ -480,8 +480,7 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
                         fileReader.close();
                         bufferedReader.close();
                     }catch (IOException e){
-                        //Log.e( "chedkFileReader"," success file not exist" );
-                        e.printStackTrace();
+                        Log.e( "chedkFileReader"," success file not exist" );
                     }
                     if(kind) {
                         String min = sectionSubtitles.get( String.valueOf( posi ) ).get( position ).getSubtitle().getSectionS().split( ":" )[0];
@@ -517,7 +516,7 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
                 }
             } );
         } catch (IOException e){
-            //Log.e( "chedkFileReader"," not make file" );
+            Log.e( "chedkFileReader"," not make file" );
         }
 
 
@@ -880,7 +879,7 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        android.util.Log.d(null, "==================> " + e.toString());
                     }
                 }
             }
@@ -923,7 +922,7 @@ public class WatchVideoActivity extends AppCompatActivity implements NavigationV
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        android.util.Log.d(null, "==================> " + e.toString());
                     }
                 }
             }

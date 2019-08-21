@@ -29,9 +29,9 @@ public class FontApplication extends Application {
             StaticField.setAccessible(true);
             StaticField.set(null, newTypeface);
         } catch (NoSuchFieldException e) {
-            e.printStackTrace();
+            android.util.Log.d(null, "==================> " + e.toString());
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            android.util.Log.d(null, "==================> " + e.toString());
         }
     }
 }

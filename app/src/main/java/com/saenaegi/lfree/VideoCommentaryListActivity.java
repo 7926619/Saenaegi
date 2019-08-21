@@ -129,9 +129,9 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
                     InputStream is = conn.getInputStream();
                     bitmap = BitmapFactory.decodeStream(is);
                 } catch (MalformedURLException ee) {
-                    ee.printStackTrace();
+                    android.util.Log.d(null, "==================> " + ee.toString());
                 }catch (IOException e){
-                    e.printStackTrace();
+                    android.util.Log.d(null, "==================> " + e.toString());
                 }
             }
         };
@@ -140,7 +140,7 @@ public class VideoCommentaryListActivity extends AppCompatActivity implements Na
             mThread.join();
             user_profile.setImageBitmap(bitmap);
         }catch (InterruptedException e){
-            e.printStackTrace();
+            android.util.Log.d(null, "==================> " + e.toString());
         }
 
         listView = (ListView) findViewById(R.id.listview);
