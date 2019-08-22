@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.*;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,6 +22,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemVi
 
     //private RecyclerAdapter.OnListItemSelectedInterface mListener;
     //private Context context;
+
     public RecyclerAdapter.OnListItemSelectedInterface mListener;
     public Context context;
 
@@ -80,7 +82,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemVi
             imageView.setImageBitmap(data.getBit());
             textView1.setText(data.getTitle());
 
-            imageView.setOnClickListener(new View.OnClickListener() {
+            imageView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mListener.onItemSelected(v, getAdapterPosition());

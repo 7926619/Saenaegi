@@ -129,7 +129,7 @@ public class SettingsActivity extends AppCompatActivity implements NavigationVie
         ArrayList<ListviewItem> data = new ArrayList<>();
         ListviewItem set1 = new ListviewItem(R.drawable.push_off,"Push 알림 설정", "요청한 영상에 대한 알림");
         data.add(set1);
-        ListviewItem set2 = new ListviewItem("앱 소개", "경기대학교 새내기 팀의 캡스톤설계 작품");
+        ListviewItem set2 = new ListviewItem("앱 소개", "경기대학교 새내기 팀의 2019 소프트웨어 개발 보안 시큐어코딩 해커톤 대회 작품");
         data.add(set2);
         ListviewItem set3 = new ListviewItem("버전 정보", "v1.0.0");
         data.add(set3);

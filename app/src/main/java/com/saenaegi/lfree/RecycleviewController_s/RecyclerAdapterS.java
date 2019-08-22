@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.*;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -105,7 +106,7 @@ public class RecyclerAdapterS extends RecyclerView.Adapter<RecyclerAdapterS.Item
                 subtitleButton.setAlpha((float) 0.3);
             }
             else {
-                subtitleButton.setOnClickListener(new View.OnClickListener() {
+                subtitleButton.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mListener.onItemSelectedS(v, getAdapterPosition());
@@ -116,7 +117,7 @@ public class RecyclerAdapterS extends RecyclerView.Adapter<RecyclerAdapterS.Item
             if(!dataS.getOnSound())
                 soundButton.setAlpha((float) 0.3);
             else {
-                soundButton.setOnClickListener(new View.OnClickListener() {
+                soundButton.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mListener.onItemSelectedS(v, getAdapterPosition());
@@ -128,7 +129,7 @@ public class RecyclerAdapterS extends RecyclerView.Adapter<RecyclerAdapterS.Item
                 moreButton.setAlpha( (float)0.3 );
 
             else {
-                moreButton.setOnClickListener(new View.OnClickListener() {
+                moreButton.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mListener.onItemSelectedS( v, getAdapterPosition() );
