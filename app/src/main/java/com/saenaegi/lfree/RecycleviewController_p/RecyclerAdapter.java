@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -95,7 +96,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemVi
 
             if(data.getState()) {
                 imageView.setImageResource(R.drawable.on_button);
-                imageView.setOnClickListener(new View.OnClickListener() {
+                imageView.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mListener.onItemSelected(v, getAdapterPosition());
