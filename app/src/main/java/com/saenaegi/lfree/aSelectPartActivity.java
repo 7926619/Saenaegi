@@ -1,6 +1,6 @@
 package com.saenaegi.lfree;
 
-import android.content.Context;
+//import android.content.Context;
 import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -35,7 +35,7 @@ public class aSelectPartActivity extends AppCompatActivity {
 
     private int count = 0;
 
-    public static Context context;
+    //public static Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -168,6 +168,14 @@ public class aSelectPartActivity extends AppCompatActivity {
 
         adapter.notifyDataSetChanged();
         progressBar.setVisibility(View.GONE);
-        context = this;
+
+        FontApplication app = (FontApplication) getApplication();
+
+        app.setSectionList(sectionList);
+        app.setSectionAfterList(sectionafterList);
+        app.setSectionBeforeList(sectionbeforeList);
+        app.setSectionListView(listView);
+        //context = this;
     }
 }
+

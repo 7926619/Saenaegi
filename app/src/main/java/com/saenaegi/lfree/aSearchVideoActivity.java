@@ -1,6 +1,6 @@
 package com.saenaegi.lfree;
 
-import android.content.Context;
+//import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
@@ -39,7 +39,7 @@ public class aSearchVideoActivity extends AppCompatActivity {
     public aListviewAdapter adapter;
     public int focusposition = 0;
     public ConstraintLayout constraintLayout;
-    public static Context context;
+    //public static Context context;
     private ProgressBar progressBar;
     private String search;
 
@@ -91,7 +91,16 @@ public class aSearchVideoActivity extends AppCompatActivity {
         Intent data = getIntent();
         search = data.getExtras().getString( "search" );
         getData();
-        context = this;
+
+        //context = this;
+
+        FontApplication app = (FontApplication) getApplication();
+
+        app.setSearchList(searchList);
+        app.setSearchAfterList(searchafterList);
+        app.setSearchBeforeList(searchbeforeList);
+        app.setSearchListView(listView);
+
         count = 0;
     }
 

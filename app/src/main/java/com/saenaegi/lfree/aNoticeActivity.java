@@ -1,6 +1,6 @@
 package com.saenaegi.lfree;
 
-import android.content.Context;
+//import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -40,7 +40,7 @@ public class aNoticeActivity extends AppCompatActivity {
 
     private int count = 0;
 
-    public static Context context = null;
+    //public static Context context = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +57,14 @@ public class aNoticeActivity extends AppCompatActivity {
 
         getDataQuery();
 
-        context = this;
+        FontApplication app = (FontApplication) getApplication();
+
+        app.setNoticeList(noticeList);
+        app.setNoticeAfterList(noticeafterList);
+        app.setNoticeBeforeList(noticebeforeList);
+        app.setNoticeListView(listView);
+
+        //context = this;
     }
 
     public void  getDataQuery(){

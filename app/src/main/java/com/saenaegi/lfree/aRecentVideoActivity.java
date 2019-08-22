@@ -1,6 +1,6 @@
 package com.saenaegi.lfree;
 
-import android.content.Context;
+//import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -36,7 +36,7 @@ public class aRecentVideoActivity extends AppCompatActivity {
     public aListviewAdapter adapter;
     public int focusposition = 0;
     public ConstraintLayout constraintLayout;
-    public static Context context;
+    //public static Context context;
     private ProgressBar progressBar;
 
     private int count = 0;
@@ -73,7 +73,14 @@ public class aRecentVideoActivity extends AppCompatActivity {
         progressBar.setMax(100);
 
         getData();
-        context = this;
+
+        FontApplication app = (FontApplication) getApplication();
+
+        app.setRowList(rowList);
+        app.setRowAfterList(rowafterList);
+        app.setRowBeforeList(rowbeforeList);
+        app.setRowListView(listView);
+        //context = this;
     }
 
     public void getData(){
@@ -188,3 +195,4 @@ public class aRecentVideoActivity extends AppCompatActivity {
 
     }
 }
+

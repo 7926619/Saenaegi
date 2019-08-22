@@ -67,9 +67,15 @@ public class aAccessibilityService extends AccessibilityService {
 
     public void listViewAutoFocusDown() {
         if(source.getContentDescription().equals("영상 목록")) {
-            ArrayList<TextView> rowtemp = ((aRecentVideoActivity)aRecentVideoActivity.context).rowList;
-            ArrayList<TextView> rowaftertemp = ((aRecentVideoActivity)aRecentVideoActivity.context).rowafterList;
-            ListView listviewtemp = ((aRecentVideoActivity)aRecentVideoActivity.context).listView;
+            //ArrayList<TextView> rowtemp = ((aRecentVideoActivity)aRecentVideoActivity.context).rowList;
+            //ArrayList<TextView> rowaftertemp = ((aRecentVideoActivity)aRecentVideoActivity.context).rowafterList;
+            //ListView listviewtemp = ((aRecentVideoActivity)aRecentVideoActivity.context).listView;
+
+            FontApplication app = (FontApplication) getApplication();
+            ArrayList<TextView> rowtemp = app.getRowList();
+            ArrayList<TextView> rowaftertemp = app.getRowAfterList();
+            ListView listviewtemp = app.getRowListView();
+
             TextView temp;
             int focusposition;
 
@@ -106,9 +112,15 @@ public class aAccessibilityService extends AccessibilityService {
         }
 
         else if(source.getContentDescription().equals("파트 선택")) {
-            ArrayList<TextView> sectiontemp = ((aSelectPartActivity)aSelectPartActivity.context).sectionList;
-            ArrayList<TextView> sectionaftertemp = ((aSelectPartActivity)aSelectPartActivity.context).sectionafterList;
-            ListView listviewtemp = ((aSelectPartActivity)aSelectPartActivity.context).listView;
+            //ArrayList<TextView> sectiontemp = ((aSelectPartActivity)aSelectPartActivity.context).sectionList;
+            //ArrayList<TextView> sectionaftertemp = ((aSelectPartActivity)aSelectPartActivity.context).sectionafterList;
+            //ListView listviewtemp = ((aSelectPartActivity)aSelectPartActivity.context).listView;
+
+            FontApplication app = (FontApplication) getApplication();
+            ArrayList<TextView> sectiontemp = app.getSectionList();
+            ArrayList<TextView> sectionaftertemp = app.getSectionAfterList();
+            ListView listviewtemp = app.getSectionListView();
+
             TextView temp;
             int focusposition;
 
@@ -145,9 +157,15 @@ public class aAccessibilityService extends AccessibilityService {
         }
 
         else if(source.getContentDescription().equals("좋아요 표시한 동영상")) {
-            ArrayList<TextView> liketemp = ((aLikeVideoActivity)aLikeVideoActivity.context).likeList;
-            ArrayList<TextView> likeaftertemp = ((aLikeVideoActivity)aLikeVideoActivity.context).likeafterList;
-            ListView listviewtemp = ((aLikeVideoActivity)aLikeVideoActivity.context).listView;
+            //ArrayList<TextView> liketemp = ((aLikeVideoActivity)aLikeVideoActivity.context).likeList;
+            //ArrayList<TextView> likeaftertemp = ((aLikeVideoActivity)aLikeVideoActivity.context).likeafterList;
+            //ListView listviewtemp = ((aLikeVideoActivity)aLikeVideoActivity.context).listView;
+
+            FontApplication app = (FontApplication) getApplication();
+            ArrayList<TextView> liketemp = app.getLikeList();
+            ArrayList<TextView> likeaftertemp = app.getLikeAfterList();
+            ListView listviewtemp = app.getLikeListView();
+
             TextView temp;
             int focusposition;
 
@@ -184,9 +202,15 @@ public class aAccessibilityService extends AccessibilityService {
         }
 
         else if(source.getContentDescription().equals("공지사항")) {
-            ArrayList<TextView> noticetemp = ((aNoticeActivity)aNoticeActivity.context).noticeList;
-            ArrayList<TextView> noticeaftertemp = ((aNoticeActivity)aNoticeActivity.context).noticeafterList;
-            ListView listviewtemp = ((aNoticeActivity)aNoticeActivity.context).listView;
+            //ArrayList<TextView> noticetemp = ((aNoticeActivity)aNoticeActivity.context).noticeList;
+            //ArrayList<TextView> noticeaftertemp = ((aNoticeActivity)aNoticeActivity.context).noticeafterList;
+            //ListView listviewtemp = ((aNoticeActivity)aNoticeActivity.context).listView;
+
+            FontApplication app = (FontApplication) getApplication();
+            ArrayList<TextView> noticetemp = app.getNoticeList();
+            ArrayList<TextView> noticeaftertemp = app.getNoticeAfterList();
+            ListView listviewtemp = app.getNoticeListView();
+
             TextView temp;
             int focusposition;
 
@@ -223,9 +247,15 @@ public class aAccessibilityService extends AccessibilityService {
         }
 
         else if(source.getContentDescription().equals("검색 목록")) {
-            ArrayList<TextView> searchtemp = ((aSearchVideoActivity)aSearchVideoActivity.context).searchList;
-            ArrayList<TextView> searchaftertemp = ((aSearchVideoActivity)aSearchVideoActivity.context).searchafterList;
-            ListView listviewtemp = ((aSearchVideoActivity)aSearchVideoActivity.context).listView;
+            //ArrayList<TextView> searchtemp = ((aSearchVideoActivity)aSearchVideoActivity.context).searchList;
+            //ArrayList<TextView> searchaftertemp = ((aSearchVideoActivity)aSearchVideoActivity.context).searchafterList;
+            //ListView listviewtemp = ((aSearchVideoActivity)aSearchVideoActivity.context).listView;
+
+            FontApplication app = (FontApplication) getApplication();
+            ArrayList<TextView> searchtemp = app.getSearchList();
+            ArrayList<TextView> searchaftertemp = app.getSearchAfterList();
+            ListView listviewtemp = app.getSearchListView();
+
             TextView temp;
             int focusposition;
 
@@ -264,9 +294,15 @@ public class aAccessibilityService extends AccessibilityService {
 
     public void listViewAutoFocusUp() {
         if(source.getContentDescription().equals("영상 목록")) {
-            ArrayList<TextView> rowtemp = ((aRecentVideoActivity)aRecentVideoActivity.context).rowList;
-            ArrayList<TextView> rowbeforetemp = ((aRecentVideoActivity)aRecentVideoActivity.context).rowbeforeList;
-            ListView listviewtemp = ((aRecentVideoActivity)aRecentVideoActivity.context).listView;
+            //ArrayList<TextView> rowtemp = ((aRecentVideoActivity)aRecentVideoActivity.context).rowList;
+            //ArrayList<TextView> rowbeforetemp = ((aRecentVideoActivity)aRecentVideoActivity.context).rowbeforeList;
+            //ListView listviewtemp = ((aRecentVideoActivity)aRecentVideoActivity.context).listView;
+
+            FontApplication app = (FontApplication) getApplication();
+            ArrayList<TextView> rowtemp = app.getRowList();
+            ArrayList<TextView> rowbeforetemp = app.getRowBeforeList();
+            ListView listviewtemp = app.getRowListView();
+
             TextView temp;
             int focusposition;
 
@@ -303,9 +339,15 @@ public class aAccessibilityService extends AccessibilityService {
         }
 
         else if(source.getContentDescription().equals("파트 선택")) {
-            ArrayList<TextView> sectiontemp = ((aSelectPartActivity)aSelectPartActivity.context).sectionList;
-            ArrayList<TextView> sectionbeforetemp = ((aSelectPartActivity)aSelectPartActivity.context).sectionbeforeList;
-            ListView listviewtemp = ((aSelectPartActivity)aSelectPartActivity.context).listView;
+            //ArrayList<TextView> sectiontemp = ((aSelectPartActivity)aSelectPartActivity.context).sectionList;
+            //ArrayList<TextView> sectionbeforetemp = ((aSelectPartActivity)aSelectPartActivity.context).sectionbeforeList;
+            //ListView listviewtemp = ((aSelectPartActivity)aSelectPartActivity.context).listView;
+
+            FontApplication app = (FontApplication) getApplication();
+            ArrayList<TextView> sectiontemp = app.getSectionList();
+            ArrayList<TextView> sectionbeforetemp = app.getSectionBeforeList();
+            ListView listviewtemp = app.getSectionListView();
+
             TextView temp;
             int focusposition;
 
@@ -342,9 +384,15 @@ public class aAccessibilityService extends AccessibilityService {
         }
 
         else if(source.getContentDescription().equals("좋아요 표시한 동영상")) {
-            ArrayList<TextView> liketemp = ((aLikeVideoActivity)aLikeVideoActivity.context).likeList;
-            ArrayList<TextView> likebeforetemp = ((aLikeVideoActivity)aLikeVideoActivity.context).likebeforeList;
-            ListView listviewtemp = ((aLikeVideoActivity)aLikeVideoActivity.context).listView;
+            //ArrayList<TextView> liketemp = ((aLikeVideoActivity)aLikeVideoActivity.context).likeList;
+            //ArrayList<TextView> likebeforetemp = ((aLikeVideoActivity)aLikeVideoActivity.context).likebeforeList;
+            //ListView listviewtemp = ((aLikeVideoActivity)aLikeVideoActivity.context).listView;
+
+            FontApplication app = (FontApplication) getApplication();
+            ArrayList<TextView> liketemp = app.getLikeList();
+            ArrayList<TextView> likebeforetemp = app.getLikeBeforeList();
+            ListView listviewtemp = app.getLikeListView();
+
             TextView temp;
             int focusposition;
 
@@ -381,9 +429,15 @@ public class aAccessibilityService extends AccessibilityService {
         }
 
         else if(source.getContentDescription().equals("공지사항")) {
-            ArrayList<TextView> noticetemp = ((aNoticeActivity)aNoticeActivity.context).noticeList;
-            ArrayList<TextView> noticebeforetemp = ((aNoticeActivity)aNoticeActivity.context).noticebeforeList;
-            ListView listviewtemp = ((aNoticeActivity)aNoticeActivity.context).listView;
+            //ArrayList<TextView> noticetemp = ((aNoticeActivity)aNoticeActivity.context).noticeList;
+            //ArrayList<TextView> noticebeforetemp = ((aNoticeActivity)aNoticeActivity.context).noticebeforeList;
+            //ListView listviewtemp = ((aNoticeActivity)aNoticeActivity.context).listView;
+
+            FontApplication app = (FontApplication) getApplication();
+            ArrayList<TextView> noticetemp = app.getNoticeList();
+            ArrayList<TextView> noticebeforetemp = app.getNoticeBeforeList();
+            ListView listviewtemp = app.getNoticeListView();
+
             TextView temp;
             int focusposition;
 
@@ -420,9 +474,15 @@ public class aAccessibilityService extends AccessibilityService {
         }
 
         else if(source.getContentDescription().equals("검색 목록")) {
-            ArrayList<TextView> searchtemp = ((aSearchVideoActivity)aSearchVideoActivity.context).searchList;
-            ArrayList<TextView> searchbeforetemp = ((aSearchVideoActivity)aSearchVideoActivity.context).searchbeforeList;
-            ListView listviewtemp = ((aSearchVideoActivity)aSearchVideoActivity.context).listView;
+            //ArrayList<TextView> searchtemp = ((aSearchVideoActivity)aSearchVideoActivity.context).searchList;
+            //ArrayList<TextView> searchbeforetemp = ((aSearchVideoActivity)aSearchVideoActivity.context).searchbeforeList;
+            //ListView listviewtemp = ((aSearchVideoActivity)aSearchVideoActivity.context).listView;
+
+            FontApplication app = (FontApplication) getApplication();
+            ArrayList<TextView> searchtemp = app.getSearchList();
+            ArrayList<TextView> searchbeforetemp = app.getSearchBeforeList();
+            ListView listviewtemp = app.getSearchListView();
+
             TextView temp;
             int focusposition;
 
@@ -463,9 +523,15 @@ public class aAccessibilityService extends AccessibilityService {
         ActivityManager am3 = (ActivityManager)this.getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningTaskInfo> rti3 = am3.getRunningTasks(1);
         if((rti3.get(0).topActivity.getClassName()).contains("aRecentVideoActivity")) {
-            ArrayList<TextView> rowtemp = ((aRecentVideoActivity)aRecentVideoActivity.context).rowList;
-            ArrayList<TextView> rowaftertemp = ((aRecentVideoActivity)aRecentVideoActivity.context).rowafterList;
-            ListView listviewtemp = ((aRecentVideoActivity)aRecentVideoActivity.context).listView;
+            //ArrayList<TextView> rowtemp = ((aRecentVideoActivity)aRecentVideoActivity.context).rowList;
+            //ArrayList<TextView> rowaftertemp = ((aRecentVideoActivity)aRecentVideoActivity.context).rowafterList;
+            //ListView listviewtemp = ((aRecentVideoActivity)aRecentVideoActivity.context).listView;
+
+            FontApplication app = (FontApplication) getApplication();
+            ArrayList<TextView> rowtemp = app.getRowList();
+            ArrayList<TextView> rowaftertemp = app.getRowAfterList();
+            ListView listviewtemp = app.getRowListView();
+
             TextView temp;
             TextView tempafter;
             int focusposition;
@@ -537,9 +603,15 @@ public class aAccessibilityService extends AccessibilityService {
         }
 
         else if((rti3.get(0).topActivity.getClassName()).contains("aSelectPartActivity")) {
-            ArrayList<TextView> sectiontemp = ((aSelectPartActivity)aSelectPartActivity.context).sectionList;
-            ArrayList<TextView> sectionaftertemp = ((aSelectPartActivity)aSelectPartActivity.context).sectionafterList;
-            ListView listviewtemp = ((aSelectPartActivity)aSelectPartActivity.context).listView;
+            //ArrayList<TextView> sectiontemp = ((aSelectPartActivity)aSelectPartActivity.context).sectionList;
+            //ArrayList<TextView> sectionaftertemp = ((aSelectPartActivity)aSelectPartActivity.context).sectionafterList;
+            //ListView listviewtemp = ((aSelectPartActivity)aSelectPartActivity.context).listView;
+
+            FontApplication app = (FontApplication) getApplication();
+            ArrayList<TextView> sectiontemp = app.getSectionList();
+            ArrayList<TextView> sectionaftertemp = app.getSectionAfterList();
+            ListView listviewtemp = app.getSectionListView();
+
             TextView temp;
             TextView tempafter;
             int focusposition;
@@ -607,9 +679,15 @@ public class aAccessibilityService extends AccessibilityService {
         }
 
         else if((rti3.get(0).topActivity.getClassName()).contains("aLikeVideoActivity")) {
-            ArrayList<TextView> liketemp = ((aLikeVideoActivity)aLikeVideoActivity.context).likeList;
-            ArrayList<TextView> likeaftertemp = ((aLikeVideoActivity)aLikeVideoActivity.context).likeafterList;
-            ListView listviewtemp = ((aLikeVideoActivity)aLikeVideoActivity.context).listView;
+            //ArrayList<TextView> liketemp = ((aLikeVideoActivity)aLikeVideoActivity.context).likeList;
+            //ArrayList<TextView> likeaftertemp = ((aLikeVideoActivity)aLikeVideoActivity.context).likeafterList;
+            //ListView listviewtemp = ((aLikeVideoActivity)aLikeVideoActivity.context).listView;
+
+            FontApplication app = (FontApplication) getApplication();
+            ArrayList<TextView> liketemp = app.getLikeList();
+            ArrayList<TextView> likeaftertemp = app.getLikeAfterList();
+            ListView listviewtemp = app.getLikeListView();
+
             TextView temp;
             TextView tempafter;
             int focusposition;
@@ -677,9 +755,15 @@ public class aAccessibilityService extends AccessibilityService {
         }
 
         else if((rti3.get(0).topActivity.getClassName()).contains("aNoticeActivity")) {
-            ArrayList<TextView> noticetemp = ((aNoticeActivity)aNoticeActivity.context).noticeList;
-            ArrayList<TextView> noticeaftertemp = ((aNoticeActivity)aNoticeActivity.context).noticeafterList;
-            ListView listviewtemp = ((aNoticeActivity)aNoticeActivity.context).listView;
+            //ArrayList<TextView> noticetemp = ((aNoticeActivity)aNoticeActivity.context).noticeList;
+            //ArrayList<TextView> noticeaftertemp = ((aNoticeActivity)aNoticeActivity.context).noticeafterList;
+            //ListView listviewtemp = ((aNoticeActivity)aNoticeActivity.context).listView;
+
+            FontApplication app = (FontApplication) getApplication();
+            ArrayList<TextView> noticetemp = app.getNoticeList();
+            ArrayList<TextView> noticeaftertemp = app.getNoticeAfterList();
+            ListView listviewtemp = app.getNoticeListView();
+
             TextView temp;
             TextView tempafter;
             int focusposition;
@@ -747,9 +831,15 @@ public class aAccessibilityService extends AccessibilityService {
         }
 
         else if((rti3.get(0).topActivity.getClassName()).contains("aSearchVideoActivity")) {
-            ArrayList<TextView> searchtemp = ((aSearchVideoActivity)aSearchVideoActivity.context).searchList;
-            ArrayList<TextView> searchaftertemp = ((aSearchVideoActivity)aSearchVideoActivity.context).searchafterList;
-            ListView listviewtemp = ((aSearchVideoActivity)aSearchVideoActivity.context).listView;
+            //ArrayList<TextView> searchtemp = ((aSearchVideoActivity)aSearchVideoActivity.context).searchList;
+            //ArrayList<TextView> searchaftertemp = ((aSearchVideoActivity)aSearchVideoActivity.context).searchafterList;
+            //ListView listviewtemp = ((aSearchVideoActivity)aSearchVideoActivity.context).listView;
+
+            FontApplication app = (FontApplication) getApplication();
+            ArrayList<TextView> searchtemp = app.getSearchList();
+            ArrayList<TextView> searchaftertemp = app.getSearchAfterList();
+            ListView listviewtemp = app.getSearchListView();
+
             TextView temp;
             TextView tempafter;
             int focusposition;
@@ -822,9 +912,15 @@ public class aAccessibilityService extends AccessibilityService {
         List<ActivityManager.RunningTaskInfo> rti3 = am3.getRunningTasks(1);
 
         if((rti3.get(0).topActivity.getClassName()).contains("aRecentVideoActivity")) {
-            ArrayList<TextView> rowtemp = ((aRecentVideoActivity)aRecentVideoActivity.context).rowList;
-            ArrayList<TextView> rowbeforetemp = ((aRecentVideoActivity)aRecentVideoActivity.context).rowbeforeList;
-            ListView listviewtemp = ((aRecentVideoActivity)aRecentVideoActivity.context).listView;
+            //ArrayList<TextView> rowtemp = ((aRecentVideoActivity)aRecentVideoActivity.context).rowList;
+            //ArrayList<TextView> rowbeforetemp = ((aRecentVideoActivity)aRecentVideoActivity.context).rowbeforeList;
+            //ListView listviewtemp = ((aRecentVideoActivity)aRecentVideoActivity.context).listView;
+
+            FontApplication app = (FontApplication) getApplication();
+            ArrayList<TextView> rowtemp = app.getRowList();
+            ArrayList<TextView> rowbeforetemp = app.getRowBeforeList();
+            ListView listviewtemp = app.getRowListView();
+
             TextView temp;
             TextView tempbefore;
             int focusposition;
@@ -891,9 +987,15 @@ public class aAccessibilityService extends AccessibilityService {
         }
 
         else if((rti3.get(0).topActivity.getClassName()).contains("aSelectPartActivity")) {
-            ArrayList<TextView> sectiontemp = ((aSelectPartActivity)aSelectPartActivity.context).sectionList;
-            ArrayList<TextView> sectionbeforetemp = ((aSelectPartActivity)aSelectPartActivity.context).sectionbeforeList;
-            ListView listviewtemp = ((aSelectPartActivity)aSelectPartActivity.context).listView;
+            //ArrayList<TextView> sectiontemp = ((aSelectPartActivity)aSelectPartActivity.context).sectionList;
+            //ArrayList<TextView> sectionbeforetemp = ((aSelectPartActivity)aSelectPartActivity.context).sectionbeforeList;
+            //ListView listviewtemp = ((aSelectPartActivity)aSelectPartActivity.context).listView;
+
+            FontApplication app = (FontApplication) getApplication();
+            ArrayList<TextView> sectiontemp = app.getSectionList();
+            ArrayList<TextView> sectionbeforetemp = app.getSectionBeforeList();
+            ListView listviewtemp = app.getSectionListView();
+
             TextView temp;
             TextView tempbefore;
             int focusposition;
@@ -958,9 +1060,15 @@ public class aAccessibilityService extends AccessibilityService {
         }
 
         else if((rti3.get(0).topActivity.getClassName()).contains("aLikeVideoActivity")) {
-            ArrayList<TextView> liketemp = ((aLikeVideoActivity)aLikeVideoActivity.context).likeList;
-            ArrayList<TextView> likebeforetemp = ((aLikeVideoActivity)aLikeVideoActivity.context).likebeforeList;
-            ListView listviewtemp = ((aLikeVideoActivity)aLikeVideoActivity.context).listView;
+            //ArrayList<TextView> liketemp = ((aLikeVideoActivity)aLikeVideoActivity.context).likeList;
+            //ArrayList<TextView> likebeforetemp = ((aLikeVideoActivity)aLikeVideoActivity.context).likebeforeList;
+            //ListView listviewtemp = ((aLikeVideoActivity)aLikeVideoActivity.context).listView;
+
+            FontApplication app = (FontApplication) getApplication();
+            ArrayList<TextView> liketemp = app.getLikeList();
+            ArrayList<TextView> likebeforetemp = app.getLikeBeforeList();
+            ListView listviewtemp = app.getLikeListView();
+
             TextView temp;
             TextView tempbefore;
             int focusposition;
@@ -1025,9 +1133,15 @@ public class aAccessibilityService extends AccessibilityService {
         }
 
         else if((rti3.get(0).topActivity.getClassName()).contains("aNoticeActivity")) {
-            ArrayList<TextView> noticetemp = ((aNoticeActivity)aNoticeActivity.context).noticeList;
-            ArrayList<TextView> noticebeforetemp = ((aNoticeActivity)aNoticeActivity.context).noticebeforeList;
-            ListView listviewtemp = ((aNoticeActivity)aNoticeActivity.context).listView;
+            //ArrayList<TextView> noticetemp = ((aNoticeActivity)aNoticeActivity.context).noticeList;
+            //ArrayList<TextView> noticebeforetemp = ((aNoticeActivity)aNoticeActivity.context).noticebeforeList;
+            //ListView listviewtemp = ((aNoticeActivity)aNoticeActivity.context).listView;
+
+            FontApplication app = (FontApplication) getApplication();
+            ArrayList<TextView> noticetemp = app.getNoticeList();
+            ArrayList<TextView> noticebeforetemp = app.getNoticeBeforeList();
+            ListView listviewtemp = app.getNoticeListView();
+
             TextView temp;
             TextView tempbefore;
             int focusposition;
@@ -1092,9 +1206,15 @@ public class aAccessibilityService extends AccessibilityService {
         }
 
         else if((rti3.get(0).topActivity.getClassName()).contains("aSearchVideoActivity")) {
-            ArrayList<TextView> searchtemp = ((aSearchVideoActivity)aSearchVideoActivity.context).searchList;
-            ArrayList<TextView> searchbeforetemp = ((aSearchVideoActivity)aSearchVideoActivity.context).searchbeforeList;
-            ListView listviewtemp = ((aSearchVideoActivity)aSearchVideoActivity.context).listView;
+            //ArrayList<TextView> searchtemp = ((aSearchVideoActivity)aSearchVideoActivity.context).searchList;
+            //ArrayList<TextView> searchbeforetemp = ((aSearchVideoActivity)aSearchVideoActivity.context).searchbeforeList;
+            //ListView listviewtemp = ((aSearchVideoActivity)aSearchVideoActivity.context).listView;
+
+            FontApplication app = (FontApplication) getApplication();
+            ArrayList<TextView> searchtemp = app.getSearchList();
+            ArrayList<TextView> searchbeforetemp = app.getSearchBeforeList();
+            ListView listviewtemp = app.getSearchListView();
+
             TextView temp;
             TextView tempbefore;
             int focusposition;
@@ -1374,7 +1494,9 @@ public class aAccessibilityService extends AccessibilityService {
                     mHandler.postDelayed(new Runnable(){
                         @Override
                         public void run() {
-                            ListView listviewtemp = ((aRecentVideoActivity)aRecentVideoActivity.context).listView;
+                            //ListView listviewtemp = ((aRecentVideoActivity)aRecentVideoActivity.context).listView;
+                            FontApplication app = (FontApplication) getApplication();
+                            ListView listviewtemp = app.getRowListView();
                             listviewtemp.performItemClick(listviewtemp.getAdapter().getView(listviewitemposition, null, null), listviewitemposition, listviewtemp.getItemIdAtPosition(listviewitemposition));
                         }
                     }, 15000);
@@ -1390,7 +1512,9 @@ public class aAccessibilityService extends AccessibilityService {
                     mHandler2.postDelayed(new Runnable(){
                         @Override
                         public void run() {
-                            ListView listviewtemp = ((aSelectPartActivity)aSelectPartActivity.context).listView;
+                            //ListView listviewtemp = ((aSelectPartActivity)aSelectPartActivity.context).listView;
+                            FontApplication app = (FontApplication) getApplication();
+                            ListView listviewtemp = app.getSectionListView();
                             listviewtemp.performItemClick(listviewtemp.getAdapter().getView(listviewitemposition2, null, null), listviewitemposition2, listviewtemp.getItemIdAtPosition(listviewitemposition2));
                         }
                     }, 8000);
@@ -1407,7 +1531,9 @@ public class aAccessibilityService extends AccessibilityService {
                     mHandler3.postDelayed(new Runnable(){
                         @Override
                         public void run() {
-                            ListView listviewtemp = ((aLikeVideoActivity)aLikeVideoActivity.context).listView;
+                            //ListView listviewtemp = ((aLikeVideoActivity)aLikeVideoActivity.context).listView;
+                            FontApplication app = (FontApplication) getApplication();
+                            ListView listviewtemp = app.getLikeListView();
                             listviewtemp.performItemClick(listviewtemp.getAdapter().getView(listviewitemposition3, null, null), listviewitemposition3, listviewtemp.getItemIdAtPosition(listviewitemposition3));
                         }
                     }, 12000);
@@ -1424,7 +1550,9 @@ public class aAccessibilityService extends AccessibilityService {
                     mHandler5.postDelayed(new Runnable(){
                         @Override
                         public void run() {
-                            ListView listviewtemp = ((aSearchVideoActivity)aSearchVideoActivity.context).listView;
+                            //ListView listviewtemp = ((aSearchVideoActivity)aSearchVideoActivity.context).listView;
+                            FontApplication app = (FontApplication) getApplication();
+                            ListView listviewtemp = app.getSearchListView();
                             listviewtemp.performItemClick(listviewtemp.getAdapter().getView(listviewitemposition5, null, null), listviewitemposition5, listviewtemp.getItemIdAtPosition(listviewitemposition5));
                         }
                     }, 13000);

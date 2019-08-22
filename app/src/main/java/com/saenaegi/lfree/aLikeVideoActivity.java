@@ -1,6 +1,6 @@
 package com.saenaegi.lfree;
 
-import android.content.Context;
+//import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -41,7 +41,7 @@ public class aLikeVideoActivity extends AppCompatActivity {
     private ArrayList<String> lvideos=new ArrayList<>();
     private ProgressBar progressBar;
 
-    public static Context context;
+    //public static Context context;
 
     private int count = 0;
 
@@ -70,7 +70,15 @@ public class aLikeVideoActivity extends AppCompatActivity {
         progressBar.setMax(100);
 
         getData();
-        context = this;
+
+        FontApplication app = (FontApplication) getApplication();
+
+        app.setLikeList(likeList);
+        app.setLikeAfterList(likeafterList);
+        app.setLikeBeforeList(likebeforeList);
+        app.setLikeListView(listView);
+
+        //context = this;
     }
     public void getData() {
         databaseReference.addListenerForSingleValueEvent( new ValueEventListener() {
