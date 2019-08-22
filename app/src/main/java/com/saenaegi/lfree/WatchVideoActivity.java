@@ -74,7 +74,7 @@ import java.util.Locale;
 
 public class WatchVideoActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, RecyclerAdapter.OnListItemSelectedInterface, RecyclerAdapterS.OnListItemSelectedInterface {
 
-    private static int posi;
+    private int posi;
     private int prePosition = -1;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
